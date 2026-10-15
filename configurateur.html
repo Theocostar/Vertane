@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Configurateur 3D — Vertane</title>
+<meta name="description" content="Configure ton appareil Vertane en 3D : chaque module montre comment il se change.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
+<style>
+:root{
+  --bg:#F3F1EA;--bg-2:#FFFFFF;--panel:#FFFFFF;--ink:#16181A;--ink-2:#55584F;--line:#C9C4B8;--acc:#2F7A55;--warn:#9A4A1A;--hover:rgba(27,32,38,.05);
+  --sans:"Sora","Helvetica Neue",Arial,sans-serif;
+  --cond:"Sora","Helvetica Neue",Arial,sans-serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#16181A;--bg-2:#23272A;--panel:#1C1F21;--ink:#F3F1EA;--ink-2:#A9ABA3;--line:#3A3D38;--acc:#8DB89A;--warn:#E8A67A;--hover:rgba(231,234,237,.05);color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#16181A;--bg-2:#23272A;--panel:#1C1F21;--ink:#F3F1EA;--ink-2:#A9ABA3;--line:#3A3D38;--acc:#8DB89A;--warn:#E8A67A;--hover:rgba(231,234,237,.05);color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.app{display:grid;grid-template-columns:minmax(0,1fr) 440px;height:100%}
+.stage{position:relative;overflow:hidden;background:radial-gradient(110% 85% at 48% 46%,var(--bg-2) 0%,var(--bg) 72%)}
+#c{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+#c:active{cursor:grabbing}
+#c.pick{cursor:pointer}
+#err{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--ink-2)}
+#err[hidden]{display:none}
+#load{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink-2);font-size:14px;pointer-events:none}
+#load[hidden]{display:none}
+.explode[hidden]{display:none}
+
+.title{position:absolute;left:28px;top:24px;max-width:430px;pointer-events:none;transition:opacity .2s}
+.title h1{font:600 32px/1.05 var(--cond);letter-spacing:-.01em;margin:0 0 8px}
+.title p{margin:0;color:var(--ink-2);font-size:15px;max-width:40ch}
+.focus-on .title{opacity:0}
+.focusbar{position:absolute;left:50%;top:22px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:7px 8px 7px 16px;background:var(--panel);border:1px solid var(--ink);border-radius:12px;max-width:calc(100% - 32px)}
+.focusbar[hidden]{display:none}
+.focusbar strong{font:600 17px/1.2 var(--cond);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.controls{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 20px;padding:12px 18px;background:color-mix(in srgb,var(--panel) 92%,transparent);border:1px solid var(--line);border-radius:14px;width:max-content;max-width:calc(100% - 32px)}
+.explode{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-2)}
+.explode input{width:150px;accent-color:var(--ink)}
+.seg{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{background:none;border:0;padding:6px 12px;font-weight:500;font-size:14px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.spin{background:none;border:1px solid var(--line);border-radius:9px;padding:6px 12px;font-weight:500;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:7px}
+.spin svg{width:16px;height:16px}
+.spin[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.linkbtn{background:none;border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}
+.linkbtn:hover{border-color:var(--ink)}
+
+.panel{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.scroll{overflow-y:auto;padding:22px 24px 26px;flex:1;min-height:0}
+.panel-head h2{font:600 24px/1.1 var(--cond);margin:0}
+.panel-head p{margin:6px 0 18px;color:var(--ink-2);font-size:14px}
+.panel-head a{color:var(--ink);text-underline-offset:3px}
+
+.sec{border-top:1px solid var(--line)}
+.sec:last-of-type{border-bottom:1px solid var(--line)}
+.sec h3{margin:0}
+.sec-h{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:13px 2px;cursor:pointer}
+.sec-h:hover{background:var(--hover)}
+.sec-t{font:600 18px/1.2 var(--cond)}
+.sec-s{grid-column:1;color:var(--ink-2);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sec-h svg{grid-row:1/3;grid-column:2;width:18px;height:18px;transition:transform .2s}
+.sec-h[aria-expanded="true"] svg{transform:rotate(180deg)}
+.sec-b{padding:2px 0 18px}
+.sec-b[hidden]{display:none}
+.note{margin:0 0 14px;color:var(--ink-2);font-size:13.5px;line-height:1.5}
+fieldset{border:0;margin:0 0 16px;padding:0;min-width:0}
+legend{font-weight:500;font-size:14px;margin-bottom:8px;padding:0}
+legend span{color:var(--ink-2);font-weight:400}
+.cards{display:grid;gap:8px}
+.opt{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:var(--panel)}
+.opt:hover{border-color:var(--ink-2)}
+.opt input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.opt.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.opt:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:2px}
+.opt.dis{cursor:not-allowed;background:transparent}
+.opt.dis .t,.opt.dis .d,.opt.dis .p{opacity:.5}
+.opt .t{font-weight:500}
+.opt .d{grid-column:1;color:var(--ink-2);font-size:13px;line-height:1.4}
+.opt .p{grid-row:1;grid-column:2;font:500 14px var(--cond);color:var(--ink-2);white-space:nowrap}
+.opt .why{grid-column:1/-1;font-size:13px;color:var(--warn);margin-top:3px;line-height:1.4}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips .opt{display:flex;flex-direction:column;align-items:center;gap:0;padding:7px 12px;min-width:64px;text-align:center}
+.chips .opt .p{font-size:12.5px}
+.chips .opt.dis{opacity:.45}
+.hint{margin:8px 0 0;color:var(--ink-2);font-size:13px}
+.whyline{margin:6px 0 0;color:var(--warn);font-size:13px}
+.sws{display:flex;flex-wrap:wrap;gap:10px}
+.sw{position:relative;width:34px;height:34px;border-radius:50%;cursor:pointer;display:block}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw span{position:absolute;inset:3px;border-radius:50%;background:var(--c);border:1px solid rgba(0,0,0,.18)}
+.sw.on{box-shadow:0 0 0 2px var(--ink)}
+.sw:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:3px}
+
+.recap{margin-top:26px}
+.recap h2{font:600 20px/1.2 var(--cond);margin:0 0 10px}
+.recap table{width:100%;border-collapse:collapse;font-size:13.5px}
+.recap td{padding:7px 0;border-top:1px solid var(--line);vertical-align:top}
+.recap td:first-child{padding-right:10px}
+.recap .ref{display:block;color:var(--ink-2);font:500 12.5px var(--cond)}
+.recap td:last-child{text-align:right;white-space:nowrap;font:500 14px var(--cond)}
+.recap-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+
+.summary{border-top:1px solid var(--line);background:var(--panel);padding:14px 24px 16px}
+.stats{display:grid;grid-template-columns:1.1fr .8fr .8fr 1.5fr;gap:10px;align-items:end}
+.stat .v{font:600 20px/1.1 var(--cond);display:block;white-space:nowrap}
+.stat.big .v{font-size:28px}
+.stat .l{font-size:12.5px;color:var(--ink-2)}
+.fine{margin:8px 0 0;font-size:12px;color:var(--ink-2)}
+#notice{margin:0 0 10px;padding:9px 12px;border:1px solid var(--warn);border-radius:9px;color:var(--warn);font-size:13.5px}
+#notice[hidden]{display:none}
+
+@media (max-width:980px){
+  body{height:auto}
+  .app{grid-template-columns:1fr;height:auto}
+  .stage{height:58svh;min-height:420px;position:sticky;top:0;z-index:1}
+  .panel{border-left:0;border-top:1px solid var(--line);position:relative;z-index:2}
+  .scroll{overflow:visible}
+  .summary{position:sticky;bottom:0}
+  .title{left:18px;top:14px;right:18px}
+  .title h1{font-size:24px}
+  .title p{display:none}
+  .controls{bottom:10px;gap:8px 12px;padding:8px 10px}
+  .explode input{width:110px}
+  .focusbar{top:12px}
+  .stats{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:reduce){.sec-h svg,.title{transition:none}}
+/* mode intégré (boutique) : seule la vue 3D, fond transparent, pilotée par la page parente */
+html.embed,html.embed body{background:transparent!important;height:100%;overflow:hidden}
+.embed .app{display:block;height:100%}
+.embed .stage{position:fixed!important;inset:0;height:100%!important;min-height:0!important;background:transparent!important}
+.embed .panel,.embed .title,.embed .controls,.embed .focusbar,.embed #load,.embed #err,.embed .brand{display:none!important}
+.embed.static #c{pointer-events:none;touch-action:auto}
+
+/* charte Vertane : ivoire, noir graphite, vert ; Unbounded pour les titres, Sora pour le texte */
+.brand{position:absolute;left:28px;top:22px;z-index:3;display:block;width:128px;height:16px}
+.brand img{position:absolute;inset:0;width:100%;height:100%}
+.brand .neg{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .brand .pos{display:none}:root:not([data-theme="light"]) .brand .neg{display:block}}
+:root[data-theme="dark"] .brand .pos{display:none}:root[data-theme="dark"] .brand .neg{display:block}
+.title{top:62px!important}
+.title h1,.panel-head h2,.panel h2,.sec-t,.recap h2,.focusbar strong,.cartouche caption{font-family:"Unbounded",system-ui,sans-serif!important;font-weight:500!important;letter-spacing:-.02em}
+.title h1{font-size:28px!important}
+.sec-t{font-size:16px!important}
+.opt.on{border-color:var(--acc)!important;box-shadow:inset 0 0 0 1px var(--acc)!important}
+.sw.on{box-shadow:0 0 0 2px var(--acc)!important}
+.seg button[aria-pressed="true"],.spin[aria-pressed="true"]{background:var(--acc)!important;color:var(--bg)!important;border-color:var(--acc)!important}
+.explode input{accent-color:var(--acc)!important}
+.buy{display:flex;align-items:center;justify-content:center;margin-top:12px;min-height:44px;border-radius:980px;background:var(--acc);color:var(--bg);text-decoration:none;font-weight:600;font-size:15px}
+.buy:hover{filter:brightness(1.08)}
+@media (max-width:980px){.brand{left:18px;top:16px}.title{top:44px!important}}
+
+/* pliant : lecteur « comment le changer », baies, sélecteurs */
+.howbtn{background:var(--acc);color:var(--bg);border:0;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.howbtn:hover{filter:brightness(1.08)}
+.player{position:absolute;left:50%;top:22px;transform:translateX(-50%);width:min(560px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px 12px;box-shadow:0 10px 30px rgba(0,0,0,.08);z-index:4}
+.player[hidden]{display:none}
+.player .p-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+.player .p-top strong{font:500 15px/1.2 "Unbounded",system-ui,sans-serif;letter-spacing:-.01em}
+.player .p-n{font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+.player .p-t{margin:0 0 10px;font-size:15px;min-height:2.9em}
+.player .p-bar{display:flex;gap:4px;margin-bottom:10px}
+.player .p-bar i{flex:1;height:3px;border-radius:2px;background:var(--line)}
+.player .p-bar i.on{background:var(--acc)}
+.player .p-ctl{display:flex;gap:8px;flex-wrap:wrap}
+.bays-f{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bays-f .side{grid-column:1/-1;font-size:13px;color:var(--ink-2);margin:4px 0 -2px}
+.bays-f label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--ink-2)}
+.bays-f select{font:inherit;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+.bays-f select:hover{border-color:var(--ink-2)}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.info-l{list-style:none;margin:0;padding:0;font-size:13.5px}
+.info-l li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-top:1px solid var(--line)}
+.info-l li span:last-child{color:var(--ink-2);text-align:right}
+.explode input:disabled{opacity:.4}
+.focus-on .brand{opacity:0;pointer-events:none}
+@media (max-width:600px){
+  .stage{height:66svh}
+  .title h1{font-size:21px!important}
+  .controls{gap:6px 10px;padding:7px 8px;bottom:8px}
+  .controls .explode{font-size:12px;gap:6px}
+  .controls .explode input{width:92px}
+  .seg{max-width:100%;overflow-x:auto;scrollbar-width:none}
+  .seg button{padding:5px 9px;font-size:12.5px;white-space:nowrap}
+  .spin{padding:5px 9px;font-size:12.5px}
+}
+.brand{transition:opacity .2s}
+@media (max-width:980px){.player{top:12px;padding:10px 12px}.player .p-t{font-size:14px;min-height:0}}
+</style>
+</head>
+<body>
+<div class="app">
+  <main class="stage" id="stage">
+    <div id="gl" style="position:absolute;inset:0"></div>
+    <div id="load" role="status">Chargement de l’aperçu 3D…</div>
+    <div id="err" hidden>La vue 3D n’a pas pu démarrer. Active WebGL dans ton navigateur ou ouvre la page sur un autre appareil. La configuration reste utilisable dans le panneau.</div>
+    <a class="brand" href="store.html" id="brandL" aria-label="Vertane, retour"><img class="pos" src="assets/logo/vertane-logo-principal.svg" alt="" width="128" height="16"><img class="neg" src="assets/logo/vertane-logo-negatif.svg" alt="" width="128" height="16"></a>
+    <header class="title">
+      <h1 id="cfgT">Configure ton Vertane</h1>
+      <p>Chaque module est là, en 3D. Clique une pièce pour voir ses options, et regarde comment elle se change.</p>
+    </header>
+    <div class="focusbar" id="focusbar" hidden><strong id="fname"></strong><button class="howbtn" id="how">Voir comment le changer</button><button class="linkbtn" id="fall">Vue d’ensemble</button></div>
+    <section class="player" id="player" hidden aria-live="polite" aria-labelledby="pT">
+      <div class="p-top"><strong id="pT"></strong><span class="p-n" id="pN"></span></div>
+      <div class="p-bar" id="pBar"></div>
+      <p class="p-t" id="pTxt"></p>
+      <div class="p-ctl"><button class="linkbtn" id="pPrev">Précédent</button><button class="linkbtn" id="pPlay">Pause</button><button class="linkbtn" id="pNext">Suivant</button><button class="linkbtn" id="pAgain">Revoir</button><button class="linkbtn" id="pClose">Fermer</button></div>
+    </section>
+    <div class="controls" role="group" aria-label="Réglages de l’aperçu">
+      <label class="explode" id="openR" hidden><span>Fermé</span><input id="fold" type="range" min="0" max="100" step="1" value="100" aria-label="Ouverture"><span>Ouvert</span></label>
+      <label class="explode"><span>Assemblé</span><input id="ex" type="range" min="0" max="100" step="1" value="0" aria-label="Démontage"><span>Éclaté</span></label>
+      <div class="seg" role="group" aria-label="Point de vue" id="vseg"></div>
+      <button class="spin" id="spin" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v4h-4"/></svg>Vue 360°</button>
+      <button class="spin" id="openBtn" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M9 20v-2h6v2"/></svg>Ouvrir le dos</button>
+    </div>
+  </main>
+
+  <aside class="panel">
+    <div class="scroll">
+      <div class="panel-head">
+        <h2>Tes modules</h2>
+        <p>Ouvre une section pour voir le module dans l’aperçu, puis « Voir comment le changer ». Les options incompatibles sont expliquées. <a href="#" id="discL">Découvrir</a> · <a href="store.html">Store</a></p>
+      </div>
+      <div id="secs"></div>
+      <section class="recap" aria-labelledby="rt">
+        <h2 id="rt">Récapitulatif</h2>
+        <table id="recap"></table>
+        <div class="recap-actions">
+          <button class="linkbtn" id="copy">Copier le récapitulatif</button>
+          <button class="linkbtn" id="reset">Revenir à la configuration de base</button>
+        </div>
+      </section>
+    </div>
+    <div class="summary">
+      <p id="notice" hidden role="status"></p>
+      <div class="stats" aria-live="polite">
+        <div class="stat big"><span class="v" id="sPrice"></span><span class="l">Prix indicatif</span></div>
+        <div class="stat"><span class="v" id="sHours"></span><span class="l" id="sHoursL">Autonomie</span></div>
+        <div class="stat"><span class="v" id="sMass"></span><span class="l">Masse</span></div>
+        <div class="stat"><span class="v" id="sDim"></span><span class="l">Dimensions</span></div>
+      </div>
+      <p class="fine">Estimations de prototype.</p>
+      <a class="buy" href="#" id="buy">Acheter cette configuration</a>
+    </div>
+  </aside>
+</div>
+
+<script>window.V=window.V||{};</script>
+<script src="assets/devices.js"></script>
+<script src="assets/walls.js"></script>
+<script src="assets/devices-3d.js"></script>
+<script src="assets/devices-models.js"></script>
+<script src="assets/configurateur-appareil.js"></script>
+</body>
+</html>

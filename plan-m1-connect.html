@@ -1,0 +1,2293 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dossier de fabrication M1 Connect</title>
+<meta name="description" content="Vertane M1, dos Connect, un capteur photo, sans LiDAR : plans cotés, carte mère, processeur, connecteurs, brochages, assemblage et nomenclature.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;600&family=Unbounded:wght@400;500&display=swap">
+<style>
+/* Mise en page : un dossier technique relié. Sommaire fixe à gauche, feuilles de plan sur papier, texte court au-dessus des détails.
+   Charte Vertane (vert, noir, ivoire, sauge, pierre) ; la couleur d'accent ne sert qu'aux connecteurs et aux éléments sélectionnés. */
+:root{
+  --bg:#F3F1EA;          /* ivoire de la charte : le fond du dossier */
+  --sheet:#FBFAF6;       /* papier des feuilles de plan */
+  --fg:#16181A;          /* noir de la charte : texte et trait */
+  --mute:#55584F;        /* pierre : légendes, cotes */
+  --line:#D9D5CA;        /* filets */
+  --accent:#2F7A55;      /* vert : connecteurs, sélection */
+  --accent-soft:rgba(47,122,85,.12);
+  --warn:#9A5B12;        /* points d'attention */
+  --warn-soft:rgba(154,91,18,.10);
+  --zone:rgba(85,88,79,.10);
+  --hatch:rgba(85,88,79,.35);
+  --gold:#B8912F;
+  --ink2:#8B8D84;
+  --display:"Unbounded","Arial",sans-serif;
+  --text:"Sora","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#16181A;--sheet:#1D2022;--fg:#ECEAE3;--mute:#A6A89E;--line:#34383B;--accent:#8DB89A;--accent-soft:rgba(141,184,154,.14);
+  --warn:#E0A55A;--warn-soft:rgba(224,165,90,.12);--zone:rgba(236,234,227,.07);--hatch:rgba(236,234,227,.28);--gold:#D9B45A;--ink2:#6F7269;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#16181A;--sheet:#1D2022;--fg:#ECEAE3;--mute:#A6A89E;--line:#34383B;--accent:#8DB89A;--accent-soft:rgba(141,184,154,.14);
+  --warn:#E0A55A;--warn-soft:rgba(224,165,90,.12);--zone:rgba(236,234,227,.07);--hatch:rgba(236,234,227,.28);--gold:#D9B45A;--ink2:#6F7269;color-scheme:dark}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:24px;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--fg);font:400 15.5px/1.6 var(--text);-webkit-font-smoothing:antialiased;padding-inline:16px}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:48px;max-width:1260px;margin:0 auto;padding-block:32px 96px}
+@media (max-width:1000px){.layout{grid-template-columns:minmax(0,1fr);gap:0}}
+
+/* sommaire */
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;max-height:calc(100vh - 40px);overflow:auto;font-size:13px;padding-right:6px}
+.toc .brand{font:500 13px/1.2 var(--display);letter-spacing:.04em;margin:0 0 4px}
+.toc .rev{font:400 11.5px/1.4 var(--mono);color:var(--mute);margin:0 0 18px}
+.toc ol{list-style:none;margin:0;padding:0;counter-reset:t -1}
+.toc li{counter-increment:t}
+.toc li.grp{counter-increment:none}
+.toc a{display:grid;grid-template-columns:26px 1fr;padding:4px 8px;border-radius:6px;color:var(--mute);text-decoration:none}
+.toc a::before{content:counter(t,decimal-leading-zero);font:400 11px/1.9 var(--mono);color:var(--ink2)}
+.toc a:hover{color:var(--fg);background:var(--zone)}
+.toc a.on{color:var(--fg);background:var(--accent-soft)}
+.toc a.on::before{color:var(--accent)}
+.toc .grp{font:500 10.5px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin:16px 8px 6px}
+@media (max-width:1000px){
+  nav.toc{position:static;max-height:none;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:28px}
+  .toc ol{columns:2;column-gap:12px}.toc .grp{break-after:avoid}
+}
+@media (max-width:560px){.toc ol{columns:1}}
+
+/* contenu */
+main{min-width:0}
+section.ch{padding-block:44px 8px;border-top:1px solid var(--line)}
+section.ch:first-of-type{border-top:0;padding-top:0}
+.eyebrow{font:500 11px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 12px;display:flex;gap:10px;align-items:center}
+.eyebrow .n{font-family:var(--mono);letter-spacing:0;color:var(--mute)}
+h1{font:500 clamp(30px,4.6vw,50px)/1.08 var(--display);letter-spacing:-.03em;margin:0 0 18px;text-wrap:balance}
+h2{font:500 clamp(22px,2.8vw,30px)/1.15 var(--display);letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance}
+h3{font:600 16px/1.35 var(--text);margin:30px 0 10px;text-wrap:balance}
+h4{font:600 14px/1.4 var(--text);margin:18px 0 6px}
+p{margin:0 0 12px;max-width:68ch}
+ul.plain,ol.plain{margin:0 0 14px;padding-left:20px;max-width:70ch}
+ul.plain li,ol.plain li{margin:3px 0}
+.lead{font-size:17px;line-height:1.55;max-width:62ch}
+.mono,code{font-family:var(--mono);font-size:.9em}
+abbr[title]{text-decoration:underline dotted var(--ink2);text-underline-offset:3px;cursor:help}
+
+/* encadré « En bref » en tête de chapitre */
+.brief{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;background:var(--sheet);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:6px 0 22px;max-width:760px}
+.brief b{font:500 10.5px/1.9 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.brief ul{margin:0;padding-left:18px}.brief li{margin:2px 0}
+@media (max-width:560px){.brief{grid-template-columns:1fr}}
+
+/* points d'attention */
+.note{border-left:3px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;max-width:760px;font-size:14.5px}
+.note strong{color:var(--warn)}
+.info{border-left:3px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;max-width:760px;font-size:14.5px}
+
+/* tableaux */
+.tw{overflow-x:auto;margin:10px 0 18px;border:1px solid var(--line);border-radius:10px;background:var(--sheet)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:7px 12px;border-bottom:1px solid var(--line)}
+th{font:500 10.5px/1.4 var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);background:var(--zone);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.k{font-weight:600;white-space:nowrap}
+td.m,th.m{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+td.r,th.r{text-align:right}
+tr.sub td{background:var(--zone);font:500 10.5px/1.4 var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.pill{display:inline-block;font:500 11px/1 var(--mono);padding:4px 7px;border-radius:5px;background:var(--zone);color:var(--fg);white-space:nowrap}
+.pill.g{background:var(--accent-soft);color:var(--accent)}
+.pill.w{background:var(--warn-soft);color:var(--warn)}
+
+/* couverture */
+.cover{padding-bottom:36px}
+.cover .kicker{font:400 12px/1.4 var(--mono);color:var(--mute);margin-bottom:22px;display:flex;flex-wrap:wrap;gap:6px 18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 26px}
+.chip{font:500 12.5px/1 var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 13px;background:var(--sheet)}
+.chip.on{border-color:var(--accent);color:var(--accent)}
+.figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;max-width:820px}
+.figs div{background:var(--sheet);padding:14px 16px}
+.figs b{display:block;font:500 20px/1.2 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.figs span{font-size:12px;color:var(--mute)}
+@media (max-width:700px){.figs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* feuilles de plan */
+.sheet{background:var(--sheet);border:1px solid var(--line);border-radius:12px;margin:14px 0 22px;overflow:hidden}
+.sheet .bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line)}
+.sheet .ttl{font:500 11px/1.3 var(--display);letter-spacing:.1em;text-transform:uppercase}
+.sheet .meta{font:400 11px/1.3 var(--mono);color:var(--mute)}
+.sheet .draw{overflow-x:auto;padding:10px}
+.sheet .draw svg{display:block;width:100%;height:auto;min-width:560px;margin:0 auto}
+.sheet .draw.tall svg{max-height:980px}
+.sheet .foot{display:flex;flex-wrap:wrap;gap:6px 18px;padding:9px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+.key{display:inline-flex;align-items:center;gap:6px}
+.key i{display:inline-block;width:18px;height:10px;border-radius:2px;border:1.5px solid var(--fg)}
+.key i.a{border-color:var(--accent);background:var(--accent-soft)}
+.key i.z{border:1px dashed var(--mute);background:var(--zone)}
+.key i.w{border-color:var(--warn);background:var(--warn-soft)}
+.key i.g{border-color:var(--gold);background:var(--gold)}
+
+/* onglets et bascules */
+.tabs{display:flex;flex-wrap:wrap;gap:4px}
+.tabs button{font:500 12px/1 var(--text);border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:999px;padding:7px 12px;cursor:pointer}
+.tabs button:hover{color:var(--fg)}
+.tabs button[aria-selected="true"],.tabs button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+
+/* dessin : tout est tracé en millimètres, les traits gardent leur épaisseur à l'écran */
+svg.dw{font-family:var(--text);color:var(--fg)}
+svg.dw .o,svg.dw .t,svg.dw .th,svg.dw .z,svg.dw .a,svg.dw .d,svg.dw .h,svg.dw .w,svg.dw .gd,svg.dw .cl,svg.dw .hit{vector-effect:non-scaling-stroke}
+svg.dw .o{fill:none;stroke:var(--fg);stroke-width:1.4}
+svg.dw .t{fill:none;stroke:var(--fg);stroke-width:.8}
+svg.dw .th{fill:none;stroke:var(--mute);stroke-width:.6}
+svg.dw .z{fill:var(--zone);stroke:var(--mute);stroke-width:.8;stroke-dasharray:4 3}
+svg.dw .h{fill:url(#hatch);stroke:var(--mute);stroke-width:.7}
+svg.dw .a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.3}
+svg.dw .af{fill:var(--accent)}
+svg.dw .w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2;stroke-dasharray:5 3}
+svg.dw .gd{fill:var(--gold);stroke:none}
+svg.dw .fill{fill:var(--fg)}
+svg.dw .sheetfill{fill:var(--sheet)}
+svg.dw .d{fill:none;stroke:var(--mute);stroke-width:.7}
+svg.dw .cl{fill:none;stroke:var(--ink2);stroke-width:.6;stroke-dasharray:10 3 2 3}
+svg.dw text{fill:var(--fg)}
+svg.dw .dt{fill:var(--mute);font-family:var(--mono)}
+svg.dw .lt{fill:var(--fg);font-weight:600}
+svg.dw .lm{fill:var(--mute)}
+svg.dw .la{fill:var(--accent);font-weight:600}
+svg.dw .lw{fill:var(--warn);font-weight:600}
+svg.dw .arrow{fill:var(--mute)}
+svg.dw .cmp{cursor:pointer}
+svg.dw .cmp:hover .t,svg.dw .cmp:hover .o,svg.dw .cmp:hover .a,svg.dw .cmp.sel .t,svg.dw .cmp.sel .o,svg.dw .cmp.sel .a{stroke:var(--accent);stroke-width:2.2}
+svg.dw .cmp.sel .t,svg.dw .cmp.sel .o{fill:var(--accent-soft)}
+svg.dw .hit{fill:transparent;stroke:none}
+svg.dw .dim{opacity:.28}
+
+/* carte de composant sélectionné */
+.inspect{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);gap:0}
+.inspect .card{border-left:1px solid var(--line);padding:16px 18px;font-size:13.5px;min-width:0}
+.inspect .card h4{margin:0 0 2px;font:500 15px/1.3 var(--display);letter-spacing:-.01em}
+.inspect .card .ref{font:500 12px/1 var(--mono);color:var(--accent);margin-bottom:10px;display:block}
+.inspect .card dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:10px 0 0}
+.inspect .card dt{color:var(--mute);white-space:nowrap}
+.inspect .card dd{margin:0;min-width:0}
+.inspect .card .hint{color:var(--mute);font-size:12.5px}
+@media (max-width:860px){.inspect{grid-template-columns:minmax(0,1fr)}.inspect .card{border-left:0;border-top:1px solid var(--line)}}
+
+/* détails dépliables */
+details{border:1px solid var(--line);border-radius:10px;background:var(--sheet);margin:10px 0;max-width:100%}
+details>summary{cursor:pointer;padding:11px 14px;font-weight:600;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"+";font:500 14px/1 var(--mono);color:var(--accent);width:12px}
+details[open]>summary::before{content:"−"}
+details>summary .s{font-weight:400;color:var(--mute);font-size:13px}
+details .in{padding:0 14px 12px}
+details .in .tw{margin-top:4px}
+
+/* étapes d'assemblage */
+ol.steps{list-style:none;counter-reset:s;margin:10px 0 18px;padding:0;display:grid;gap:10px;max-width:820px}
+ol.steps>li{counter-increment:s;display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+ol.steps>li::before{content:counter(s,decimal-leading-zero);font:500 18px/1.1 var(--display);color:var(--accent)}
+ol.steps>li p{margin:0 0 4px}
+ol.steps .ctl{font-size:13px;color:var(--mute)}
+ol.steps .ctl b{color:var(--fg);font-weight:600}
+
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.two>*{min-width:0}
+.cols{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:12px 0 18px}
+.mod{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px}
+.mod .r{font:500 11.5px/1 var(--mono);color:var(--accent)}
+.mod b{display:block;font-weight:600;margin:6px 0 2px}
+.mod span{color:var(--mute)}
+.mod a{text-decoration:none;color:inherit}
+.mod:hover{border-color:var(--accent)}
+
+.tip{position:fixed;z-index:50;pointer-events:none;background:var(--fg);color:var(--bg);font:500 12px/1.35 var(--text);padding:6px 9px;border-radius:6px;max-width:260px;opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}
+.tip .m{font-family:var(--mono);opacity:.7;display:block;font-size:11px}
+.endnote{margin-top:48px;font-size:12.5px;color:var(--mute)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* impression (PDF) : pas de sommaire, tout déplié, chaque grand chapitre sur une nouvelle page */
+@media print{
+  @page{size:A4;margin:14mm 13mm}
+  body{background:#fff;color:#111;font-size:8.6pt;line-height:1.45;padding:0}
+  table{font-size:7.6pt}th,td{padding:4px 8px}td.m,th.m{font-size:7.2pt}
+  h1{font-size:24pt}h2{font-size:16pt}h3{font-size:10.5pt;margin-top:16px}.lead{font-size:10pt}
+  section.ch{padding-block:0}.brief{padding:10px 12px;margin-bottom:12px}ol.steps>li{padding:8px 10px}
+  :root{--bg:#fff;--sheet:#fff;--fg:#111;--mute:#555;--line:#cfcfc6}
+  .layout{display:block;padding:0;max-width:none}
+  nav.toc,.tabs,.no-print,.tip{display:none!important}
+  section.ch{break-before:page;border-top:0;padding-top:0}
+  section.ch.cover{break-before:auto}
+  ol.steps>li,.brief,.note,.info,.mod,tr{break-inside:avoid}
+  .tw,details{break-inside:auto}
+  .sheet .draw svg{min-width:0;width:100%;height:auto;max-height:228mm}
+  .sheet{break-inside:auto}
+  [data-panel]{break-inside:avoid}
+  .sheet .draw{overflow:visible}
+  details>summary::before{content:""}
+  [data-panel]{display:block!important}
+  [data-panel][hidden]{display:block!important}
+  .inspect{grid-template-columns:1fr}
+  .inspect .card{display:none}
+  h2,h3{break-after:avoid}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand">VERTANE M1 · CONNECT</p>
+  <p class="rev">Dossier de fabrication · rév. A · 29/09/2026</p>
+  <ol>
+    <li class="grp">Lire le dossier</li>
+    <li><a href="#couverture">Le téléphone</a></li>
+    <li><a href="#lire">Comment lire ce dossier</a></li>
+    <li><a href="#fiche">Fiche technique</a></li>
+    <li><a href="#pieces">Les pièces</a></li>
+    <li class="grp">Vues d'ensemble</li>
+    <li><a href="#plans">Plans cotés</a></li>
+    <li><a href="#empilement">Empilement et vue éclatée</a></li>
+    <li><a href="#architecture">Architecture électronique</a></li>
+    <li class="grp">Électronique</li>
+    <li><a href="#soc">Processeur (SoC)</a></li>
+    <li><a href="#carte">Carte mère</a></li>
+    <li><a href="#pcb">Circuit imprimé (PCB)</a></li>
+    <li><a href="#alim">Alimentation et horloges</a></li>
+    <li><a href="#connecteurs">Connecteurs et brochages</a></li>
+    <li><a href="#antennes">Antennes et radio</a></li>
+    <li class="grp">Modules</li>
+    <li><a href="#ecran">Bloc écran</a></li>
+    <li><a href="#photo">Module photo</a></li>
+    <li><a href="#batterie">Batterie</a></li>
+    <li><a href="#stockage">Stockage</a></li>
+    <li><a href="#audio">Haut-parleurs et micros</a></li>
+    <li><a href="#usb">Port USB-C</a></li>
+    <li class="grp">Structure</li>
+    <li><a href="#cadre">Cadre et boutons</a></li>
+    <li><a href="#cache">Cache de carte mère</a></li>
+    <li><a href="#coque">Coque arrière</a></li>
+    <li><a href="#connect">Dos Connect</a></li>
+    <li><a href="#qi">Recharge sans fil et NFC</a></li>
+    <li><a href="#thermique">Thermique</a></li>
+    <li class="grp">Fabriquer</li>
+    <li><a href="#fixations">Vis, clips et outils</a></li>
+    <li><a href="#assemblage">Assemblage</a></li>
+    <li><a href="#reparation">Démontage et réparation</a></li>
+    <li><a href="#essais">Contrôles et essais</a></li>
+    <li><a href="#normes">Conformité</a></li>
+    <li><a href="#bom">Nomenclature complète</a></li>
+    <li><a href="#ecarts">Écarts avec la maquette 3D</a></li>
+    <li><a href="#reste">Avant la série</a></li>
+    <li><a href="#lexique">Lexique</a></li>
+  </ol>
+</nav>
+
+<main>
+<!-- ============================================================ COUVERTURE -->
+<section class="ch cover" id="couverture">
+  <div class="kicker"><span>VERTANE · DOSSIER DE FABRICATION</span><span>Réf. produit M1-CX-1S-256-NOIR</span><span>Révision A</span><span>29 septembre 2026</span></div>
+  <h1>Vertane M1, dos Connect, un capteur photo</h1>
+  <p class="lead">Ce dossier décrit tout ce qu'il faut pour fabriquer ce téléphone : ses dimensions, chaque pièce, la carte mère et son processeur, chaque connecteur broche par broche, l'ordre de montage et les essais. Il part du M1 de la gamme et en change trois choses : le dos Connect à quatre connecteurs aimantés, un seul capteur photo, pas de LiDAR.</p>
+  <div class="chips" aria-label="Configuration décrite">
+    <span class="chip on">Dos Connect (4 connecteurs)</span>
+    <span class="chip on">1 capteur 50 Mpx</span>
+    <span class="chip on">Sans LiDAR</span>
+    <span class="chip">OLED LTPO 120 Hz</span>
+    <span class="chip">Carte Performance, 12 Go</span>
+    <span class="chip">Stockage 256 Go</span>
+    <span class="chip">4 400 mAh</span>
+    <span class="chip">Qi2 15 W</span>
+    <span class="chip">USB-C 3.2</span>
+    <span class="chip">Verre dépoli, cadre alu, Noir sidéral</span>
+  </div>
+  <div class="figs">
+    <div><b>71,4 × 149,4</b><span>mm, hors tout</span></div>
+    <div><b>10,0 mm</b><span>épaisseur (11,4 à l'objectif)</span></div>
+    <div><b>≈ 210 g</b><span>masse calculée</span></div>
+    <div><b>≈ 16 h</b><span>autonomie en usage mixte</span></div>
+    <div><b>11</b><span>références de pièces</span></div>
+    <div><b>13 vis</b><span>une seule empreinte, Torx T5</span></div>
+    <div><b>0 colle</b><span>entre les modules</span></div>
+    <div><b>12</b><span>connecteurs sur la carte mère</span></div>
+  </div>
+</section>
+
+<!-- ============================================================ LIRE -->
+<section class="ch" id="lire">
+  <p class="eyebrow"><span class="n">01</span>Comment lire ce dossier</p>
+  <h2>Trois niveaux de lecture</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Chaque chapitre commence par un encadré « En bref » : c'est ce qu'il faut retenir.</li>
+    <li>Viennent ensuite les plans et les tableaux, puis les détails dépliables (brochages, matières, tolérances).</li>
+    <li>Les encadrés orange signalent un point à valider avant la série. Les encadrés verts donnent une règle de conception.</li>
+  </ul></div>
+
+  <h3>Le repère : où est le point (0 ; 0) ?</h3>
+  <p>Toutes les positions sont données en millimètres, dans un seul repère, <strong>téléphone vu de dos</strong> (on regarde la coque, le plateau photo en haut) :</p>
+  <div class="two">
+    <div class="sheet"><div class="bar"><span class="ttl">Repère du dossier</span><span class="meta">vu de dos</span></div><div class="draw" id="dw-axes"></div></div>
+    <div>
+      <ul class="plain">
+        <li><strong>Origine</strong> : le centre du téléphone, au milieu de la largeur et de la hauteur.</li>
+        <li><strong>X</strong> vers la droite, <strong>Y</strong> vers le haut, vu de dos. L'objectif photo est donc à gauche (x = −22,5).</li>
+        <li><strong>Z</strong> part de la face avant du verre d'écran (z = 0) et va vers le dos. La surface extérieure de la coque est à z = 10,0.</li>
+        <li>Vu de face (côté écran), la droite et la gauche s'inversent : le bouton d'alimentation, à droite vu de dos, est à gauche vu de face.</li>
+        <li>Une position s'écrit (x ; y). Exemple : le processeur est centré en (17,5 ; 42,5).</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Conventions des plans</h3>
+  <div class="tw"><table>
+    <tr><th>Élément</th><th>Signification</th></tr>
+    <tr><td class="k">Trait noir épais</td><td>Contour extérieur d'une pièce.</td></tr>
+    <tr><td class="k">Trait fin</td><td>Détail, perçage, pièce voisine.</td></tr>
+    <tr><td class="k" style="color:var(--accent)">Trait vert</td><td>Connecteur ou contact électrique. Élément sélectionné dans les plans interactifs.</td></tr>
+    <tr><td class="k">Pointillés sur fond gris</td><td>Zone réservée (logement d'un module, zone sans composant).</td></tr>
+    <tr><td class="k" style="color:var(--warn)">Pointillés orange</td><td>Modification par rapport à la maquette 3D, ou point à valider.</td></tr>
+    <tr><td class="k">Trait mixte</td><td>Axe de symétrie.</td></tr>
+    <tr><td class="k">Cote</td><td>En millimètres, virgule décimale. « Ø » : diamètre. « r » : rayon d'angle.</td></tr>
+  </table></div>
+
+  <h3>Tolérances générales</h3>
+  <p>Sauf mention contraire : ISO 2768-f pour les pièces usinées (± 0,05 mm jusqu'à 6 mm, ± 0,1 mm jusqu'à 30 mm, ± 0,15 mm au-delà), ISO 20457 classe fine pour les pièces injectées. Les cotes fonctionnelles (fenêtres de coque, affleurement des contacts, positions des connecteurs) portent leur propre tolérance dans le texte.</p>
+  <div class="info"><strong>Ce que ce dossier ne remplace pas.</strong> Le brochage complet du processeur, ses tensions exactes et son schéma de référence sont fournis par le fondeur sous accord de confidentialité. Le dossier indique où ils s'insèrent et ce qu'ils doivent respecter. Le chapitre « Avant la série » liste ce qui reste à obtenir ou à mesurer.</p>
+</section>
+
+<!-- ============================================================ FICHE -->
+<section class="ch" id="fiche">
+  <p class="eyebrow"><span class="n">02</span>Fiche technique</p>
+  <h2>Ce que fait le téléphone</h2>
+  <div class="tw"><table>
+    <tr class="sub"><td colspan="2">Format</td></tr>
+    <tr><td class="k">Dimensions</td><td>71,4 × 149,4 × 10,0 mm. 11,0 mm au plateau photo, 11,4 mm au sommet de l'objectif.</td></tr>
+    <tr><td class="k">Masse</td><td>≈ 210 g (détail par pièce dans la nomenclature).</td></tr>
+    <tr><td class="k">Matières</td><td>Cadre aluminium recyclé anodisé, coque verre recyclé dépoli teinté dans la masse, plateau photo plastique noir fumé. Finition Noir sidéral (#27282B), cadre et coque de la même couleur.</td></tr>
+    <tr><td class="k">Protection</td><td>IP54 visé (poussière et projections d'eau) : joint périphérique de coque, joints de modules, grilles acoustiques.</td></tr>
+    <tr class="sub"><td colspan="2">Écran</td></tr>
+    <tr><td class="k">Dalle</td><td>OLED LTPO 6,37″ (annoncé 6,3″), zone active 68,6 × 146,6 mm, 1 200 × 2 560 px, 444 ppp.</td></tr>
+    <tr><td class="k">Fréquence</td><td>Adaptative de 1 à 120 Hz. Échantillonnage tactile 240 Hz.</td></tr>
+    <tr><td class="k">Luminosité</td><td>1 200 cd/m² en plein soleil, 2 000 cd/m² en pointe (HDR).</td></tr>
+    <tr><td class="k">Protection</td><td>Verre aluminosilicate renforcé de 0,55 mm, traitement oléophobe.</td></tr>
+    <tr class="sub"><td colspan="2">Électronique</td></tr>
+    <tr><td class="k">Processeur</td><td>SoC 3 nm à 8 cœurs, référence de conception : MediaTek Dimensity 9400 (chapitre SoC).</td></tr>
+    <tr><td class="k">Mémoire vive</td><td>12 Go LPDDR5X.</td></tr>
+    <tr><td class="k">Stockage</td><td>128 Go UFS 4.0 soudés (système) + module amovible de 256 Go (PCIe 4.0 ×1, NVMe, TLC).</td></tr>
+    <tr><td class="k">Réseaux</td><td>5G sous 6 GHz, 4G LTE, Wi-Fi 7, Bluetooth 5.4, NFC, GNSS double fréquence (L1 + L5).</td></tr>
+    <tr><td class="k">SIM</td><td>1 nano-SIM (sous la coque) + eSIM.</td></tr>
+    <tr><td class="k">Capteurs</td><td>Accéléromètre et gyroscope, magnétomètre, baromètre, proximité, lumière ambiante, empreinte digitale dans le bouton d'alimentation, capteur de présence de coque.</td></tr>
+    <tr class="sub"><td colspan="2">Photo et son</td></tr>
+    <tr><td class="k">Arrière</td><td>1 capteur 50 Mpx 1/1,56″, f/1,8, 24 mm équivalent, stabilisation optique, flash 2 LED bi-teinte. Pas de LiDAR.</td></tr>
+    <tr><td class="k">Avant</td><td>12 Mpx, mise au point fixe, f/2,2, poinçon dans l'écran.</td></tr>
+    <tr><td class="k">Vidéo</td><td>4K 60 i/s à l'arrière, 4K 30 i/s à l'avant.</td></tr>
+    <tr><td class="k">Audio</td><td>2 haut-parleurs en bas, 1 écouteur d'appel, 3 micros (bas, haut, dos).</td></tr>
+    <tr class="sub"><td colspan="2">Énergie</td></tr>
+    <tr><td class="k">Batterie</td><td>Amovible, 4 400 mAh, 3,87 V, 17,0 Wh, lithium-ion polymère. 800 cycles à 80 % de capacité minimum.</td></tr>
+    <tr><td class="k">Charge filaire</td><td>USB Power Delivery 3.1, 45 W (15 V 3 A ou 20 V 2,25 A).</td></tr>
+    <tr><td class="k">Sans fil</td><td>Qi2 15 W magnétique, anneau d'aimants dans la coque.</td></tr>
+    <tr><td class="k">Autonomie</td><td>≈ 16 h d'usage mixte (consommation moyenne de 1,05 W).</td></tr>
+    <tr class="sub"><td colspan="2">Connectique</td></tr>
+    <tr><td class="k">Port</td><td>USB-C, USB 3.2 Gen 2 (10 Gb/s), sortie vidéo DisplayPort 1.4.</td></tr>
+    <tr><td class="k">Dos Connect</td><td>4 connecteurs aimantés à 4 contacts dorés. Chacun porte un port USB 2.0 (480 Mb/s) et 5 V jusqu'à 500 mA. Un accessoire batterie peut aussi recharger le téléphone (7,5 W).</td></tr>
+    <tr><td class="k">Boutons</td><td>Alimentation avec lecteur d'empreinte, volume + et volume −, loquet de coque au dos.</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ PIECES -->
+<section class="ch" id="pieces">
+  <p class="eyebrow"><span class="n">03</span>Les pièces</p>
+  <h2>Onze références, une seule main pour les changer</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Le téléphone se compose de 11 pièces vendues séparément. Chacune a une référence Vertane.</li>
+    <li>Le cadre porte tout. L'écran se clipse devant, la carte mère se visse derrière, les modules se posent sur la carte, la coque ferme le tout.</li>
+    <li>Aucune colle entre les pièces : des vis, des clips, des contacts à ressort et un loquet.</li>
+  </ul></div>
+  <div class="cols" id="modcards"></div>
+</section>
+
+<!-- ============================================================ PLANS -->
+<section class="ch" id="plans">
+  <p class="eyebrow"><span class="n">04</span>Plans cotés</p>
+  <h2>Le téléphone sous toutes ses faces</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Hors tout : 71,4 × 149,4 × 10,0 mm, angles r 8,7.</li>
+    <li>Au dos : le plateau photo de 67 × 24 mm occupe tout le haut ; les 4 connecteurs Connect sont à 13,2 mm des bords, deux sous le plateau, deux en bas.</li>
+    <li>Sur la tranche : alimentation à droite vu de dos, volume à gauche. En bas : port USB-C, 2 grilles de haut-parleur, 1 micro.</li>
+  </ul></div>
+  <div class="sheet">
+    <div class="bar">
+      <div class="tabs" role="tablist" aria-label="Choix de la vue" data-tabs="plans">
+        <button role="tab" aria-selected="true" data-tab="dos">Dos</button>
+        <button role="tab" aria-selected="false" data-tab="face">Face</button>
+        <button role="tab" aria-selected="false" data-tab="profil">Profils</button>
+        <button role="tab" aria-selected="false" data-tab="bords">Bords haut et bas</button>
+      </div>
+      <span class="meta">Échelle libre · cotes en mm</span>
+    </div>
+    <div data-panel="plans:dos"><div class="draw tall" id="dw-back"></div></div>
+    <div data-panel="plans:face" hidden><div class="draw tall" id="dw-front"></div></div>
+    <div data-panel="plans:profil" hidden><div class="draw" id="dw-side"></div></div>
+    <div data-panel="plans:bords" hidden><div class="draw" id="dw-edges"></div></div>
+    <div class="foot"><span class="key"><i></i>contour</span><span class="key"><i class="a"></i>contacts, connecteurs</span><span class="key"><i class="z"></i>zone, fenêtre</span><span>Vue de dos : X vers la droite. Vue de face : miroir.</span></div>
+  </div>
+
+  <h3>Cotes principales</h3>
+  <div class="tw"><table>
+    <tr><th>Élément</th><th>Dimension</th><th>Position du centre (x ; y)</th><th>Tolérance</th></tr>
+    <tr><td class="k">Corps</td><td class="m">71,4 × 149,4 × 10,0, r 8,7</td><td class="m">(0 ; 0)</td><td class="m">± 0,10</td></tr>
+    <tr><td class="k">Plateau photo</td><td class="m">67,0 × 24,0, r 6,5, saillie 1,0</td><td class="m">(0 ; 60,5)</td><td class="m">± 0,05</td></tr>
+    <tr><td class="k">Fenêtre de coque du plateau</td><td class="m">67,6 × 24,6, r 6,8</td><td class="m">(0 ; 60,5)</td><td class="m">+0,05 / 0</td></tr>
+    <tr><td class="k">Objectif principal</td><td class="m">bague Ø 12,0, perçage Ø 12,9, saillie 0,4 sur le plateau</td><td class="m">(−22,5 ; 60,5)</td><td class="m">± 0,03</td></tr>
+    <tr><td class="k">Micro arrière</td><td class="m">perçage Ø 1,6</td><td class="m">(24,9 ; 60,5)</td><td class="m">± 0,05</td></tr>
+    <tr><td class="k">Flash</td><td class="m">Ø 4,8, perçage Ø 5,4</td><td class="m">(28,4 ; 60,5)</td><td class="m">± 0,05</td></tr>
+    <tr><td class="k">Connecteurs Connect (×4)</td><td class="m">15,4 × 3,4, r 1,7 ; fenêtre 16,0 × 4,0</td><td class="m">(±22,5 ; 42) et (±22,5 ; −61)</td><td class="m">± 0,05</td></tr>
+    <tr><td class="k">Logo</td><td class="m">30,0 × 3,7</td><td class="m">(0 ; −51)</td><td class="m">± 0,2</td></tr>
+    <tr><td class="k">Loquet de coque</td><td class="m">platine 22,0 × 4,4 ; curseur 12,0 × 3,2, saillie 0,7</td><td class="m">(0 ; −70,5)</td><td class="m">± 0,1</td></tr>
+    <tr><td class="k">Bouton alimentation</td><td class="m">14,0 × 3,0, saillie 0,5</td><td class="m">x = +35,7, y = 30</td><td class="m">± 0,05</td></tr>
+    <tr><td class="k">Volume + / −</td><td class="m">11,0 × 3,0, saillie 0,5</td><td class="m">x = −35,7, y = 40 et 26</td><td class="m">± 0,05</td></tr>
+    <tr><td class="k">Ouverture USB-C</td><td class="m">9,2 × 3,4, r 1,7</td><td class="m">x = 0, z = 4,85</td><td class="m">± 0,05</td></tr>
+    <tr><td class="k">Grilles haut-parleurs</td><td class="m">2 × 6 trous Ø 1,1, pas 2,2</td><td class="m">x = ±11,0 à ±22,0, z = 4,85</td><td class="m">± 0,05</td></tr>
+    <tr><td class="k">Micro bas / micro haut</td><td class="m">Ø 1,1 / Ø 1,0</td><td class="m">x = +8 (bas), x = +10 (haut), z = 4,85</td><td class="m">± 0,05</td></tr>
+    <tr><td class="k">Coupures d'antenne (×8)</td><td class="m">largeur 1,2, remplies de polymère</td><td class="m">y = ±56 sur les côtés, x = ±24 en haut et en bas</td><td class="m">± 0,05</td></tr>
+    <tr><td class="k">Poinçon caméra avant</td><td class="m">Ø 3,4</td><td class="m">(0 ; 68,3)</td><td class="m">± 0,05</td></tr>
+    <tr><td class="k">Fente d'écouteur</td><td class="m">11,0 × 0,8</td><td class="m">(0 ; 74,1)</td><td class="m">± 0,05</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ EMPILEMENT -->
+<section class="ch" id="empilement">
+  <p class="eyebrow"><span class="n">05</span>Empilement et vue éclatée</p>
+  <h2>Huit couches, de l'écran à la coque</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>On monte le téléphone de l'avant vers l'arrière : écran, cadre, carte mère, cache, modules, module photo, intérieur de coque, coque.</li>
+    <li>La carte mère est posée à plat sur la plaque du cadre. La batterie et les autres modules se posent sur elle ; leurs contacts à ressort touchent des plages dorées de la carte.</li>
+    <li>La coque presse les modules sur leurs contacts. Elle porte aussi la recharge sans fil, le NFC et tout le câblage du dos Connect.</li>
+  </ul></div>
+  <div class="sheet">
+    <div class="bar"><span class="ttl">Vue éclatée</span><span class="meta">Cliquez sur une couche</span></div>
+    <div class="inspect">
+      <div class="draw" id="dw-explode"></div>
+      <div class="card" id="explode-card" aria-live="polite"><p class="hint">Survolez ou cliquez une couche pour voir son rôle, sa cote en Z et sa fixation.</p></div>
+    </div>
+  </div>
+
+  <h3>Cotes en Z (épaisseur)</h3>
+  <p>Z = 0 est la face avant du verre. Chaque ligne donne la couche du dessous (vers l'écran) et celle du dessus (vers le dos).</p>
+  <div class="sheet"><div class="bar"><span class="ttl">Coupes A-A et B-B</span><span class="meta">Z exagéré 4 fois</span></div><div class="draw" id="dw-zstack"></div></div>
+  <div style="max-width:620px"><div class="tw"><table>
+      <tr><th>Couche</th><th class="m">Z bas</th><th class="m">Z haut</th><th class="m">Ép.</th></tr>
+      <tr><td>Verre d'écran</td><td class="m">0,00</td><td class="m">0,55</td><td class="m">0,55</td></tr>
+      <tr><td>Dalle OLED, polariseur, colle optique</td><td class="m">0,55</td><td class="m">1,40</td><td class="m">0,85</td></tr>
+      <tr><td>Feuille graphite + cuivre de l'écran</td><td class="m">1,40</td><td class="m">1,50</td><td class="m">0,10</td></tr>
+      <tr><td>Plaque intermédiaire du cadre</td><td class="m">1,50</td><td class="m">2,50</td><td class="m">1,00</td></tr>
+      <tr><td>Carte mère</td><td class="m">2,50</td><td class="m">3,30</td><td class="m">0,80</td></tr>
+      <tr><td>Composants bas (sous le cache)</td><td class="m">3,30</td><td class="m">3,90</td><td class="m">≤ 0,60</td></tr>
+      <tr><td>Cache de carte mère (alu)</td><td class="m">3,95</td><td class="m">4,25</td><td class="m">0,30</td></tr>
+      <tr><td>Batterie</td><td class="m">3,70</td><td class="m">8,10</td><td class="m">4,40</td></tr>
+      <tr><td>Stockage / HP / USB</td><td class="m">3,70</td><td class="m">5,50 / 6,70 / 6,90</td><td class="m">—</td></tr>
+      <tr><td>Capot du processeur + pad thermique</td><td class="m">3,30</td><td class="m">8,55</td><td class="m">5,25</td></tr>
+      <tr><td>Bord supérieur du cadre</td><td class="m">1,50</td><td class="m">8,20</td><td class="m">6,70</td></tr>
+      <tr><td>Joint périphérique</td><td class="m">8,20</td><td class="m">8,56</td><td class="m">0,36</td></tr>
+      <tr><td>Intérieur de coque (Qi, Connect)</td><td class="m">7,80</td><td class="m">8,60</td><td class="m">0,80</td></tr>
+      <tr><td>Coque</td><td class="m">8,60</td><td class="m">10,00</td><td class="m">1,40</td></tr>
+      <tr><td>Plateau photo</td><td class="m">—</td><td class="m">11,00</td><td class="m">+1,00</td></tr>
+      <tr><td>Sommet de l'objectif</td><td class="m">—</td><td class="m">11,40</td><td class="m">+0,40</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================================ ARCHITECTURE -->
+<section class="ch" id="architecture">
+  <p class="eyebrow"><span class="n">06</span>Architecture électronique</p>
+  <h2>Qui parle à qui</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Le processeur (SoC) est au centre. Tout le reste lui est relié, directement ou par un circuit spécialisé.</li>
+    <li>Les liaisons rapides (écran, caméras, stockage, USB) passent par des interposeurs à compression. Les liaisons d'énergie et les liaisons lentes passent par des contacts à ressort.</li>
+    <li>Le dos Connect n'utilise qu'un seul port USB 2.0 du téléphone : un concentrateur (hub) placé dans la coque le partage entre les 4 connecteurs.</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Schéma bloc</span><span class="meta">Survolez un bloc</span></div><div class="draw" id="dw-block"></div>
+    <div class="foot"><span class="key"><i class="a"></i>liaison rapide (&gt; 1 Gb/s)</span><span class="key"><i></i>liaison lente ou énergie</span><span>Les références U et J renvoient au plan de carte mère.</span></div></div>
+</section>
+
+<!-- ============================================================ SOC -->
+<section class="ch" id="soc">
+  <p class="eyebrow"><span class="n">07</span>Processeur (SoC)</p>
+  <h2>Le processeur et sa mémoire</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Un SoC (« système sur puce ») réunit sur une même puce le processeur, le graphisme, l'IA, le traitement photo et le modem 5G.</li>
+    <li>Référence de conception : <strong>MediaTek Dimensity 9400</strong>, gravé en 3 nm. Alternative équivalente : Qualcomm Snapdragon 8 Elite. Le choix final dépend de l'accord avec le fondeur.</li>
+    <li>Il est soudé sur la carte mère en (17,5 ; 42,5), avec ses 12 Go de mémoire vive, sous un capot métallique de 25 × 17 mm.</li>
+  </ul></div>
+
+  <h3>Ce qu'il y a dans la puce</h3>
+  <div class="tw"><table>
+    <tr><th>Bloc</th><th>Rôle</th><th>Caractéristiques (données publiques du fondeur)</th></tr>
+    <tr><td class="k">CPU</td><td>Fait tourner le système et les applications.</td><td>8 cœurs : 1 × Arm Cortex-X925 jusqu'à 3,62 GHz, 3 × Cortex-X4, 4 × Cortex-A720.</td></tr>
+    <tr><td class="k">GPU</td><td>Dessine l'interface et les jeux.</td><td>Arm Immortalis-G925, 12 cœurs, tracé de rayons matériel.</td></tr>
+    <tr><td class="k">NPU</td><td>Calcule les modèles d'IA sur l'appareil (assistant Vertane OS, photo).</td><td>MediaTek NPU 890.</td></tr>
+    <tr><td class="k">ISP</td><td>Transforme les données brutes du capteur en photo.</td><td>ISP intégré : réduction de bruit multi-images, vidéo HDR 4K.</td></tr>
+    <tr><td class="k">Modem</td><td>5G et 4G.</td><td>5G sous 6 GHz intégré. La partie radio (émetteur-récepteur, amplificateurs) est à part, sur la carte.</td></tr>
+    <tr><td class="k">Contrôleurs</td><td>Mémoire, stockage, écran, caméras, USB, bus lents.</td><td>LPDDR5X jusqu'à 10 667 Mb/s, UFS 4.0, MIPI DSI et CSI, USB 3.2, PCIe, I²C, I³C, SPI, UART.</td></tr>
+    <tr><td class="k">Sécurité</td><td>Démarrage vérifié, clés, paiement.</td><td>Zone sécurisée matérielle, démarrage signé.</td></tr>
+  </table></div>
+  <div class="note"><strong>À confirmer avec le fondeur.</strong> Le module de stockage utilise un port PCIe 4.0 ×1 du SoC. Il faut vérifier qu'un port reste libre une fois le Wi-Fi branché. Si ce n'est pas le cas : ajouter un commutateur PCIe, ou passer le module de stockage en UFS.</div>
+
+  <h3>Mémoire vive</h3>
+  <p>12 Go de LPDDR5X à 8 533 Mb/s, en 4 canaux de 16 bits. La mémoire est empilée sur le SoC (montage PoP) quand la plateforme le permet, sinon posée à côté. Le capot de 25 × 17 mm est dimensionné pour les deux cas.</p>
+
+  <h3>Où vont les interfaces du SoC</h3>
+  <div class="tw"><table>
+    <tr><th>Interface du SoC</th><th>Débit</th><th>Vers</th><th>Par</th></tr>
+    <tr><td class="k">MIPI DSI, 4 voies</td><td class="m">jusqu'à 2,5 Gb/s par voie</td><td>Dalle OLED</td><td class="m">J1</td></tr>
+    <tr><td class="k">MIPI CSI-2, 4 voies</td><td class="m">2,5 Gb/s par voie</td><td>Capteur arrière 50 Mpx</td><td class="m">J2</td></tr>
+    <tr><td class="k">MIPI CSI-2, 2 voies</td><td class="m">1,5 Gb/s par voie</td><td>Caméra avant</td><td class="m">J11</td></tr>
+    <tr><td class="k">UFS 4.0, 2 voies</td><td class="m">23,2 Gb/s par voie</td><td>Stockage système 128 Go (U3)</td><td class="m">soudé</td></tr>
+    <tr><td class="k">PCIe 4.0 ×1</td><td class="m">16 GT/s</td><td>Module de stockage</td><td class="m">J5</td></tr>
+    <tr><td class="k">USB 3.2 Gen 2 + DisplayPort</td><td class="m">10 Gb/s</td><td>Port USB-C, via un redresseur de signal (U12)</td><td class="m">J9</td></tr>
+    <tr><td class="k">USB 2.0 (2e contrôleur)</td><td class="m">480 Mb/s</td><td>Dos Connect, via le hub de la coque</td><td class="m">J10</td></tr>
+    <tr><td class="k">SPI</td><td class="m">jusqu'à 20 MHz</td><td>Tactile (J1), lecteur d'empreinte (J12)</td><td class="m">J1, J12</td></tr>
+    <tr><td class="k">I²S / SoundWire</td><td class="m">—</td><td>Codec audio et amplificateurs</td><td class="m">U13, U14</td></tr>
+    <tr><td class="k">PDM</td><td class="m">2,4 MHz</td><td>3 micros numériques</td><td class="m">J2, J9</td></tr>
+    <tr><td class="k">I²C / I³C</td><td class="m">1 à 12,5 MHz</td><td>Capteurs, PMIC, chargeur, capteurs photo</td><td class="m">—</td></tr>
+    <tr><td class="k">UART + JTAG</td><td class="m">—</td><td>Plages de test TP1 (sous la batterie)</td><td class="m">TP1</td></tr>
+  </table></div>
+
+  <h3>Montage et refroidissement</h3>
+  <ul class="plain">
+    <li>Boîtier BGA, brasé en refusion sous azote, contrôlé aux rayons X (vides &lt; 25 % par bille).</li>
+    <li>Sous-remplissage (underfill) capillaire sous le SoC et la mémoire, pour tenir aux chutes. C'est la seule résine du téléphone ; elle est dans la carte, pas entre deux pièces.</li>
+    <li>Pâte thermique de 0,1 mm entre la puce et le capot, puis pad thermique vers la coque (chapitre Thermique).</li>
+    <li>Puissance : 1 W en usage courant, 4,5 W en continu, pointes à 12 W limitées par la gestion thermique.</li>
+  </ul>
+
+  <h3>Démarrage</h3>
+  <p>Code ROM du SoC → chargeur signé lu dans l'UFS système (U3) → chargeur d'amorçage → Vertane OS. La chaîne est signée de bout en bout ; un module de stockage amovible ne peut pas servir à démarrer. Pour le premier flashage en usine, le SoC démarre en mode téléchargement par l'USB-C (bouton volume − maintenu) ou par les plages TP1.</p>
+
+  <details><summary>Documents à obtenir du fondeur <span class="s">sous accord de confidentialité</span></summary><div class="in">
+    <ul class="plain">
+      <li>Fiche technique et carte des billes (ball map) du SoC et des PMIC associés.</li>
+      <li>Guide de conception matérielle : séquences d'alimentation, découplage, règles de routage mémoire.</li>
+      <li>Schéma et routage de référence de la plateforme (souvent 10 couches, à adapter au format 64 × 140 mm).</li>
+      <li>Liste des composants radio validés (émetteur-récepteur, amplificateurs, filtres) et outils d'étalonnage.</li>
+      <li>Paquet logiciel (BSP) : noyau, pilotes, micrologiciel du modem.</li>
+    </ul></div></details>
+</section>
+
+<!-- ============================================================ CARTE MERE -->
+<section class="ch" id="carte">
+  <p class="eyebrow"><span class="n">08</span>Carte mère</p>
+  <h2>M1-MB-P : une seule carte, deux faces</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Une carte de 64 × 140 × 0,8 mm, vissée au cadre par 4 vis. Elle porte le processeur et tous les connecteurs des modules.</li>
+    <li><strong>Face dos</strong> (vers la coque) : processeur, stockage système, chargeur, vibreur et les 12 connecteurs. La zone sous la batterie reste plate : seules des plages de test y sont gravées.</li>
+    <li><strong>Face écran</strong> (vers la plaque du cadre) : radio, alimentation, audio, capteurs. Ces composants font moins de 0,6 mm et se logent dans des poches usinées de la plaque ; la plaque sert aussi de blindage.</li>
+  </ul></div>
+  <div class="sheet">
+    <div class="bar">
+      <div class="tabs" role="tablist" aria-label="Face de la carte" data-tabs="board">
+        <button role="tab" aria-selected="true" data-tab="dos">Face dos</button>
+        <button role="tab" aria-selected="false" data-tab="ecran">Face écran</button>
+      </div>
+      <div class="tabs no-print" aria-label="Calques">
+        <button aria-pressed="false" id="tg-mods">Montrer les modules posés</button>
+        <button aria-pressed="false" id="tg-cover">Montrer le cache</button>
+      </div>
+    </div>
+    <div class="inspect">
+      <div>
+        <div data-panel="board:dos"><div class="draw tall" id="dw-board-top"></div></div>
+        <div data-panel="board:ecran" hidden><div class="draw tall" id="dw-board-bot"></div></div>
+      </div>
+      <div class="card" id="board-card" aria-live="polite"><p class="hint">Cliquez un composant ou un connecteur pour voir sa fonction, sa position et sa taille.</p></div>
+    </div>
+    <div class="foot"><span class="key"><i></i>composant</span><span class="key"><i class="a"></i>connecteur</span><span class="key"><i class="g"></i>plage dorée</span><span class="key"><i class="z"></i>zone réservée</span><span class="key"><i class="w"></i>ajout par rapport à la maquette</span><span>Face écran : vue « par transparence », dans le repère vu de dos.</span></div>
+  </div>
+
+  <h3>Liste des composants</h3>
+  <p>Les références d'exemple sont des pièces du commerce qui conviennent. Toute référence est à valider avec la plateforme SoC retenue.</p>
+  <div class="tw"><table id="tbl-parts"></table></div>
+
+  <h3>Règles d'implantation</h3>
+  <ul class="plain">
+    <li>Face dos, zone batterie (x −32 à 32, y −51 à 29) : aucun composant. Seules les plages de test TP1 et le cuivre de masse. Hauteur disponible : 0,4 mm, occupée par un film isolant de 0,1 mm collé à la batterie (côté batterie).</li>
+    <li>Face dos, sous le cache (en haut et en bas) : composants de 0,6 mm au plus. Tout composant plus haut (capot du SoC, UFS, chargeur, vibreur, support SIM, connecteurs) passe par une découpe du cache.</li>
+    <li>Face écran : composants de 0,6 mm au plus, dans les poches de 0,7 mm de la plaque intermédiaire. Contact de masse tout autour de chaque poche par joint conducteur de 0,1 mm : chaque poche devient une cage de blindage.</li>
+    <li>Magnétomètre (U20) à plus de 25 mm des aimants Qi2, des haut-parleurs et du vibreur.</li>
+    <li>2 mm sans cuivre autour de chaque pied d'antenne (ANT1 à ANT8), sauf la plage du clip.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ PCB -->
+<section class="ch" id="pcb">
+  <p class="eyebrow"><span class="n">09</span>Circuit imprimé</p>
+  <h2>Le circuit imprimé nu</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>10 couches de cuivre, 0,8 mm d'épaisseur, technologie HDI « any-layer » : des micro-vias laser empilés relient n'importe quelle couche à n'importe quelle autre.</li>
+    <li>C'est ce qui permet de faire sortir les centaines de billes du processeur sur une carte aussi petite.</li>
+    <li>Or dur sur toutes les plages de contact : elles doivent supporter des milliers de poses de modules.</li>
+  </ul></div>
+  <div class="two">
+    <div class="sheet"><div class="bar"><span class="ttl">Empilage des couches</span><span class="meta">0,80 ± 0,08 mm</span></div><div class="draw" id="dw-stackup"></div></div>
+    <div>
+      <div class="tw"><table>
+        <tr><th>Paramètre</th><th>Valeur</th></tr>
+        <tr><td class="k">Contour</td><td class="m">64,0 × 140,0 mm, r 5,0, ± 0,1</td></tr>
+        <tr><td class="k">Couches</td><td class="m">10, any-layer HDI</td></tr>
+        <tr><td class="k">Matériau</td><td>Sans halogène, faibles pertes (Dk ≈ 3,4, Df ≈ 0,006 à 10 GHz), Tg ≥ 170 °C</td></tr>
+        <tr><td class="k">Cuivre</td><td class="m">externes 25 µm après dépôt, internes 12 µm</td></tr>
+        <tr><td class="k">Micro-vias</td><td class="m">laser Ø 0,10, pastille Ø 0,25, empilés, remplis cuivre</td></tr>
+        <tr><td class="k">Pistes mini</td><td class="m">40 / 40 µm (sortie BGA), 60 / 60 ailleurs</td></tr>
+        <tr><td class="k">Finition</td><td>ENEPIG ; or dur ≥ 0,76 µm sur les plages de contact</td></tr>
+        <tr><td class="k">Vernis</td><td>Vert foncé mat, sérigraphie blanche</td></tr>
+        <tr><td class="k">Trous de fixation</td><td class="m">4 × Ø 1,55 non métallisés, anneau de masse Ø 3,0</td></tr>
+        <tr><td class="k">Marquage</td><td class="m">M1-MB-P REV A + code DataMatrix de traçabilité</td></tr>
+      </table></div>
+    </div>
+  </div>
+  <h3>Impédances contrôlées</h3>
+  <div class="tw"><table>
+    <tr><th>Liaison</th><th>Impédance</th><th>Couches</th><th>Règle</th></tr>
+    <tr><td class="k">Antennes, radio</td><td class="m">50 Ω ± 10 %</td><td class="m">L1, L10</td><td>Guide coplanaire à plan de masse, vias de couture tous les 1,5 mm.</td></tr>
+    <tr><td class="k">MIPI DSI et CSI (D-PHY)</td><td class="m">100 Ω diff.</td><td class="m">L3, L8</td><td>Écart de longueur intra-paire &lt; 0,1 mm, entre paires &lt; 1 mm.</td></tr>
+    <tr><td class="k">PCIe 4.0</td><td class="m">85 Ω diff.</td><td class="m">L3</td><td>Condensateurs de liaison 220 nF (0201) près de l'émetteur.</td></tr>
+    <tr><td class="k">USB 3.2 et DisplayPort</td><td class="m">90 Ω / 85 Ω diff.</td><td class="m">L8</td><td>Longueur SoC → U12 &lt; 60 mm.</td></tr>
+    <tr><td class="k">USB 2.0</td><td class="m">90 Ω diff.</td><td class="m">L5</td><td>—</td></tr>
+    <tr><td class="k">LPDDR5X</td><td class="m">40 Ω simple</td><td class="m">L3, L5</td><td>Selon le guide du fondeur (ou PoP, sans routage).</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ ALIM -->
+<section class="ch" id="alim">
+  <p class="eyebrow"><span class="n">10</span>Alimentation et horloges</p>
+  <h2>De la prise à chaque puce</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Le courant entre par l'USB-C, la bobine Qi2 ou un accessoire Connect. Le chargeur (U7) remplit la batterie et alimente le téléphone en même temps.</li>
+    <li>Deux PMIC (circuits de gestion d'alimentation) fabriquent à partir de la batterie toutes les tensions dont chaque puce a besoin, de 0,5 V à 3,3 V.</li>
+    <li>Un circuit dédié (U6) fabrique les tensions de l'écran OLED ; un autre (U23) fabrique le 5 V du dos Connect.</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Arbre d'alimentation</span><span class="meta">tensions indicatives, à caler sur le guide du fondeur</span></div><div class="draw" id="dw-power"></div></div>
+  <details><summary>Tableau des rails <span class="s">tension, courant, source, destinataires</span></summary><div class="in"><div class="tw"><table id="tbl-rails"></table></div></div></details>
+  <h3>Horloges</h3>
+  <div class="tw"><table>
+    <tr><th>Réf.</th><th>Fréquence</th><th>Précision</th><th>Usage</th></tr>
+    <tr><td class="m">Y1</td><td class="m">26 MHz TCXO</td><td class="m">± 0,5 ppm</td><td>SoC, modem, GNSS, Wi-Fi</td></tr>
+    <tr><td class="m">Y2</td><td class="m">32,768 kHz</td><td class="m">± 20 ppm</td><td>Horloge temps réel (dans U4)</td></tr>
+    <tr><td class="m">Y3</td><td class="m">24 MHz</td><td class="m">± 30 ppm</td><td>Hub USB du dos Connect (dans la coque)</td></tr>
+    <tr><td class="m">—</td><td class="m">24 MHz</td><td class="m">—</td><td>Horloges des capteurs photo (MCLK), produites par le SoC</td></tr>
+  </table></div>
+  <h3>Séquences à respecter</h3>
+  <ul class="plain">
+    <li>Mise sous tension : l'ordre des rails du SoC est imposé par U4 (programmé en usine selon le fondeur).</li>
+    <li>Écran : VDDI 1,8 V, puis VCI 3,0 V, puis ELVDD / ELVSS, puis la reprise de la liaison DSI. Ordre inverse à l'arrêt.</li>
+    <li>Retrait de la coque (détecté par U21) : le téléphone démonte le stockage amovible, coupe VCX et passe l'écran en veille avant la perte des contacts.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ CONNECTEURS -->
+<section class="ch" id="connecteurs">
+  <p class="eyebrow"><span class="n">11</span>Connecteurs et brochages</p>
+  <h2>Douze connecteurs, trois familles</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li><strong>Interposeurs à compression</strong> (J1, J2, J5, J9, J11) : pour les liaisons rapides. Des contacts en C dorés, au pas de 0,8 mm, pressés entre le module et la carte par deux vis ou par la bride du module.</li>
+    <li><strong>Contacts à ressort</strong> (J4, J6, J7, J8, J10) : pour l'énergie et les liaisons lentes. Ils touchent des plages dorées ; la coque fournit la pression.</li>
+    <li><strong>Connecteurs classiques</strong> (J3 SIM, J12 empreinte, boutons, antennes).</li>
+  </ul></div>
+  <div class="tw"><table>
+    <tr><th>Réf.</th><th>Relie</th><th>Face</th><th>Centre (x ; y)</th><th>Type</th><th class="r">Contacts</th><th>Maintien</th></tr>
+    <tbody id="tbl-conn"></tbody>
+  </table></div>
+  <h3>Brochages</h3>
+  <p>Contacts numérotés de gauche à droite, vu de dos. Rangée A côté bord le plus proche de la carte, rangée B vers le centre. « GND » : masse.</p>
+  <div id="pinouts"></div>
+  <div class="info"><strong>Règle de montage.</strong> Les contacts de masse des connecteurs à ressort dépassent de 0,2 mm les autres : la masse touche toujours en premier et part en dernier.</div>
+</section>
+
+<!-- ============================================================ ANTENNES -->
+<section class="ch" id="antennes">
+  <p class="eyebrow"><span class="n">12</span>Antennes et radio</p>
+  <h2>Le cadre est l'antenne</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Le cadre en aluminium est coupé en 8 endroits. Les morceaux isolés deviennent 6 antennes ; le reste du cadre est relié à la masse.</li>
+    <li>La carte touche chaque morceau par un clip à ressort doré (ANT1 à ANT8).</li>
+    <li>La coque en verre et le plateau en plastique laissent passer les ondes. Une coque en aluminium ne serait pas compatible avec ce découpage.</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Segments d'antenne</span><span class="meta">vu de dos</span></div><div class="draw tall" id="dw-ant"></div></div>
+  <div class="tw"><table>
+    <tr><th>Antenne</th><th>Segment du cadre</th><th>Clip</th><th>Bandes</th></tr>
+    <tr><td class="k">A · principale</td><td>Bas, entre x −24 et +24</td><td class="m">ANT7 (−24 ; −69,3) alimentation, ANT8 (24 ; −69,3) accord</td><td>600–960 MHz, 1 710–2 690 MHz (5G / LTE)</td></tr>
+    <tr><td class="k">B · 5G haute</td><td>Coin bas, côté −X</td><td class="m">ANT3 (−31,4 ; −56)</td><td>3 300–4 200 MHz (n77, n78), 1 710–2 690 MHz MIMO</td></tr>
+    <tr><td class="k">C · Wi-Fi 1</td><td>Coin bas, côté +X</td><td class="m">ANT4 (31,4 ; −56)</td><td>Wi-Fi 2,4 / 5 / 6 GHz chaîne 1, Bluetooth</td></tr>
+    <tr><td class="k">D · diversité + GNSS</td><td>Haut, entre x −24 et +24</td><td class="m">ANT5 (−24 ; 69,3) alimentation, ANT6 (24 ; 69,3) masse</td><td>600–960 MHz diversité, GNSS L1 (1 575 MHz) et L5 (1 176 MHz)</td></tr>
+    <tr><td class="k">E · MIMO 3</td><td>Coin haut, côté −X</td><td class="m">ANT1 (−31,4 ; 56)</td><td>3 300–4 200 MHz, Wi-Fi 5 / 6 GHz chaîne 2</td></tr>
+    <tr><td class="k">F · MIMO 4</td><td>Coin haut, côté +X</td><td class="m">ANT2 (31,4 ; 56)</td><td>1 710–2 690 MHz, 3 300–4 200 MHz</td></tr>
+    <tr><td class="k">NFC</td><td>Boucle dans la coque, autour de la bobine Qi2</td><td class="m">J6, contacts 3 et 4</td><td>13,56 MHz</td></tr>
+  </table></div>
+  <ul class="plain">
+    <li>Coupures remplies de PBT chargé verre, injecté dans le cadre (technologie nano-moulage), teinté Noir sidéral, affleurant ± 0,02 mm.</li>
+    <li>Les côtés longs (entre y −56 et +56) sont à la masse, reliés à la plaque intermédiaire. Les boutons y sont logés.</li>
+    <li>Le port USB-C traverse l'antenne principale : sa masse est reliée au cadre par le joint conducteur du module USB, ce qui fixe la longueur électrique. À régler pendant l'accord des antennes.</li>
+    <li>Commutateur d'accord (tuner) sur l'antenne A pour couvrir les bandes basses.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ ECRAN -->
+<section class="ch" id="ecran">
+  <p class="eyebrow"><span class="n">13</span>Bloc écran · M1-ECR-O120</p>
+  <h2>Un bloc qui se change d'un geste</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Le bloc écran réunit le verre, la dalle OLED, le tactile, la caméra avant, l'écouteur et les capteurs de proximité et de lumière.</li>
+    <li>Il se clipse dans le cadre par 6 clips en acier et se relie à la carte par deux interposeurs : J1 en bas, J11 en haut.</li>
+    <li>Épaisseur 1,5 mm. Masse 24 g.</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Bloc écran, face arrière</span><span class="meta">vu de dos, à travers le cadre</span></div><div class="draw tall" id="dw-screen"></div></div>
+  <div class="tw"><table>
+    <tr><th>Couche</th><th>Matière</th><th class="m">Épaisseur</th></tr>
+    <tr><td>Verre de protection</td><td>Aluminosilicate renforcé par échange d'ions, 71,4 × 149,4, r 8,7, bords 2,5D, oléophobe</td><td class="m">0,55</td></tr>
+    <tr><td>Colle optique (OCA)</td><td>Acrylique optique, retirable à chaud par le réparateur du bloc</td><td class="m">0,10</td></tr>
+    <tr><td>Polariseur circulaire</td><td>—</td><td class="m">0,07</td></tr>
+    <tr><td>Dalle OLED LTPO</td><td>Substrat polyimide, tactile intégré (on-cell), contrôleur d'écran (DDIC) sur le film</td><td class="m">0,48</td></tr>
+    <tr><td>Film de support</td><td>PET noir + mousse amortissante</td><td class="m">0,20</td></tr>
+    <tr><td>Feuille thermique</td><td>Graphite 60 × 112 mm + cuivre 18 µm, centrée en (0 ; 4)</td><td class="m">0,10</td></tr>
+  </table></div>
+  <details><summary>Détails de la dalle et des composants du haut <span class="s">résolution, caméra, écouteur, capteurs</span></summary><div class="in">
+    <div class="tw"><table>
+      <tr><td class="k">Zone active</td><td class="m">68,6 × 146,6 mm, r 7,6 ; bordure 1,4 mm</td></tr>
+      <tr><td class="k">Définition</td><td class="m">1 200 × 2 560 px, 444 ppp, sous-pixels en losange</td></tr>
+      <tr><td class="k">Fréquence</td><td>LTPO 1 à 120 Hz ; balayage PWM 1 920 Hz en basse luminosité</td></tr>
+      <tr><td class="k">Couleurs</td><td>100 % DCI-P3, 10 bits, HDR10+</td></tr>
+      <tr><td class="k">Caméra avant</td><td>Module 9 × 7 mm en (0 ; 66,5) ; capteur 12 Mpx 1/2,93″, pixels 1,22 µm ; objectif 5 lentilles f/2,2, 80° ; mise au point fixe ; poinçon Ø 3,4 en (0 ; 68,3)</td></tr>
+      <tr><td class="k">Écouteur</td><td>Récepteur 12 × 4 × 1,0 mm en (−12 ; 68,5), 32 Ω ; sortie par la fente de 11 × 0,8 mm en haut du verre</td></tr>
+      <tr><td class="k">Proximité et lumière</td><td>Capteur infrarouge sous la dalle, près du poinçon ; lumière ambiante RVB</td></tr>
+      <tr><td class="k">Liaisons</td><td>J1 (bas) : 40 contacts, dalle et tactile. J11 (haut) : 30 contacts, caméra avant, écouteur, capteurs. Nappes 30 × 13 mm en bas et 3 × 8 + 4 × 8 mm en haut.</td></tr>
+      <tr><td class="k">Clips</td><td>6 clips en acier inoxydable 301 (0,5 × 7 mm) à x = ±34,9, y = −45 / 0 / 45</td></tr>
+    </table></div></div></details>
+</section>
+
+<!-- ============================================================ PHOTO -->
+<section class="ch" id="photo">
+  <p class="eyebrow"><span class="n">14</span>Module photo · M1-CAM-1S</p>
+  <h2>Un capteur, le plateau entier</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Le module porte le plateau noir fumé de 67 × 24 mm, qui dépasse de 1,0 mm de la coque. Le plateau garde toujours cette taille : il remplit la même fenêtre de coque, quel que soit le nombre de capteurs.</li>
+    <li>Version décrite : 1 capteur 50 Mpx à gauche, micro arrière et flash 2 LED à droite. L'emplacement du LiDAR (x = 20,6) reste plein : pas de perçage.</li>
+    <li>Il se visse sur la carte par 2 vis imperdables et se relie par J2.</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Module photo M1-CAM-1S</span><span class="meta">vue de dos et coupe</span></div><div class="draw" id="dw-photo"></div></div>
+  <div class="tw"><table>
+    <tr><th>Élément</th><th>Spécification</th></tr>
+    <tr><td class="k">Capteur</td><td>50 Mpx, 1/1,56″, pixels 1,0 µm (2,0 µm en regroupement 4 en 1), mise au point à détection de phase. Exemple : Sony IMX890.</td></tr>
+    <tr><td class="k">Objectif</td><td>7 lentilles plastique, f/1,8, focale 5,7 mm (24 mm équivalent), filtre infrarouge.</td></tr>
+    <tr><td class="k">Stabilisation</td><td>Optique, par déplacement de l'objectif (moteur à bobine), ± 1,5°.</td></tr>
+    <tr><td class="k">Bague d'objectif</td><td>Aluminium poli Ø 12,0, fût noir en gradins, verre saphir Ø 10,1 × 0,3 mm affleurant.</td></tr>
+    <tr><td class="k">Flash</td><td>2 LED (chaude 2 700 K et froide 5 700 K), 1 A chacune en impulsion, diffuseur de Fresnel Ø 3,7, bague Ø 4,8.</td></tr>
+    <tr><td class="k">Micros</td><td>Micro arrière (x = 24,9, sous le plateau) et micro du haut (sortie par la tranche en x = 10). MEMS numériques PDM, 65 dB de rapport signal/bruit.</td></tr>
+    <tr><td class="k">Corps</td><td>Aluminium anodisé noir, 63,6 × 20,0 mm, centré en (0 ; 61). Posé à z = 4,5, sommet du corps à 10,15.</td></tr>
+    <tr><td class="k">Plateau (capot)</td><td>PMMA teinté noir fumé (transmission 30 %), vernis dur anti-rayures, 67,0 × 24,0 × 0,8 mm, r 6,5, bord de 1,1 mm tout autour. Joint en élastomère de 0,3 mm contre la fenêtre de coque.</td></tr>
+    <tr><td class="k">Fixation</td><td>2 vis imperdables M1,4 en (−24,5 ; 53) et (−6,5 ; 53), dans des inserts taraudés de la plaque intermédiaire.</td></tr>
+    <tr><td class="k">Liaison</td><td>J2, 30 contacts : CSI-2 4 voies, alimentations, I²C, flash, micros.</td></tr>
+    <tr><td class="k">Masse</td><td>12 g.</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ BATTERIE -->
+<section class="ch" id="batterie">
+  <p class="eyebrow"><span class="n">15</span>Batterie · M1-BAT-44</p>
+  <h2>Amovible à la main</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>64 × 80 × 4,4 mm, centrée en (0 ; −11), posée directement sur la carte mère. On la retire avec sa languette, sans outil.</li>
+    <li>4 400 mAh, 3,87 V, 17,0 Wh. Une jauge et un circuit de protection sont intégrés au module.</li>
+    <li>7 contacts en bas du module (J4). La coque la maintient ; deux pions la centrent.</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Module batterie</span><span class="meta">vu de dos (étiquette) et dessous (contacts)</span></div><div class="draw" id="dw-batt"></div></div>
+  <div class="tw"><table>
+    <tr><td class="k">Cellule</td><td>Lithium-ion polymère, anode graphite, 62 × 72 × 4,1 mm, 4 400 mAh typique (4 300 mAh minimum), tension de charge max. 4,45 V, fin de décharge 3,0 V.</td></tr>
+    <tr><td class="k">Charge</td><td>Jusqu'à 8 A côté cellule (≈ 2 C) entre 15 et 45 °C, puis tension constante. Charge adaptative pour préserver la cellule.</td></tr>
+    <tr><td class="k">Durée de vie</td><td>≥ 800 cycles complets à ≥ 80 % de la capacité d'origine.</td></tr>
+    <tr><td class="k">Électronique du module</td><td>Circuit de protection (surcharge, décharge profonde, surintensité, court-circuit) et jauge de charge avec thermistance ; bus 1 fil pour lire l'état et authentifier le module. Carte de 62 × 6 mm dans les 6 derniers mm du module.</td></tr>
+    <tr><td class="k">Boîtier</td><td>Cadre polycarbonate 64 × 80 mm, r 3 ; faces en film PET noir imprimé ; plages de contact en retrait de 1,1 mm sous le module pour loger les lames de J4.</td></tr>
+    <tr><td class="k">Contacts</td><td>7 plages or dur 2,0 × 3,0 mm au pas de 3 mm, à y = −48 ; 2 trous de centrage Ø 1,3 à x = ±13.</td></tr>
+    <tr><td class="k">Languette</td><td>PET rouge 12 × 9 mm en (−22 ; 29,5), rabattue sur le dessus.</td></tr>
+    <tr><td class="k">Marquage</td><td>« M1-BAT-44 », 3,87 V, 4 400 mAh, 17,0 Wh, pictogrammes de sécurité et de collecte, marquage CE, numéro de série et code-barres.</td></tr>
+    <tr><td class="k">Normes</td><td>IEC 62133-2, UN 38.3, règlement (UE) 2023/1542.</td></tr>
+    <tr><td class="k">Masse</td><td>63 g.</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ STOCKAGE -->
+<section class="ch" id="stockage">
+  <p class="eyebrow"><span class="n">16</span>Stockage · M1-STO-256Go-STD</p>
+  <h2>Un SSD de la taille d'un ongle</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>256 Go de mémoire TLC dans un SSD NVMe en boîtier BGA, sur une petite carte de 37 × 12,5 mm.</li>
+    <li>Il se relie au processeur en PCIe 4.0 ×1 (≈ 1,6 Go/s en lecture) par l'interposeur J5, et se tient par une vis imperdable.</li>
+    <li>Le module de la maquette 3D (37 × 10 mm) est trop étroit pour un boîtier SSD : il passe à 12,5 mm de haut.</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Module de stockage</span><span class="meta">vu de dos</span></div><div class="draw" id="dw-sto"></div></div>
+  <div class="tw"><table>
+    <tr><td class="k">Composant</td><td>SSD NVMe monocomposant (contrôleur + NAND TLC), boîtier BGA ≤ 11,5 × 13 × 1,2 mm, 256 Go.</td></tr>
+    <tr><td class="k">Performances</td><td>Lecture ≥ 1,6 Go/s, écriture ≥ 1,2 Go/s, 1 500 cycles d'écriture par cellule.</td></tr>
+    <tr><td class="k">Carte</td><td>4 couches, 0,4 mm, 37,0 × 12,5 mm, centrée en (0 ; −58) ; épaisseur totale du module 1,8 mm.</td></tr>
+    <tr><td class="k">Capot</td><td>Aluminium 0,2 mm, étiquette « 256 Go · Qualité Standard · TLC · PCIe », liseré or pour la qualité Standard.</td></tr>
+    <tr><td class="k">Liaison</td><td>J5, 20 contacts au pas de 0,8 mm, centré en (0 ; −61).</td></tr>
+    <tr><td class="k">Fixation</td><td>1 vis imperdable M1,4 en (0 ; −55,5) dans un écrou CMS de la carte mère.</td></tr>
+    <tr><td class="k">Sécurité des données</td><td>Chiffrement matériel AES-256 ; la clé est liée au téléphone. Un module retiré n'est lisible que sur son téléphone, ou après effacement.</td></tr>
+    <tr><td class="k">Masse</td><td>3 g.</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ AUDIO -->
+<section class="ch" id="audio">
+  <p class="eyebrow"><span class="n">17</span>Haut-parleurs et micros · M1-HP-STD</p>
+  <h2>Deux modules identiques</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Deux haut-parleurs identiques de 19 × 6,5 × 3,0 mm, en bas, de part et d'autre du port USB-C : A en x = −20,5, B en x = +20,5.</li>
+    <li>Chacun a sa boîte close et son joint vers la grille du cadre. Il se pose sans vis ; la coque le maintient.</li>
+    <li>3 micros : bas (sur le module USB), haut et dos (sur le module photo). L'écouteur d'appel est dans le bloc écran.</li>
+  </ul></div>
+  <div class="tw"><table>
+    <tr><td class="k">Transducteur</td><td>Micro haut-parleur 6 × 15 × 2,5 mm, 8 Ω, 1 W crête, 85 dB SPL à 10 cm (1 kHz).</td></tr>
+    <tr><td class="k">Boîte</td><td>Polycarbonate chargé verre, 19,0 × 6,5 × 3,0 mm, centrée en (±20,5 ; −69,8) ; volume arrière 0,15 cm³ ; grille acier sur le dessus (15 × 3,5 mm).</td></tr>
+    <tr><td class="k">Joint</td><td>Silicone 14 × 1 × 1,6 mm entre la sortie et les 6 trous du cadre ; membrane acoustique étanche IP54.</td></tr>
+    <tr><td class="k">Liaison</td><td>J7 (A) et J8 (B) : 3 lames au pas de 2 mm à y = −68,5. Contacts : +, −, identification.</td></tr>
+    <tr><td class="k">Amplification</td><td>2 amplificateurs intelligents à boost (U14, U15) sur la carte, avec protection de la membrane (mesure du courant et de la tension).</td></tr>
+    <tr><td class="k">Micros</td><td>MEMS numériques PDM, omnidirectionnels, −26 dBFS, 65 dB de rapport signal/bruit, Ø 1,1 mm de port. Membrane anti-poussière sur chaque trou.</td></tr>
+    <tr><td class="k">Masse</td><td>8 g les deux.</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ USB -->
+<section class="ch" id="usb">
+  <p class="eyebrow"><span class="n">18</span>Port USB-C · M1-USB-U32</p>
+  <h2>Vissé au cadre, pas à la carte</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Le port USB-C encaisse les efforts du câble. Son module est donc vissé au cadre par 2 vis ; la carte mère ne reçoit aucun effort.</li>
+    <li>USB 3.2 Gen 2 (10 Gb/s), sortie DisplayPort, charge USB PD 45 W.</li>
+    <li>Le module porte aussi le micro du bas. Il se relie à la carte par J9 (28 contacts).</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Module USB-C</span><span class="meta">vu de dos</span></div><div class="draw" id="dw-usb"></div></div>
+  <div class="tw"><table>
+    <tr><td class="k">Prise</td><td>USB-C 24 broches montée à mi-hauteur, étanche IPX7, 10 000 insertions ; coque de prise en acier 9,4 × 7,0 × 3,2 mm, centrée en (0 ; −71), z = 4,85 à l'axe.</td></tr>
+    <tr><td class="k">Carte du module</td><td>20,0 × 7,0 × 0,6 mm, 4 couches ; porte la prise, le micro du bas (x = +8), les protections contre les décharges (ESD) et les résistances de ligne CC.</td></tr>
+    <tr><td class="k">Bride</td><td>Acier inoxydable 0,3 mm, 2 trous à (±8 ; −69,5), vis M1,4 qui traversent la carte (trous de passage) et se vissent dans le cadre.</td></tr>
+    <tr><td class="k">Repère de version</td><td>Pastille bleue (USB 3.2) sur le dessus du module, visible coque retirée.</td></tr>
+    <tr><td class="k">Liaison</td><td>J9, 28 contacts au pas de 0,8 mm, en (0 ; −69,5). Le multiplexeur USB / DisplayPort et le redresseur de signal (U12) sont sur la carte mère, à moins de 15 mm de J9.</td></tr>
+    <tr><td class="k">Charge</td><td>Profils USB PD : 5 V 3 A, 9 V 3 A, 15 V 3 A, 20 V 2,25 A (45 W). 4 contacts VBUS de 1 A dans J9.</td></tr>
+    <tr><td class="k">Masse</td><td>3 g.</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ CADRE -->
+<section class="ch" id="cadre">
+  <p class="eyebrow"><span class="n">19</span>Cadre et boutons · M1-CAD-ALU-NOIR</p>
+  <h2>La colonne vertébrale</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Une seule pièce d'aluminium usinée : le tour du téléphone (6,7 mm de haut, paroi de 0,85 mm) et une plaque intermédiaire de 1,0 mm qui sépare l'écran de la carte mère.</li>
+    <li>Il porte les boutons, les 8 coupures d'antenne, les grilles, les inserts taraudés des vis et les crans des clips.</li>
+    <li>Même couleur que la coque : Noir sidéral.</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Cadre, vu de dos</span><span class="meta">plaque intermédiaire, fenêtres et fixations</span></div><div class="draw tall" id="dw-frame"></div></div>
+  <div class="tw"><table>
+    <tr><td class="k">Matière</td><td>Aluminium série 6000 (6013-T6), ≥ 90 % recyclé. Usiné dans la masse (CNC 5 axes).</td></tr>
+    <tr><td class="k">Finition</td><td>Microbillage, anodisation dure type II de 12 µm, teinte Noir sidéral, scellement à chaud. Plages de masse (clips d'antenne, vis, joints conducteurs) épargnées au laser.</td></tr>
+    <tr><td class="k">Tour</td><td>Extérieur 71,4 × 149,4, r 8,7 ; intérieur 69,7 × 147,7, r 7,95 ; hauteur 6,7 (z 1,5 à 8,2).</td></tr>
+    <tr><td class="k">Plaque intermédiaire</td><td>69,2 × 147,2, r 7,7, 1,0 mm (z 1,5 à 2,5). Fenêtre haute 26 × 8 mm en (−6,5 ; 67) pour J11, fenêtre basse 22 × 5 mm en (0 ; −68) pour J1. Poches de 0,7 mm sous les composants de la face écran.</td></tr>
+    <tr><td class="k">Inserts</td><td>4 bossages taraudés M1,4 pour la carte (±29 ; ±66), 2 pour le module photo (−24,5 ; 53) et (−6,5 ; 53), 2 pour le module USB (±8 ; −69,5).</td></tr>
+    <tr><td class="k">Clips</td><td>6 crans pour les clips de l'écran (x ±34,9 ; y −45, 0, 45) et 6 crans pour les crochets de coque (x ±34,2 ; mêmes y). Loquet : gâche en (0 ; −72,7).</td></tr>
+    <tr><td class="k">Coupures d'antenne</td><td>8 fentes de 1,2 mm remplies de PBT-GF30 teinté (voir Antennes).</td></tr>
+    <tr><td class="k">Perçages</td><td>USB-C 9,2 × 3,4 ; 2 × 6 trous Ø 1,1 (haut-parleurs) ; micro bas Ø 1,1 ; micro haut Ø 1,0 ; 3 fenêtres de bouton ; fente de nappe du lecteur d'empreinte 4 × 0,4 mm derrière le bouton d'alimentation.</td></tr>
+    <tr><td class="k">Masse</td><td>26 g.</td></tr>
+  </table></div>
+  <h3>Boutons</h3>
+  <div class="tw"><table>
+    <tr><th>Bouton</th><th>Position</th><th>Construction</th><th>Contact sur la carte</th></tr>
+    <tr><td class="k">Alimentation + empreinte</td><td class="m">x +35,7 ; y 23 à 37</td><td>Aluminium anodisé 14 × 3 mm, capteur d'empreinte capacitif sous saphir de 0,2 mm, nappe vers J12. Joint torique silicone.</td><td class="m">SW1 (31,2 ; 30), J12 (27 ; 31,2)</td></tr>
+    <tr><td class="k">Volume +</td><td class="m">x −35,7 ; y 34,5 à 45,5</td><td>Aluminium anodisé 11 × 3 mm, joint torique.</td><td class="m">SW2 (−31,2 ; 40)</td></tr>
+    <tr><td class="k">Volume −</td><td class="m">x −35,7 ; y 20,5 à 31,5</td><td>Idem.</td><td class="m">SW3 (−31,2 ; 26)</td></tr>
+  </table></div>
+  <p>Chaque bouton appuie sur un interrupteur à actionnement latéral soudé au bord de la carte (course 0,15 mm, force 2,5 N, 200 000 appuis).</p>
+</section>
+
+<!-- ============================================================ CACHE -->
+<section class="ch" id="cache">
+  <p class="eyebrow"><span class="n">20</span>Cache de carte mère · M1-CAC-ALU-NOIR</p>
+  <h2>Deux tôles percées</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Deux plaques d'aluminium anodisé de 0,3 mm qui protègent les petits composants de la face dos : une en haut, une en bas.</li>
+    <li>Elles se clipsent sur la carte par 6 pattes. Chaque connecteur et chaque grand composant passe par une découpe.</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Cache haut et cache bas</span><span class="meta">vu de dos</span></div><div class="draw tall" id="dw-cover"></div></div>
+  <div class="tw"><table>
+    <tr><th>Pièce</th><th>Contour</th><th>Découpes</th></tr>
+    <tr><td class="k">Cache haut</td><td class="m">61,0 × 38,8, r 3, centré (0 ; 48,6)</td><td>J2 23,6 × 5,6 ; capot SoC 25,6 × 17,6 ; J6 14,7 × 3,8 ; J10 10,7 × 3,8 ; trou Ø 2,0 en (29 ; 66). <span class="pill w">ajouts</span> SIM 15 × 13 en (−21 ; 38) ; UFS 14 × 12 en (−4,5 ; 44) ; J12 5,5 × 3,4 en (27 ; 31,2) ; vis J11 Ø 3,0 en (−18 ; 65,5) et (5 ; 65,5).</td></tr>
+    <tr><td class="k">Cache bas</td><td class="m">61,0 × 13,9, r 3, centré (0 ; −58,55)</td><td>Stockage 37,8 × 13,3, ouverte vers le haut : le cache bas prend la forme d'un U <span class="pill w">agrandie</span> ; vibreur 10,8 × 7,8 ; chargeur 9,8 × 9,8.</td></tr>
+    <tr><td class="k">Pattes</td><td colspan="2">6 pattes de 4 × 0,75 mm pliées à 90° : (±30,4 ; 31,5), (±30,4 ; −60), (2,5 ; 68,1), (0 ; −65,6). Elles s'engagent dans des fentes de la carte.</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ COQUE -->
+<section class="ch" id="coque">
+  <p class="eyebrow"><span class="n">21</span>Coque arrière · M1-COQ-VERRE-NOIR-CX</p>
+  <h2>La coque est un module actif</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Un panneau de verre recyclé dépoli sur un support injecté. Elle ferme le téléphone, presse les modules sur leurs contacts et se verrouille par un loquet.</li>
+    <li>Dedans : la bobine Qi2 et son anneau d'aimants, l'antenne NFC, une feuille de graphite, et tout le dos Connect (4 connecteurs, circuit souple, contrôleur).</li>
+    <li>Elle se relie à la carte par deux blocs de contacts à ressort : J6 (Qi2 + NFC) et J10 (Connect).</li>
+  </ul></div>
+  <div class="sheet">
+    <div class="bar">
+      <div class="tabs" role="tablist" aria-label="Face de la coque" data-tabs="coque">
+        <button role="tab" aria-selected="true" data-tab="ext">Extérieur</button>
+        <button role="tab" aria-selected="false" data-tab="int">Intérieur</button>
+      </div>
+      <span class="meta">vu de dos · l'intérieur est vu par transparence</span>
+    </div>
+    <div data-panel="coque:ext"><div class="draw tall" id="dw-coque-ext"></div></div>
+    <div data-panel="coque:int" hidden><div class="draw tall" id="dw-coque-int"></div></div>
+    <div class="foot"><span class="key"><i class="a"></i>circuit du dos Connect</span><span class="key"><i class="g"></i>plages dorées</span><span class="key"><i class="z"></i>graphite, aimants</span><span class="key"><i class="w"></i>ajout par rapport à la maquette</span></div>
+  </div>
+  <div class="tw"><table>
+    <tr><th>Constituant</th><th>Spécification</th></tr>
+    <tr><td class="k">Panneau</td><td>Verre recyclé renforcé par échange d'ions, 0,9 mm, teinté noir dans la masse, face extérieure dépolie (Ra 0,4 µm), 71,4 × 149,4, r 8,7. 5 fenêtres : plateau 67,6 × 24,6 r 6,8 ; 4 fenêtres Connect 16,0 × 4,0 r 2,0.</td></tr>
+    <tr><td class="k">Support</td><td>PC chargé fibre de verre 30 %, 0,5 mm, injecté, noir. Assemblé au panneau en usine par adhésif structural : la coque est livrée comme une seule pièce. Porte les crochets, le loquet, les aimants et les circuits.</td></tr>
+    <tr><td class="k">Épaisseur</td><td>1,4 mm au total (z 8,6 à 10,0). Circuits et aimants entre z 8,05 et 8,6.</td></tr>
+    <tr><td class="k">Crochets</td><td>6 crochets en acier inoxydable 0,45 × 6 × 3,0 mm, surmoulés, à x ±34,2 ; y −45, 0, 45.</td></tr>
+    <tr><td class="k">Loquet</td><td>Curseur noir fumé 12 × 3,2 mm sur platine 22 × 4,4 en (0 ; −70,5). Barre acier 40 × 1,6 × 0,5 mm, 2 crochets à x ±7,5, ressort de rappel hélicoïdal Ø 0,8 × 7 mm. Course 2,0 mm.</td></tr>
+    <tr><td class="k">Joint</td><td>Silicone 0,7 × 0,36 mm tout le tour (70,8 × 148,8), surmoulé sur le support. Compression 25 %.</td></tr>
+    <tr><td class="k">Mousses d'appui</td><td>Mousse polyuréthane microcellulaire 0,5 mm, sous la coque, en face de la batterie, du stockage, des haut-parleurs et du module USB. Force d'appui : 6 N sur la batterie, 2 N sur chaque haut-parleur.</td></tr>
+    <tr><td class="k">Graphite</td><td>Feuille de 0,07 mm (1 500 W/m·K dans le plan), au-dessus du processeur, découpée autour du connecteur haut droit (voir Thermique).</td></tr>
+    <tr><td class="k">Logo</td><td>« VERTANE », 30 × 3,7 mm en (0 ; −51), encre brillante ton sur ton sur le dépoli.</td></tr>
+    <tr><td class="k">Masse</td><td>18 g (coque) + 4 g (dos Connect) + 10 g (Qi2 et NFC).</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ CONNECT -->
+<section class="ch" id="connect">
+  <p class="eyebrow"><span class="n">22</span>Dos Connect</p>
+  <h2>Quatre connecteurs aimantés</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>4 connecteurs identiques dans la coque : deux sous le plateau photo en (±22,5 ; 42), deux en bas en (±22,5 ; −61).</li>
+    <li>Chaque connecteur : un insert noir fumé de 15,4 × 3,4 mm, 4 plages dorées affleurantes, 2 aimants dessous. Il porte un port USB 2.0 et du 5 V.</li>
+    <li>Les contacts restent hors tension tant qu'aucun accessoire valide n'est posé : un trombone ou une goutte d'eau ne déclenche rien.</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Connecteur Connect, détail</span><span class="meta">échelle 5:1 · vue de dos et coupe</span></div><div class="draw" id="dw-cx"></div></div>
+
+  <h3>Construction d'un connecteur</h3>
+  <div class="tw"><table>
+    <tr><td class="k">Insert</td><td>Polymère à cristaux liquides (LCP) noir fumé, 15,4 × 3,4 × 1,15 mm, r 1,7, emmanché dans la fenêtre de la coque avec un joint liquide polymérisé (étanchéité IP54). Affleurant à la coque, 0 / −0,05 mm.</td></tr>
+    <tr><td class="k">Plages</td><td>4 plages 3,3 × 1,8 mm, r 0,55, au pas de 3,58 mm (centres à ±1,79 et ±5,37 du centre du connecteur). Laiton, nickel 2 µm, or dur 1,5 µm. Affleurantes 0 / −0,05 mm : jamais en saillie.</td></tr>
+    <tr><td class="k">Aimants</td><td>2 aimants NdFeB N52 Ø 3,0 × 0,8 mm, nickelés, à ±6,1 mm du centre, sous l'insert. Polarité vers l'extérieur : <strong>S côté bord du téléphone, N côté centre</strong>. Un accessoire ne peut se poser que dans le bon sens.</td></tr>
+    <tr><td class="k">Platine</td><td>Aluminium anodisé 17,4 × 5,0 × 0,25 mm sous l'aimant, qui referme le champ et tient l'insert.</td></tr>
+    <tr><td class="k">Circuit</td><td>Circuit souple polyimide 2 couches, 1,4 mm de large vers chaque connecteur, 1,6 mm le long des bords (x = ±32,6) et en bas (y = −64,5). Impédance 90 Ω différentielle pour D+ / D−.</td></tr>
+    <tr><td class="k">Contrôleur</td><td>Îlot rigide 20 × 9 × 1,2 mm en (0 ; −58), au-dessus du module de stockage : hub USB 2.0 à 4 ports (exemple : Microchip USB2514B), 4 interrupteurs de puissance limités à 500 mA, 4 comparateurs de détection, régulateur 3,3 V, quartz 24 MHz, protections ESD.</td></tr>
+    <tr><td class="k">Vers la carte</td><td>J10 : 4 contacts à ressort en (−6 ; 36). VCX, D+, D−, masse.</td></tr>
+  </table></div>
+
+  <h3>Brochage d'un connecteur</h3>
+  <p>Plages numérotées du bord du téléphone vers le centre. Les connecteurs de gauche et de droite sont donc symétriques : un accessoire posé sur deux connecteurs voit le même brochage des deux côtés.</p>
+  <div class="tw"><table>
+    <tr><th class="m">Plage</th><th>Signal</th><th>Rôle</th><th>Limites</th></tr>
+    <tr><td class="m">1 (bord)</td><td class="m">GND</td><td>Masse, blindage</td><td>—</td></tr>
+    <tr><td class="m">2</td><td class="m">D−</td><td>USB 2.0 données −</td><td class="m">480 Mb/s, ESD ± 15 kV air</td></tr>
+    <tr><td class="m">3</td><td class="m">D+</td><td>USB 2.0 données +</td><td class="m">480 Mb/s</td></tr>
+    <tr><td class="m">4 (centre)</td><td class="m">VCX</td><td>5 V vers l'accessoire, ou entrée d'énergie depuis un accessoire batterie</td><td class="m">5,0 V ± 5 %, 500 mA par port, 1,5 A au total</td></tr>
+  </table></div>
+
+  <h3>Comment un accessoire est reconnu</h3>
+  <ol class="plain">
+    <li>Au repos, chaque plage VCX reçoit une sonde de 3,3 V à travers 100 kΩ. Rien d'autre n'est alimenté.</li>
+    <li>Un accessoire Vertane présente une résistance d'identification de 47 kΩ ± 1 % entre VCX et GND tant qu'il n'est pas alimenté. La tension de sonde tombe à 1,05 V.</li>
+    <li>Le comparateur du port vérifie que la tension reste entre 0,95 et 1,15 V pendant 50 ms. Un court-circuit, un trombone ou de l'eau donnent une autre valeur : le port reste coupé.</li>
+    <li>Le port passe à 5 V, limité à 500 mA. L'accessoire démarre et s'annonce en USB.</li>
+    <li>Sans annonce USB après 2 s, le téléphone recoupe le port et réessaie 30 s plus tard.</li>
+    <li>Un accessoire batterie peut ensuite, après accord en USB, fournir 5 V / 1,5 A (7,5 W) au téléphone par VCX.</li>
+  </ol>
+
+  <details><summary>Cahier des charges pour concevoir un accessoire <span class="s">géométrie, contacts, aimants</span></summary><div class="in">
+    <ul class="plain">
+      <li>Contacts côté accessoire : pointes à ressort Ø 1,0 mm, bout arrondi r 0,5, course 0,5 mm, force 0,5 N en position de travail, or dur ≥ 0,76 µm. La pointe de masse dépasse de 0,2 mm.</li>
+      <li>Positions : centres des plages à (±22,5 ± 1,79 ; …) et (±22,5 ± 5,37 ; …), tolérance de pose ± 0,3 mm grâce aux aimants.</li>
+      <li>Aimants côté accessoire : N côté bord du téléphone, S côté centre, en face des aimants du téléphone.</li>
+      <li>Maintien principal : un accessoire qui couvre le centre du dos peut aussi s'appuyer sur l'anneau magnétique Qi2 (≈ 10 N), bien plus fort que les aimants Connect (≈ 1 N par paire).</li>
+      <li>Épaisseur libre sous l'accessoire : 1,0 mm au plateau photo (y 48,5 à 72,5) ; l'accessoire doit contourner le plateau.</li>
+      <li>Électronique : résistance de 47 kΩ ± 1 % entre VCX et GND, alimentation interne bloquée sous 4,0 V, périphérique USB 2.0 conforme.</li>
+    </ul></div></details>
+</section>
+
+<!-- ============================================================ QI -->
+<section class="ch" id="qi">
+  <p class="eyebrow"><span class="n">23</span>Recharge sans fil et NFC · M1-QI-Q15</p>
+  <h2>Qi2 15 W, logé dans la coque</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Une bobine de 16 spires et un anneau de 16 aimants, centrés en (0 ; −11), clipsés dans le support de coque.</li>
+    <li>La boucle NFC fait le tour de la bobine, dans le même circuit.</li>
+    <li>Reliés à la carte par J6 : 2 contacts pour la bobine, 2 pour le NFC. Le récepteur Qi2 (U24) est sur la carte.</li>
+  </ul></div>
+  <div class="tw"><table>
+    <tr><td class="k">Bobine</td><td>Fil de Litz, 16 spires, Ø intérieur 12 mm, Ø extérieur 38 mm, 8 µH ; ferrite nanocristalline Ø 41 × 0,1 mm dessous.</td></tr>
+    <tr><td class="k">Aimants</td><td>Anneau de 16 segments N52 : Ø 47 à 54 mm, 0,4 mm, conforme au profil magnétique MPP de Qi2 (cotes finales selon la spécification WPC) ; aimant d'orientation 3 × 7 mm en (0 ; −42,5) ; 3 pattes de maintien en acier à 29 mm du centre.</td></tr>
+    <tr><td class="k">NFC</td><td>Boucle de 4 spires en cuivre gravé entre Ø 40 et Ø 45 mm, 1,2 µH ; contrôleur NFC U17 sur la carte, avec paiement sans contact.</td></tr>
+    <tr><td class="k">Récepteur</td><td>U24, récepteur Qi2 MPP 15 W, redressement synchrone, communication par modulation de charge.</td></tr>
+    <tr><td class="k">Liaison</td><td>J6 en (14,75 ; 31,5) : 4 contacts à ressort Ø 0,9, au pas de 3,5 mm, 2 A. Circuit souple de 3 mm entre la bobine et J6.</td></tr>
+  </table></div>
+  <div class="note"><strong>Compatibilité.</strong> La coque en verre laisse passer le champ. Une coque en aluminium bloquerait la recharge : la référence -CX n'existe en recharge Qi2 qu'avec les coques verre et plastique.</div>
+</section>
+
+<!-- ============================================================ THERMIQUE -->
+<section class="ch" id="thermique">
+  <p class="eyebrow"><span class="n">24</span>Thermique</p>
+  <h2>Où part la chaleur</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Le processeur chauffe vers le dos : capot, pad thermique, graphite de la coque, puis verre. Et vers l'avant : carte, plaque du cadre, graphite de l'écran.</li>
+    <li>Le connecteur Connect haut droit est posé juste au-dessus du processeur. Le pad thermique est échancré pour lui laisser la place, et un isolant protège ses plages.</li>
+    <li>Objectif : 43 °C au plus sur le verre et sur les plages Connect, en usage continu à 4,5 W.</li>
+  </ul></div>
+  <div class="sheet"><div class="bar"><span class="ttl">Zone du processeur</span><span class="meta">vu de dos · pad thermique et connecteur haut droit</span></div><div class="draw" id="dw-therm"></div></div>
+  <div class="tw"><table>
+    <tr><th>Élément</th><th>Matière</th><th>Cotes</th></tr>
+    <tr><td class="k">Pâte thermique puce → capot</td><td>Pâte à 8 W/m·K</td><td class="m">0,1 mm</td></tr>
+    <tr><td class="k">Capot du SoC</td><td>Maillechort 0,15 mm, soudé sur un cadre de blindage</td><td class="m">25 × 17 × 1,1</td></tr>
+    <tr><td class="k">Pad thermique</td><td>Silicone chargé, 6 W/m·K, dureté 40 Shore 00</td><td class="m">20 × 12 × 4,3 libre, comprimé à 4,15 ; échancrure 14,2 × 6,0</td></tr>
+    <tr><td class="k">Isolant</td><td>Aérogel 0,02 W/m·K, sous la platine du connecteur</td><td class="m">18 × 6 × 0,3</td></tr>
+    <tr><td class="k">Graphite de coque</td><td>Graphite synthétique 0,07 mm</td><td class="m">contour autour du connecteur</td></tr>
+    <tr><td class="k">Face écran</td><td>Pad 3 W/m·K entre la carte et la plaque du cadre, sous le SoC</td><td class="m">22 × 15 × 0,3</td></tr>
+  </table></div>
+  <div class="note"><strong>À valider par simulation et mesure.</strong> L'échancrure retire 35 % de la surface du pad (240 → 155 mm²). Si la température dépasse l'objectif : ajouter une feuille de cuivre de 0,1 mm sur le capot pour étaler la chaleur, ou réduire la puissance continue du SoC de 0,5 W.</div>
+</section>
+
+<!-- ============================================================ FIXATIONS -->
+<section class="ch" id="fixations">
+  <p class="eyebrow"><span class="n">25</span>Vis, clips et outils</p>
+  <h2>Un seul tournevis</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>13 vis M1,4 en acier inoxydable, toutes à empreinte Torx T5, serrées à 0,08 N·m.</li>
+    <li>Les vis des modules sont imperdables : elles restent dans le module quand on le retire.</li>
+    <li>Tout le reste tient par des clips, des crochets, un loquet et la pression de la coque.</li>
+  </ul></div>
+  <div class="tw"><table>
+    <tr><th>Repère</th><th>Nombre</th><th>Vis</th><th>Position (x ; y)</th><th>Tient</th><th>Dans</th></tr>
+    <tr><td class="m">V1–V4</td><td class="m r">4</td><td class="m">M1,4 × 2,5</td><td class="m">(±29 ; ±66)</td><td>Carte mère</td><td>Inserts du cadre</td></tr>
+    <tr><td class="m">V5–V6</td><td class="m r">2</td><td class="m">M1,4 × 2,0</td><td class="m">(±11,5 ; −68)</td><td>Interposeur J1 (écran)</td><td>Raidisseur taraudé de la nappe d'écran, à travers la carte</td></tr>
+    <tr><td class="m">V7–V8</td><td class="m r">2</td><td class="m">M1,4 × 2,0</td><td class="m">(−18 ; 65,5), (5 ; 65,5)</td><td>Interposeur J11</td><td>Idem, nappe du haut</td></tr>
+    <tr><td class="m">V9–V10</td><td class="m r">2</td><td class="m">M1,4 × 3,5, imperdables</td><td class="m">(−24,5 ; 53), (−6,5 ; 53)</td><td>Module photo</td><td>Inserts du cadre, à travers la carte</td></tr>
+    <tr><td class="m">V11</td><td class="m r">1</td><td class="m">M1,4 × 2,5, imperdable</td><td class="m">(0 ; −55,5)</td><td>Stockage</td><td>Écrou CMS de la carte</td></tr>
+    <tr><td class="m">V12–V13</td><td class="m r">2</td><td class="m">M1,4 × 2,5</td><td class="m">(±8 ; −69,5)</td><td>Module USB-C</td><td>Inserts du cadre, à travers la carte</td></tr>
+  </table></div>
+  <p>Vis : acier inoxydable A2, tête cylindrique basse Ø 2,4 × 0,6 mm, noire, avec frein filet sec de nylon (réutilisable 10 fois). Pas de colle frein-filet.</p>
+  <h3>Clips et maintiens sans vis</h3>
+  <div class="tw"><table>
+    <tr><th>Pièce</th><th>Maintien</th></tr>
+    <tr><td class="k">Bloc écran</td><td>6 clips acier dans le cadre</td></tr>
+    <tr><td class="k">Cache</td><td>6 pattes dans la carte</td></tr>
+    <tr><td class="k">Batterie</td><td>2 pions de centrage, mousse de coque</td></tr>
+    <tr><td class="k">Haut-parleurs</td><td>Logements du cadre, mousse de coque</td></tr>
+    <tr><td class="k">Coque</td><td>6 crochets latéraux + loquet</td></tr>
+    <tr><td class="k">Bobine Qi2, NFC, Connect</td><td>Clipsés dans le support de coque (usine)</td></tr>
+  </table></div>
+  <h3>Outils</h3>
+  <ul class="plain">
+    <li>Tournevis Torx T5, limiteur de couple 0,08 N·m (atelier) ; un tournevis simple suffit pour l'utilisateur.</li>
+    <li>Spatule plastique (écran uniquement).</li>
+    <li>Bracelet antistatique pour toute intervention sur la carte.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ ASSEMBLAGE -->
+<section class="ch" id="assemblage">
+  <p class="eyebrow"><span class="n">26</span>Assemblage</p>
+  <h2>L'ordre de montage en usine</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>On monte de l'avant vers l'arrière, cadre posé écran vers le bas sur un gabarit.</li>
+    <li>12 étapes, environ 9 minutes par téléphone à la main, 4 minutes sur une ligne équipée.</li>
+    <li>Chaque étape se termine par un contrôle. Le téléphone démarre à l'étape 11.</li>
+  </ul></div>
+  <p>Avant la ligne : cartes mères brasées et testées, bloc écran, module photo et coque livrés en sous-ensembles testés par leurs fabricants.</p>
+  <ol class="steps">
+    <li><div><p><strong>Préparer le cadre.</strong> Poser les 3 boutons avec leurs joints toriques, passer la nappe du lecteur d'empreinte dans sa fente, coller les membranes acoustiques sur les 14 trous (côté intérieur), poser les 2 joints de haut-parleurs.</p><p class="ctl"><b>Contrôle :</b> course des boutons, membranes centrées sur les trous, inserts taraudés propres.</p></div></li>
+    <li><div><p><strong>Clipser le bloc écran.</strong> Cadre retourné, engager le haut du bloc, puis appuyer sur les 6 clips. Les blocs-connecteurs J1 et J11 tombent dans les fenêtres de la plaque.</p><p class="ctl"><b>Contrôle :</b> affleurement verre / cadre ≤ 0,05 mm sur tout le tour ; aucune poussière sous le verre.</p></div></li>
+    <li><div><p><strong>Poser la carte mère.</strong> Cadre retourné écran vers le bas. Présenter la carte sur ses 4 bossages ; les interposeurs J1 et J11 se trouvent sous les plages de la face écran. Visser V1 à V4, puis V5 à V8 en croix.</p><p class="ctl"><b>Contrôle :</b> couple 0,08 N·m ; carte à plat (jeu ≤ 0,05 mm) ; clips d'antenne en appui sur le cadre.</p></div></li>
+    <li><div><p><strong>Brancher le lecteur d'empreinte</strong> sur J12 et fermer sa bride.</p></div></li>
+    <li><div><p><strong>Clipser le cache</strong> haut, puis le cache bas.</p><p class="ctl"><b>Contrôle :</b> les 6 pattes engagées ; aucune découpe ne touche un composant.</p></div></li>
+    <li><div><p><strong>Visser le module USB-C</strong> (V12, V13). Son interposeur tombe sur J9.</p></div></li>
+    <li><div><p><strong>Poser le module photo</strong> sur ses deux vis imperdables, visser V9 et V10.</p><p class="ctl"><b>Contrôle :</b> plateau parallèle au cadre, joint en place, film de protection du plateau présent.</p></div></li>
+    <li><div><p><strong>Poser les haut-parleurs</strong> A et B dans leurs logements, sortie vers les grilles.</p></div></li>
+    <li><div><p><strong>Poser le stockage</strong> et visser V11.</p></div></li>
+    <li><div><p><strong>Poser la batterie</strong> sur ses deux pions, languette rabattue vers le haut.</p></div></li>
+    <li><div><p><strong>Fermer la coque.</strong> Présenter la coque par le haut, engager les 6 crochets, rabattre, pousser le loquet. Le téléphone détecte la coque (U21) et démarre.</p><p class="ctl"><b>Contrôle :</b> jeu coque / cadre ≤ 0,1 mm ; loquet verrouillé ; le téléphone démarre sur l'écran de test.</p></div></li>
+    <li><div><p><strong>Tester et flasher</strong> : voir Contrôles et essais, poste « téléphone complet ».</p></div></li>
+  </ol>
+</section>
+
+<!-- ============================================================ REPARATION -->
+<section class="ch" id="reparation">
+  <p class="eyebrow"><span class="n">27</span>Démontage et réparation</p>
+  <h2>Qui peut changer quoi</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>Coque, batterie, stockage et haut-parleurs se changent sans outil, en moins d'une minute.</li>
+    <li>Module photo et port USB-C : un tournevis T5.</li>
+    <li>L'écran se change aussi au tournevis, après avoir retiré le module photo et les haut-parleurs.</li>
+  </ul></div>
+  <div class="tw"><table>
+    <tr><th>Pièce à changer</th><th>Étapes</th><th>Outil</th><th>Temps</th></tr>
+    <tr><td class="k">Coque</td><td>Pousser le loquet, soulever par le bas.</td><td>—</td><td class="m">10 s</td></tr>
+    <tr><td class="k">Batterie</td><td>Coque, puis tirer la languette.</td><td>—</td><td class="m">20 s</td></tr>
+    <tr><td class="k">Stockage</td><td>Coque, dévisser V11 (imperdable), soulever.</td><td>T5</td><td class="m">40 s</td></tr>
+    <tr><td class="k">Haut-parleurs</td><td>Coque, soulever le module.</td><td>—</td><td class="m">40 s</td></tr>
+    <tr><td class="k">Carte SIM</td><td>Coque, ouvrir le support à charnière.</td><td>—</td><td class="m">30 s</td></tr>
+    <tr><td class="k">Module photo</td><td>Coque, dévisser V9 et V10, soulever.</td><td>T5</td><td class="m">1 min</td></tr>
+    <tr><td class="k">Port USB-C</td><td>Coque, haut-parleurs, dévisser V12 et V13.</td><td>T5</td><td class="m">2 min</td></tr>
+    <tr><td class="k">Bloc écran</td><td>Coque, batterie, haut-parleurs, module photo ; dévisser V5 à V8 ; pousser les clips par les fenêtres latérales, sortir l'écran par l'avant.</td><td>T5, spatule</td><td class="m">5 min</td></tr>
+    <tr><td class="k">Carte mère</td><td>Tous les modules, cache, V1 à V8, nappe d'empreinte.</td><td>T5</td><td class="m">8 min</td></tr>
+  </table></div>
+  <div class="info"><strong>Retirer la coque, téléphone allumé,</strong> ne pose pas de problème : il détecte l'ouverture et met le stockage et le dos Connect en sécurité. Pour changer la batterie, l'éteindre d'abord.</div>
+</section>
+
+<!-- ============================================================ ESSAIS -->
+<section class="ch" id="essais">
+  <p class="eyebrow"><span class="n">28</span>Contrôles et essais</p>
+  <h2>De la carte nue au téléphone fini</h2>
+  <div class="brief"><b>En bref</b><ul>
+    <li>En production : chaque carte et chaque téléphone passent tous les postes ci-dessous.</li>
+    <li>En qualification : un échantillon passe les essais de robustesse avant la série, puis à chaque changement de fournisseur.</li>
+  </ul></div>
+  <h3>En production (100 %)</h3>
+  <div class="tw"><table>
+    <tr><th>Poste</th><th>Ce qui est vérifié</th><th>Critère</th></tr>
+    <tr><td class="k">Carte nue</td><td>Continuité et isolement (test électrique), impédances sur coupons</td><td>100 % des réseaux ; ± 10 %</td></tr>
+    <tr><td class="k">Après brasage</td><td>Inspection optique 3D, rayons X sous le SoC, la mémoire et l'UFS</td><td>Vides &lt; 25 % ; pas de pont</td></tr>
+    <tr><td class="k">Carte équipée</td><td>Test par sondes mobiles, JTAG, programmation des PMIC, démarrage sur banc</td><td>Rails dans ± 3 % ; démarrage &lt; 20 s</td></tr>
+    <tr><td class="k">Radio (conduit)</td><td>Étalonnage de chaque bande : puissance, sensibilité</td><td>Selon la plateforme</td></tr>
+    <tr><td class="k">Téléphone complet</td><td>Écran (pixels, tactile), caméras (mire), audio (boucle HP → micros), capteurs, boutons, empreinte, charge USB et Qi2, NFC, Wi-Fi, Bluetooth, GNSS, 5G en chambre</td><td>Tous les tests passés</td></tr>
+    <tr><td class="k">Dos Connect</td><td>Accessoire de test posé sur les 4 connecteurs : identification, 5 V sous 500 mA, liaison USB en boucle, entrée d'énergie</td><td>4 ports OK ; aucune tension à vide</td></tr>
+    <tr><td class="k">Étanchéité</td><td>Test de fuite à l'air, coque fermée</td><td>Selon l'étalon IP54</td></tr>
+    <tr><td class="k">Final</td><td>Aspect, affleurements, masse, numéro de série</td><td>210 ± 3 g</td></tr>
+  </table></div>
+  <h3>Qualification (échantillons)</h3>
+  <div class="tw"><table>
+    <tr><th>Essai</th><th>Condition</th><th>Critère</th></tr>
+    <tr><td class="k">Chutes</td><td>1,5 m sur béton, 26 chutes (faces, arêtes, coins), coque fermée</td><td>Fonctionne ; coque et écran intacts sur les faces</td></tr>
+    <tr><td class="k">Chutes répétées</td><td>1 m en tambour, 100 cycles</td><td>Fonctionne</td></tr>
+    <tr><td class="k">Poussière et eau</td><td>IEC 60529, IP54</td><td>Aucune entrée d'eau nuisible</td></tr>
+    <tr><td class="k">Coque</td><td>1 000 ouvertures / fermetures</td><td>Loquet et crochets intacts ; contacts &lt; 50 mΩ</td></tr>
+    <tr><td class="k">Contacts de modules</td><td>500 poses de batterie, de stockage, de haut-parleurs</td><td>Résistance &lt; 30 mΩ par contact</td></tr>
+    <tr><td class="k">Dos Connect</td><td>10 000 poses d'accessoire ; brouillard salin 48 h ; sueur artificielle 24 h</td><td>Plages sans corrosion ; &lt; 50 mΩ</td></tr>
+    <tr><td class="k">Décharges électrostatiques</td><td>IEC 61000-4-2 : ± 8 kV contact, ± 15 kV air, sur plages Connect, port, boutons</td><td>Aucun dommage, reprise automatique</td></tr>
+    <tr><td class="k">USB-C</td><td>10 000 insertions ; effort latéral 20 N</td><td>Fonctionne ; carte non contrainte</td></tr>
+    <tr><td class="k">Boutons</td><td>200 000 appuis</td><td>Course et force dans ± 20 %</td></tr>
+    <tr><td class="k">Torsion et flexion</td><td>3 points, 250 N au centre</td><td>Pas de déformation permanente</td></tr>
+    <tr><td class="k">Thermique</td><td>Charge 4,5 W, 25 °C ambiant, 30 min</td><td>≤ 43 °C sur le verre et les plages Connect</td></tr>
+    <tr><td class="k">Batterie</td><td>Cyclage 800 cycles</td><td>≥ 80 % de capacité</td></tr>
+    <tr><td class="k">Climatique</td><td>−20 / +60 °C stockage ; 85 °C 85 % HR, 168 h</td><td>Fonctionne</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ NORMES -->
+<section class="ch" id="normes">
+  <p class="eyebrow"><span class="n">29</span>Conformité</p>
+  <h2>Pour vendre en Europe</h2>
+  <div class="tw"><table>
+    <tr><th>Texte</th><th>Objet</th><th>Point du téléphone concerné</th></tr>
+    <tr><td class="k">Directive RED 2014/53/UE</td><td>Équipements radio : sécurité, CEM, spectre</td><td>Toutes les radios ; EN 62368-1, EN 301 489, EN 301 908, EN 300 328, EN 301 893, EN 303 413, EN 300 330</td></tr>
+    <tr><td class="k">DAS</td><td>Exposition aux ondes</td><td>EN 50360, EN 62209-1528 ; à mesurer tête, corps et membres</td></tr>
+    <tr><td class="k">Chargeur universel (2022/2380)</td><td>USB-C et USB PD obligatoires</td><td>Conforme : USB-C, USB PD</td></tr>
+    <tr><td class="k">Règlement batteries 2023/1542</td><td>Batterie amovible par l'utilisateur (à partir de 2027), marquage, passeport</td><td>Conforme : sans outil</td></tr>
+    <tr><td class="k">Écoconception 2023/1670</td><td>Pièces détachées 7 ans, réparabilité, 800 cycles, chutes, IP54, mises à jour</td><td>Conçu pour : modules, essais ci-dessus</td></tr>
+    <tr><td class="k">Étiquette énergie 2023/1669</td><td>Classe énergétique et indice de réparabilité</td><td>À mesurer</td></tr>
+    <tr><td class="k">RoHS 2011/65/UE, REACH</td><td>Substances</td><td>Déclarations fournisseurs pour chaque pièce</td></tr>
+    <tr><td class="k">DEEE 2012/19/UE</td><td>Collecte et recyclage</td><td>Marquage, filière</td></tr>
+    <tr><td class="k">Qi2 (WPC)</td><td>Certification de la recharge sans fil</td><td>Coque + U24</td></tr>
+    <tr><td class="k">USB-IF</td><td>Logo USB (facultatif)</td><td>Port USB-C</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ BOM -->
+<section class="ch" id="bom">
+  <p class="eyebrow"><span class="n">30</span>Nomenclature complète</p>
+  <h2>Toutes les pièces du téléphone</h2>
+  <p>Une ligne par pièce achetée ou fabriquée. Les pièces des sous-ensembles (écran, module photo, coque) sont listées pour que leur fabricant sache quoi fournir.</p>
+  <div class="tw"><table id="tbl-bom"></table></div>
+</section>
+
+<!-- ============================================================ ECARTS -->
+<section class="ch" id="ecarts">
+  <p class="eyebrow"><span class="n">31</span>Écarts avec la maquette 3D</p>
+  <h2>Ce qui change pour que ce soit fabricable</h2>
+  <p>La maquette 3D du configurateur montre l'architecture. En passant au dossier de fabrication, ces points ont été précisés ou corrigés. Ils sont marqués en orange dans les plans.</p>
+  <div class="tw"><table>
+    <tr><th>Sujet</th><th>Maquette 3D</th><th>Dossier</th><th>Pourquoi</th></tr>
+    <tr><td class="k">Liaisons rapides</td><td>Quelques plots dorés (6 à 24)</td><td>Interposeurs à compression de 20 à 40 contacts</td><td>Écran, caméra, stockage et USB demandent plus de signaux et une impédance maîtrisée.</td></tr>
+    <tr><td class="k">Module de stockage</td><td class="m">37 × 10 × 1,6</td><td class="m">37 × 12,5 × 1,8</td><td>Loger un SSD en boîtier BGA de 11,5 × 13 mm.</td></tr>
+    <tr><td class="k">Grilles de haut-parleurs</td><td>7 trous par côté, jusqu'à x = 24,2</td><td>6 trous, jusqu'à x = 22,0</td><td>Le 7e trou tombait sur la coupure d'antenne à x = 24.</td></tr>
+    <tr><td class="k">Contrôleur Connect</td><td>—</td><td>Îlot rigide dans la coque en (0 ; −58)</td><td>Partager un port USB entre 4 connecteurs et couper les plages à vide.</td></tr>
+    <tr><td class="k">Pad thermique</td><td>Plein, 20 × 12</td><td>Échancré + isolant</td><td>Il touchait la platine du connecteur Connect haut droit.</td></tr>
+    <tr><td class="k">SIM</td><td>—</td><td>Support nano-SIM sous la coque, J3</td><td>Un téléphone vendu en Europe a besoin d'une SIM physique ; la coque amovible évite un tiroir.</td></tr>
+    <tr><td class="k">Stockage système</td><td>Intégré à la carte</td><td>UFS 4.0 U3, face dos, en (−4,5 ; 44)</td><td>Placement court vers le SoC.</td></tr>
+    <tr><td class="k">Empreinte digitale</td><td>—</td><td>Dans le bouton d'alimentation, J12</td><td>Pas de place pour un lecteur sous l'écran.</td></tr>
+    <tr><td class="k">Liaison haut du bloc écran</td><td>Nappes seules</td><td>Interposeur J11 + 2 vis</td><td>Caméra avant, écouteur et capteurs doivent rejoindre la carte.</td></tr>
+    <tr><td class="k">Micro du bas</td><td>Trou seul</td><td>Porté par la carte du module USB (20 mm de large)</td><td>Le trou (x = 8) est à côté de la prise.</td></tr>
+    <tr><td class="k">Fixations</td><td>Pions de centrage</td><td>13 vis Torx T5</td><td>Tenir la pression des interposeurs et les efforts du câble USB.</td></tr>
+    <tr><td class="k">Cache de carte mère</td><td>Découpes de la maquette</td><td>+ SIM, UFS, J12, vis J11 ; découpe stockage agrandie</td><td>Suite aux ajouts ci-dessus.</td></tr>
+  </table></div>
+</section>
+
+<!-- ============================================================ RESTE -->
+<section class="ch" id="reste">
+  <p class="eyebrow"><span class="n">32</span>Avant la série</p>
+  <h2>Ce que ce dossier ne suffit pas à faire</h2>
+  <p>Avec ce dossier, un bureau d'études et un assembleur savent quoi construire et comment. Pour arriver à un téléphone vendable, il reste des étapes qui demandent des partenaires, des mesures ou des outillages.</p>
+  <ol class="steps">
+    <li><div><p><strong>Accord avec le fondeur du SoC.</strong> Sans lui, pas de brochage, pas de schéma de référence, pas de logiciel radio. C'est la première démarche.</p></div></li>
+    <li><div><p><strong>Schéma électrique complet et routage de la carte</strong> à partir du schéma de référence, dans le contour de 64 × 140 mm défini ici. Compter 3 révisions de carte (EVT, DVT, PVT).</p></div></li>
+    <li><div><p><strong>Modèle 3D mécanique de production</strong> (STEP) avec toutes les dépouilles, rayons et jeux, à partir des cotes de ce dossier. La maquette du configurateur n'est pas un fichier de fabrication.</p></div></li>
+    <li><div><p><strong>Accord des antennes et essais radio</strong> dans une chambre anéchoïque, sur prototypes.</p></div></li>
+    <li><div><p><strong>Simulation et mesure thermiques</strong>, en particulier sous le connecteur Connect haut droit.</p></div></li>
+    <li><div><p><strong>Sous-traitants</strong> : bloc écran (fabricant de dalles OLED), module photo (intégrateur caméra), batterie (fabricant de cellules certifié), cadre (usinage et anodisation), coque (verrier + injecteur), carte (fabricant HDI + assembleur).</p></div></li>
+    <li><div><p><strong>Logiciel</strong> : portage de Vertane OS sur la plateforme, pilotes des modules, gestion du dos Connect, mise à jour pendant au moins 5 ans.</p></div></li>
+    <li><div><p><strong>Certifications</strong> : RED, DAS, Qi2, opérateurs, puis étiquette énergie.</p></div></li>
+  </ol>
+</section>
+
+<!-- ============================================================ LEXIQUE -->
+<section class="ch" id="lexique">
+  <p class="eyebrow"><span class="n">33</span>Lexique</p>
+  <h2>Les mots du dossier</h2>
+  <div class="tw"><table>
+    <tr><td class="k">BGA</td><td>Boîtier de puce dont les connexions sont des billes de soudure sous la puce.</td></tr>
+    <tr><td class="k">Contact à ressort (pogo)</td><td>Petite pointe montée sur ressort qui appuie sur une plage dorée. Permet de poser et retirer un module sans connecteur à clipser.</td></tr>
+    <tr><td class="k">CSI, DSI</td><td>Liaisons MIPI entre le processeur et les caméras (CSI) ou l'écran (DSI).</td></tr>
+    <tr><td class="k">HDI any-layer</td><td>Circuit imprimé à micro-vias laser empilés, qui peuvent relier n'importe quelles couches.</td></tr>
+    <tr><td class="k">Interposeur à compression</td><td>Petite pièce isolante garnie de contacts en forme de C. Serrée entre deux cartes, elle les relie sans soudure, même pour des signaux de plusieurs Gb/s.</td></tr>
+    <tr><td class="k">LPDDR5X</td><td>Mémoire vive basse consommation des téléphones.</td></tr>
+    <tr><td class="k">LTPO</td><td>Technologie d'écran OLED qui peut descendre à 1 image par seconde pour économiser l'énergie.</td></tr>
+    <tr><td class="k">NVMe, PCIe</td><td>Protocole et liaison des SSD.</td></tr>
+    <tr><td class="k">PMIC</td><td>Circuit de gestion de l'alimentation : il fabrique toutes les tensions de la carte.</td></tr>
+    <tr><td class="k">PoP</td><td>« Package on package » : la mémoire est soudée par-dessus le processeur.</td></tr>
+    <tr><td class="k">SoC</td><td>« Système sur puce » : processeur, graphisme, IA, photo et modem dans une même puce.</td></tr>
+    <tr><td class="k">UFS</td><td>Mémoire de stockage soudée des téléphones.</td></tr>
+    <tr><td class="k">USB PD</td><td>Norme de charge rapide par USB-C : le chargeur et le téléphone s'accordent sur la tension.</td></tr>
+    <tr><td class="k">VCX</td><td>Le 5 V du dos Connect.</td></tr>
+  </table></div>
+  <p class="endnote">Vertane M1 · dossier de fabrication, révision A du 29 septembre 2026. Établi à partir de la maquette 3D du configurateur M1 (cotes de la coque, du plateau, de la carte et des modules) et des données produit de la gamme. Les masses et l'autonomie sont celles du calcul du configurateur.</p>
+</section>
+</main>
+</div>
+<div class="tip" id="tip" role="tooltip"></div>
+<script>
+/* ================================================================
+   Outils de dessin : tout est en millimètres, Y vers le haut (repère vu de dos).
+   ================================================================ */
+(function(){
+"use strict";
+const fx=n=>+(+n).toFixed(3);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+let uid=0;
+function Dw(o){this.o=Object.assign({k:3},o);this.p=[];this.id='d'+(++uid);}
+const P=Dw.prototype;
+P.X=function(x){return fx(x);};P.Y=function(y){return fx(-y);};
+P.add=function(s){this.p.push(s);return this;};
+P.at=function(a){return a?' '+a:'';};
+P.rr=function(cx,cy,w,h,r,c,a){return this.add(`<rect x="${fx(cx-w/2)}" y="${fx(-(cy+h/2))}" width="${fx(w)}" height="${fx(h)}" rx="${fx(Math.min(r||0,w/2,h/2))}" class="${c}"${this.at(a)}/>`);};
+P.box=function(x0,y0,x1,y1,c,a){return this.rr((x0+x1)/2,(y0+y1)/2,Math.abs(x1-x0),Math.abs(y1-y0),0,c,a);};
+P.ci=function(cx,cy,d,c,a){return this.add(`<circle cx="${fx(cx)}" cy="${fx(-cy)}" r="${fx(d/2)}" class="${c}"${this.at(a)}/>`);};
+P.ln=function(x1,y1,x2,y2,c,a){return this.add(`<line x1="${fx(x1)}" y1="${fx(-y1)}" x2="${fx(x2)}" y2="${fx(-y2)}" class="${c}"${this.at(a)}/>`);};
+P.pl=function(pts,c,close,a){const d=pts.map(p=>fx(p[0])+','+fx(-p[1])).join(' ');return this.add(close?`<polygon points="${d}" class="${c}"${this.at(a)}/>`:`<polyline points="${d}" class="${c}"${this.at(a)}/>`);};
+P.path=function(d,c,a){return this.add(`<path d="${d}" class="${c}"${this.at(a)}/>`);};
+/* texte : s = taille relative à k, a = ancrage, c = classe, r = rotation, v = 'm' pour centrer verticalement */
+P.tx=function(x,y,t,o){o=o||{};const k=this.o.k,s=(o.s||1)*k,dy=o.v==='m'?s*0.35:0;
+  const tr=o.r?` transform="rotate(${o.r} ${fx(x)} ${fx(-y)})"`:'';
+  const w=o.w?` font-weight="${o.w}"`:'',fam=o.f==='m'?' font-family="var(--mono)"':o.f==='d'?' font-family="var(--display)"':'';
+  const ls=o.ls?` letter-spacing="${o.ls}"`:'';
+  return this.add(`<text x="${fx(x)}" y="${fx(-y+dy)}" font-size="${fx(s)}" text-anchor="${o.a||'start'}" class="${o.c||''}"${w}${fam}${ls}${tr}>${esc(t)}</text>`);};
+/* cote horizontale entre x1 et x2, ligne à yl ; e1/e2 : y d'où partent les lignes d'attache */
+P.dimH=function(x1,x2,yl,t,o){o=o||{};const k=this.o.k,g=0.6*k*0.5,e1=o.e1!=null?o.e1:yl,e2=o.e2!=null?o.e2:e1;
+  const s1=Math.sign(yl-e1)||1,s2=Math.sign(yl-e2)||1;
+  if(Math.abs(yl-e1)>0.01)this.ln(x1,e1+s1*g,x1,yl+s1*g*1.4,'d');
+  if(Math.abs(yl-e2)>0.01)this.ln(x2,e2+s2*g,x2,yl+s2*g*1.4,'d');
+  this.add(`<line x1="${fx(x1)}" y1="${fx(-yl)}" x2="${fx(x2)}" y2="${fx(-yl)}" class="d" marker-start="url(#ar${this.id})" marker-end="url(#ar${this.id})"/>`);
+  const up=o.below?-1:1;
+  return this.tx(o.tx!=null?o.tx:(x1+x2)/2,yl+up*(0.35*k)+(o.below?-0.75*k:0),t,{a:'middle',c:'dt',s:.9});};
+/* cote verticale entre y1 et y2, ligne à xl ; e1/e2 : x d'où partent les lignes d'attache */
+P.dimV=function(y1,y2,xl,t,o){o=o||{};const k=this.o.k,g=0.6*k*0.5,e1=o.e1!=null?o.e1:xl,e2=o.e2!=null?o.e2:e1;
+  const s1=Math.sign(xl-e1)||1,s2=Math.sign(xl-e2)||1;
+  if(Math.abs(xl-e1)>0.01)this.ln(e1+s1*g,y1,xl+s1*g*1.4,y1,'d');
+  if(Math.abs(xl-e2)>0.01)this.ln(e2+s2*g,y2,xl+s2*g*1.4,y2,'d');
+  this.add(`<line x1="${fx(xl)}" y1="${fx(-y1)}" x2="${fx(xl)}" y2="${fx(-y2)}" class="d" marker-start="url(#ar${this.id})" marker-end="url(#ar${this.id})"/>`);
+  const side=o.right?1:-1,xx=xl+side*0.45*k+(o.right?0.55*k:0);
+  return this.tx(xx,o.ty!=null?o.ty:(y1+y2)/2,t,{a:'middle',c:'dt',s:.9,r:-90});};
+/* repère avec ligne d'attache : du point (px,py) au texte en (lx,ly) */
+P.call=function(px,py,lx,ly,t,o){o=o||{};const k=this.o.k,left=lx<px,a=left?'end':'start';
+  const kx=lx+(left?1:-1)*0.0;this.ci(px,py,0.32*k,'fill');
+  this.pl([[px,py],[kx+(left?1.2*k:-1.2*k),ly],[kx,ly]],'th');
+  this.tx(lx+(left?-0.5*k:0.5*k),ly,t,{a:a,v:'m',s:o.s||.95,c:o.c||'lt',w:o.w});
+  if(o.sub)this.tx(lx+(left?-0.5*k:0.5*k),ly-1.15*k*(o.s||.95),o.sub,{a:a,v:'m',s:.8,c:'lm'});
+  return this;};
+P.g=function(a){return this.add(`<g${this.at(a)}>`);};
+P.ge=function(){return this.add('</g>');};
+/* groupe interactif */
+P.cmp=function(id,tip,cls){return this.add(`<g class="cmp${cls?' '+cls:''}" data-id="${esc(id)}" data-tip="${esc(tip||'')}" tabindex="0" role="button" aria-label="${esc(tip||id)}">`);};
+P.svg=function(){const o=this.o,k=o.k,w=o.x1-o.x0,h=o.y1-o.y0;
+  const defs=`<defs><marker id="ar${this.id}" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="${fx(.62*k)}" markerHeight="${fx(.62*k)}" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1.2L10,5L0,8.8z" class="arrow"/></marker>
+  <pattern id="ht${this.id}" patternUnits="userSpaceOnUse" width="${fx(.55*k)}" height="${fx(.55*k)}" patternTransform="rotate(45)"><rect width="${fx(.55*k)}" height="${fx(.55*k)}" style="fill:var(--zone)"/><line x1="0" y1="0" x2="0" y2="${fx(.55*k)}" style="stroke:var(--hatch);stroke-width:${fx(.07*k)}"/></pattern></defs>`;
+  const body=this.p.join('').replace(/url\(#hatch\)/g,`url(#ht${this.id})`);
+  const mw=o.minw!=null?` style="min-width:${o.minw}px"`:'';
+  return `<svg class="dw" viewBox="${fx(o.x0)} ${fx(-o.y1)} ${fx(w)} ${fx(h)}" xmlns="http://www.w3.org/2000/svg"${mw} role="img" aria-label="${esc(o.label||'')}">${defs}${body}</svg>`;};
+P.mount=function(sel){const el=document.getElementById(sel);if(el)el.innerHTML=this.svg();return el;};
+/* hachures par classe : .h utilise fill:url(#hatch) remplacé à la volée */
+Dw.prototype.hatch=function(cx,cy,w,h,r,a){return this.rr(cx,cy,w,h,r,'h',`style="fill:url(#hatch)"${a?' '+a:''}`);};
+
+/* points d'un rectangle arrondi, dans le sens trigonométrique, départ en bas au milieu */
+function rrPts(cx,cy,w,h,r,n){n=n||8;const pts=[],hw=w/2,hh=h/2;r=Math.min(r,hw,hh);
+  const cs=[[hw-r,-hh+r,-Math.PI/2],[hw-r,hh-r,0],[-hw+r,hh-r,Math.PI/2],[-hw+r,-hh+r,Math.PI]];
+  cs.forEach(c=>{for(let i=0;i<=n;i++){const a=c[2]+i/n*Math.PI/2;pts.push([cx+c[0]+r*Math.cos(a),cy+c[1]+r*Math.sin(a)]);}});return pts;}
+function circPts(cx,cy,d,n){n=n||28;const p=[];for(let i=0;i<n;i++){const a=i/n*Math.PI*2;p.push([cx+d/2*Math.cos(a),cy+d/2*Math.sin(a)]);}return p;}
+window.VD={Dw,rrPts,circPts,esc,fx};
+})();
+</script>
+<script>
+/* ================================================================
+   Données du dossier : une seule source pour les plans et les tableaux.
+   Coordonnées en mm, repère vu de dos, origine au centre du téléphone.
+   ================================================================ */
+window.VDATA=(function(){
+"use strict";
+/* les 11 références */
+const MODS=[
+ {r:'M1-ECR-O120',n:'Bloc écran',d:'OLED LTPO 6,37″ 120 Hz, caméra avant 12 Mpx, écouteur',m:24,s:'ecran'},
+ {r:'M1-CAD-ALU-NOIR',n:'Cadre',d:'Aluminium recyclé, Noir sidéral, antennes, boutons',m:26,s:'cadre'},
+ {r:'M1-MB-P',n:'Carte mère Performance',d:'SoC 3 nm, 12 Go, 128 Go système, 12 connecteurs',m:36,s:'carte'},
+ {r:'M1-CAC-ALU-NOIR',n:'Cache de carte mère',d:'2 tôles alu anodisé 0,3 mm',m:3,s:'cache'},
+ {r:'M1-CAM-1S',n:'Module photo',d:'1 capteur 50 Mpx, flash 2 LED, 2 micros, sans LiDAR',m:12,s:'photo'},
+ {r:'M1-BAT-44',n:'Batterie',d:'4 400 mAh, 17,0 Wh, amovible sans outil',m:63,s:'batterie'},
+ {r:'M1-STO-256Go-STD',n:'Stockage',d:'SSD NVMe 256 Go TLC, PCIe 4.0 ×1',m:3,s:'stockage'},
+ {r:'M1-HP-STD',n:'Haut-parleurs ×2',d:'2 modules identiques, 1 W, boîte close',m:8,s:'audio'},
+ {r:'M1-USB-U32',n:'Port USB-C',d:'USB 3.2 Gen 2, DisplayPort, PD 45 W, micro du bas',m:3,s:'usb'},
+ {r:'M1-COQ-VERRE-NOIR-CX',n:'Coque dos Connect',d:'Verre dépoli, 4 connecteurs aimantés, contrôleur Connect',m:22,s:'coque'},
+ {r:'M1-QI-Q15',n:'Recharge sans fil',d:'Qi2 15 W + NFC, clipsée dans la coque',m:10,s:'qi'}];
+
+/* composants et repères de la carte mère ; face 'dos' (vers la coque) ou 'ecran' */
+const PARTS=[
+ /* face dos */
+ {id:'U1',f:'dos',k:'ic',x:17.5,y:42.5,w:25,h:17,t:'Processeur (SoC) + mémoire vive',z:'1,1 (capot)',d:'SoC 3 nm à 8 cœurs, GPU, NPU, ISP, modem 5G. 12 Go LPDDR5X empilés (PoP) ou à côté, sous un capot de blindage en maillechort.',ex:'MediaTek Dimensity 9400 + LPDDR5X 12 Go',l:'Toutes les liaisons'},
+ {id:'U3',f:'dos',k:'ic',add:1,x:-4.5,y:44,w:13,h:11,t:'Stockage système UFS 4.0',z:'1,0',d:'128 Go, boîtier BGA 153 billes, 2 voies UFS 4.0. Contient le système, les applications et les données chiffrées.',ex:'UFS 4.0 128 Go, BGA 11 × 13',l:'UFS vers U1, placé à moins de 20 mm'},
+ {id:'U7',f:'dos',k:'ic',x:25.5,y:-58,w:9,h:9,t:'Contrôleur USB PD + chargeur',z:'0,9 (capot)',d:'Négociation USB Power Delivery 3.1, pompe de charge 2:1 jusqu\'à 8 A, chargeur abaisseur, gestion du chemin d\'énergie (VSYS), protection surtension VBUS, mode source 5 V.',ex:'Contrôleur PD + pompe de charge 2:1 8 A',l:'J9 (VBUS, CC), J4 (VBAT)'},
+ {id:'M1',f:'dos',k:'mech',x:-24.5,y:-58,w:10,h:7,t:'Moteur vibrant',z:'3,0',d:'Moteur linéaire (LRA) axe X, 10 × 7 × 3 mm, 170 Hz, retour haptique précis. Piloté par un circuit dédié dans U5.',ex:'LRA axe X 1007',l:'U5'},
+ {id:'J2',f:'dos',k:'conn',x:-15.5,y:53,w:22,h:4,t:'Connecteur du module photo',z:'0,6',d:'Interposeur à compression, 30 contacts (2 × 15) au pas de 0,8 mm. Serré par les 2 vis imperdables du module (V9, V10).',l:'MIPI CSI-2 4 voies, alimentations caméra, flash, micros'},
+ {id:'J3',f:'dos',k:'conn',add:1,x:-21,y:38,w:14,h:12,t:'Support nano-SIM',z:'1,3',d:'Support à charnière pour carte nano-SIM, accessible coque retirée. Détection de présence de carte.',ex:'Support nano-SIM à charnière 6 contacts',l:'Vers le modem de U1'},
+ {id:'J4',f:'dos',k:'conn',x:0,y:-48,w:30,h:4.5,t:'Contacts de la batterie',z:'1,4 comprimé',d:'7 contacts à lame haute intensité (3 A chacun) au pas de 3 mm, 2 pions de centrage Ø 1,2 à x = ±13. Les lames BAT− dépassent de 0,2 mm.',l:'BAT+ ×3, SWI, BAT− ×3'},
+ {id:'J5',f:'dos',k:'conn',x:0,y:-61,w:16,h:3,t:'Connecteur du stockage',z:'0,6',d:'Interposeur à compression, 20 contacts (2 × 10) au pas de 0,8 mm. Serré par la vis imperdable V11.',l:'PCIe 4.0 ×1, 3,3 / 1,8 / 1,2 V'},
+ {id:'J6',f:'dos',k:'conn',x:14.75,y:31.5,w:14,h:3.2,t:'Contacts Qi2 + NFC (coque)',z:'bloc de la coque',d:'4 plages dorées Ø 1,8 au pas de 3,5 mm (x = 9,5 / 13 / 16,5 / 20). Les pointes à ressort sont dans la coque.',l:'Bobine Qi2 (2), boucle NFC (2)'},
+ {id:'J7',f:'dos',k:'conn',x:-20.5,y:-68.5,w:8,h:2.4,t:'Contacts haut-parleur A',z:'1,2 comprimé',d:'3 lames au pas de 2 mm.',l:'SPK+, SPK−, identification'},
+ {id:'J8',f:'dos',k:'conn',x:20.5,y:-68.5,w:8,h:2.4,t:'Contacts haut-parleur B',z:'1,2 comprimé',d:'3 lames au pas de 2 mm.',l:'SPK+, SPK−, identification'},
+ {id:'J9',f:'dos',k:'conn',x:0,y:-69.5,w:13,h:2.4,t:'Connecteur du port USB-C',z:'0,6',d:'Interposeur à compression, 28 contacts (2 × 14) au pas de 0,8 mm. Zone élargie de 7 à 13 mm par rapport à la maquette.',l:'USB 3.2 (4 paires), USB 2.0, CC, SBU, VBUS ×4, micro du bas'},
+ {id:'J10',f:'dos',k:'conn',x:-6,y:36,w:10,h:3.2,t:'Contacts du dos Connect (coque)',z:'bloc de la coque',d:'4 plages dorées Ø 1,6 au pas de 2 mm (x = −9 / −7 / −5 / −3). Les pointes à ressort sont dans la coque.',l:'VCX, D+, D−, GND'},
+ {id:'J12',f:'dos',k:'conn',add:1,x:27,y:31.2,w:4.5,h:2.4,t:'Connecteur du lecteur d\'empreinte',z:'0,6',d:'Connecteur carte à nappe 10 contacts, pas 0,35 mm, avec bride clipsée. Reçoit la nappe du bouton d\'alimentation.',l:'SPI, interruption, 3,3 V, 1,8 V'},
+ {id:'SW1',f:'dos',k:'mech',x:31.2,y:30,w:1.5,h:4,t:'Interrupteur du bouton d\'alimentation',z:'1,2',d:'Interrupteur à actionnement latéral, 2,5 N, course 0,15 mm.',l:'PWR_KEY vers U4'},
+ {id:'SW2',f:'dos',k:'mech',x:-31.2,y:40,w:1.5,h:3.5,t:'Interrupteur volume +',z:'1,2',d:'Interrupteur à actionnement latéral.',l:'VOL_UP'},
+ {id:'SW3',f:'dos',k:'mech',x:-31.2,y:26,w:1.5,h:3.5,t:'Interrupteur volume −',z:'1,2',d:'Interrupteur à actionnement latéral. Maintenu au démarrage : mode téléchargement (usine).',l:'VOL_DN'},
+ {id:'TP1',f:'dos',k:'tp',x:0,y:-20,w:12,h:4,t:'Plages de test',z:'0',d:'10 plages Ø 1,0 : UART, JTAG (4), BOOT, RESET, 1,8 V, VBAT, GND. Accessibles batterie retirée, pour le diagnostic en atelier.',l:'—'},
+ /* face écran (vue par transparence, repère vu de dos) */
+ {id:'J1',f:'ecran',k:'conn',x:0,y:-68,w:20,h:4.2,t:'Connecteur du bloc écran (bas)',z:'0,6',d:'Plages pour interposeur à compression 40 contacts (2 × 20, pas 0,8). Serré par 2 vis (V5, V6) qui traversent la carte.',l:'MIPI DSI 4 voies, tactile SPI, ELVDD / ELVSS, VCI, VDDI'},
+ {id:'J11',f:'ecran',k:'conn',add:1,x:-6.5,y:66,w:14,h:3,t:'Connecteur du haut de l\'écran',z:'0,6',d:'Plages pour interposeur 30 contacts (2 × 15, pas 0,8). Serré par 2 vis (V7, V8) en (−18 ; 65,5) et (5 ; 65,5).',l:'Caméra avant CSI 2 voies, écouteur, proximité, lumière'},
+ {id:'U4',f:'ecran',k:'ic',x:14,y:-24,w:7,h:7,t:'PMIC principal',z:'0,55',d:'Convertisseurs du SoC (CPU, GPU, NPU, cœur, modem, mémoire), horloge temps réel, bouton d\'alimentation, séquences de démarrage.',ex:'PMIC compagnon de la plateforme',l:'I²C / SPMI vers U1'},
+ {id:'U5',f:'ecran',k:'ic',x:24,y:-38,w:6,h:6,t:'PMIC secondaire',z:'0,55',d:'Régulateurs des périphériques : caméras, capteurs, tactile, stockage, vibreur.',ex:'PMIC compagnon de la plateforme',l:'I²C'},
+ {id:'U6',f:'ecran',k:'ic',x:12,y:-58,w:4,h:4,t:'Alimentation de l\'écran OLED',z:'0,55',d:'Fabrique ELVDD (+4,6 V) et ELVSS (−1,4 à −5,4 V) pour la dalle.',ex:'Convertisseur AMOLED double sortie',l:'J1'},
+ {id:'U8',f:'ecran',k:'ic',x:-24,y:47,w:2,h:2,t:'Pilote du flash',z:'0,5',d:'Deux sorties de courant de 1 A, pour les LED chaude et froide.',l:'J2'},
+ {id:'U9',f:'ecran',k:'ic',x:-16,y:-10,w:7,h:7,t:'Émetteur-récepteur radio',z:'0,55',d:'Transposition de fréquence 5G / LTE, réception en diversité.',ex:'Composant radio de la plateforme',l:'Vers U10, U11'},
+ {id:'U10',f:'ecran',k:'ic',x:-24,y:-30,w:8,h:6,t:'Module d\'amplification bas et moyennes bandes',z:'0,6',d:'Amplificateur de puissance, filtres, commutateur d\'antenne, 600 à 2 700 MHz.',l:'Antennes A, B'},
+ {id:'U11',f:'ecran',k:'ic',x:-10,y:-32,w:7,h:6,t:'Module d\'amplification 5G haute',z:'0,6',d:'Bandes n77 / n78 (3,3 à 4,2 GHz), émission et réception.',l:'Antennes B, E, F'},
+ {id:'Y1',f:'ecran',k:'ic',x:-5,y:-20,w:2.5,h:2,t:'Oscillateur 26 MHz',z:'0,6',d:'TCXO ± 0,5 ppm, horloge de référence du modem, du GNSS et du Wi-Fi.',l:'U1, U9, U16'},
+ {id:'U12',f:'ecran',k:'ic',x:-2,y:-57,w:4,h:4,t:'Redresseur USB 3.2 / DisplayPort',z:'0,55',d:'Remet en forme les signaux 10 Gb/s et commute USB / DisplayPort selon le sens de la prise.',l:'U1 → J9'},
+ {id:'U13',f:'ecran',k:'ic',x:-16,y:-56,w:4,h:4,t:'Codec audio',z:'0,5',d:'Convertit et mixe le son : écouteur, micros, casque USB.',l:'I²S / SoundWire'},
+ {id:'U14',f:'ecran',k:'ic',x:-26,y:-56,w:3,h:3,t:'Amplificateur haut-parleur A',z:'0,5',d:'Amplificateur intelligent à boost, mesure courant / tension pour protéger la membrane.',l:'J7'},
+ {id:'U15',f:'ecran',k:'ic',x:26,y:-47,w:3,h:3,t:'Amplificateur haut-parleur B',z:'0,5',d:'Identique à U14.',l:'J8'},
+ {id:'U16',f:'ecran',k:'ic',x:16,y:4,w:7,h:7,t:'Wi-Fi 7, Bluetooth 5.4, GNSS',z:'0,6',d:'Puce de connectivité compagnon de la plateforme, 2 × 2 MIMO.',l:'Antennes C, E, D'},
+ {id:'U17',f:'ecran',k:'ic',x:22,y:24,w:4,h:4,t:'Contrôleur NFC',z:'0,5',d:'13,56 MHz, paiement sans contact, élément sécurisé associé.',ex:'NXP PN7160 ou équivalent',l:'J6 (contacts 3, 4)'},
+ {id:'U24',f:'ecran',k:'ic',x:10,y:24,w:4,h:4,t:'Récepteur Qi2',z:'0,55',d:'Récepteur MPP 15 W, redressement synchrone.',l:'J6 (contacts 1, 2) → U7'},
+ {id:'U23',f:'ecran',k:'ic',x:-6,y:28,w:3,h:3,t:'Convertisseur 5 V du dos Connect',z:'0,55',d:'Élévateur 5 V 1,5 A vers VCX ; en sens inverse, laisse entrer l\'énergie d\'un accessoire batterie vers le chargeur.',l:'J10'},
+ {id:'U22',f:'ecran',k:'ic',x:-20,y:28,w:2.5,h:2,t:'eSIM',z:'0,5',d:'Puce eUICC soudée, plusieurs profils.',l:'Modem de U1'},
+ {id:'U21',f:'ecran',k:'ic',x:-12,y:20,w:1.5,h:1.5,t:'Capteur de coque',z:'0,5',d:'Capteur à effet Hall qui voit l\'anneau magnétique de la coque. Coque retirée : démontage du stockage, coupure de VCX.',l:'I²C / interruption'},
+ {id:'U18',f:'ecran',k:'ic',x:0,y:0,w:3,h:2.5,t:'Accéléromètre et gyroscope',z:'0,5',d:'Centrale inertielle 6 axes, au centre du téléphone.',ex:'ST LSM6DSV16X ou équivalent',l:'I³C'},
+ {id:'U19',f:'ecran',k:'ic',x:4,y:-5,w:2,h:2,t:'Baromètre',z:'0,5',d:'Pression ± 0,5 hPa, pour l\'altitude.',ex:'Bosch BMP390 ou équivalent',l:'I²C'},
+ {id:'U20',f:'ecran',k:'ic',x:-20,y:60,w:1.6,h:1.6,t:'Magnétomètre',z:'0,5',d:'Boussole 3 axes, placée loin des aimants et des haut-parleurs.',l:'I²C'},
+ {id:'TH',f:'ecran',k:'zone',x:17.5,y:42.5,w:22,h:15,t:'Pad thermique face écran',z:'0,3',d:'Pad de 3 W/m·K entre la carte et la plaque du cadre, sous le SoC.',l:'—'}];
+
+/* repères non cliquables : vis, antennes */
+const HOLES=[[-29,66],[29,66],[-29,-66],[29,-66]];
+const ANT=[['ANT1',-31.4,56],['ANT2',31.4,56],['ANT3',-31.4,-56],['ANT4',31.4,-56],['ANT5',-24,69.3],['ANT6',24,69.3],['ANT7',-24,-69.3],['ANT8',24,-69.3]];
+const SCREWS={V5:[-11.5,-68],V6:[11.5,-68],V7:[-18,65.5],V8:[5,65.5],V9:[-24.5,53],V10:[-6.5,53],V11:[0,-55.5],V12:[-8,-69.5],V13:[8,-69.5]};
+
+/* connecteurs : tableau de synthèse */
+const CONN=[
+ ['J1','Bloc écran, bas (dalle, tactile)','écran','(0 ; −68)','Interposeur à compression, pas 0,8',40,'2 vis V5, V6'],
+ ['J2','Module photo','dos','(−15,5 ; 53)','Interposeur à compression, pas 0,8',30,'2 vis imperdables V9, V10'],
+ ['J3','Carte nano-SIM','dos','(−21 ; 38)','Support à charnière',6,'—'],
+ ['J4','Batterie','dos','(0 ; −48)','Lames haute intensité, pas 3',7,'Coque + 2 pions'],
+ ['J5','Stockage','dos','(0 ; −61)','Interposeur à compression, pas 0,8',20,'Vis imperdable V11'],
+ ['J6','Coque : Qi2 + NFC','dos','(14,75 ; 31,5)','Plages ; pointes à ressort dans la coque',4,'Coque'],
+ ['J7','Haut-parleur A','dos','(−20,5 ; −68,5)','Lames, pas 2',3,'Coque'],
+ ['J8','Haut-parleur B','dos','(20,5 ; −68,5)','Lames, pas 2',3,'Coque'],
+ ['J9','Port USB-C','dos','(0 ; −69,5)','Interposeur à compression, pas 0,8',28,'Module vissé au cadre, V12, V13'],
+ ['J10','Coque : dos Connect','dos','(−6 ; 36)','Plages ; pointes à ressort dans la coque',4,'Coque'],
+ ['J11','Bloc écran, haut (caméra avant, écouteur, capteurs)','écran','(−6,5 ; 66)','Interposeur à compression, pas 0,8',30,'2 vis V7, V8'],
+ ['J12','Lecteur d\'empreinte','dos','(27 ; 31,2)','Connecteur à nappe, pas 0,35',10,'Bride clipsée']];
+
+/* brochages : [contact, signal, rôle] */
+const G='GND';
+const PIN={
+ J1:{t:'J1 · Bloc écran, bas',s:'40 contacts · interposeur 2 × 20, pas 0,8 mm',rows:[
+  ['A1',G,'Masse'],['A2','DSI_CLK_P','Horloge DSI +'],['A3','DSI_CLK_N','Horloge DSI −'],['A4',G,''],['A5','DSI_D0_P','Données DSI voie 0 +'],['A6','DSI_D0_N','voie 0 −'],['A7',G,''],['A8','DSI_D1_P','voie 1 +'],['A9','DSI_D1_N','voie 1 −'],['A10',G,''],
+  ['A11','DSI_D2_P','voie 2 +'],['A12','DSI_D2_N','voie 2 −'],['A13',G,''],['A14','DSI_D3_P','voie 3 +'],['A15','DSI_D3_N','voie 3 −'],['A16',G,''],['A17','TE','Synchronisation d\'image (dalle → SoC)'],['A18','RESX','Réinitialisation de la dalle'],['A19','ERR_FG','Signal d\'erreur de la dalle'],['A20',G,''],
+  ['B1','ELVDD','+4,6 V dalle (1 A au total sur B1–B3)'],['B2','ELVDD',''],['B3','ELVDD',''],['B4',G,''],['B5','ELVSS','−1,4 à −5,4 V dalle'],['B6','ELVSS',''],['B7','ELVSS',''],['B8',G,''],['B9','VCI_3V0','Analogique 3,0 V du contrôleur d\'écran'],['B10','VDDI_1V8','Logique 1,8 V'],
+  ['B11','VDD_TP_1V8','Tactile 1,8 V'],['B12','VDD_TP_3V0','Tactile 3,0 V'],['B13','TP_SPI_CLK','Tactile, horloge SPI'],['B14','TP_SPI_MOSI','Tactile, données vers la dalle'],['B15','TP_SPI_MISO','Tactile, données vers le SoC'],['B16','TP_SPI_CS','Tactile, sélection'],['B17','TP_INT','Tactile, interruption'],['B18','TP_RST','Tactile, réinitialisation'],['B19','DISP_ID','Résistance d\'identification du bloc écran'],['B20',G,'']]},
+ J11:{t:'J11 · Bloc écran, haut',s:'30 contacts · interposeur 2 × 15, pas 0,8 mm',rows:[
+  ['A1',G,''],['A2','FCAM_CLK_P','Caméra avant, horloge CSI +'],['A3','FCAM_CLK_N','horloge CSI −'],['A4',G,''],['A5','FCAM_D0_P','voie 0 +'],['A6','FCAM_D0_N','voie 0 −'],['A7',G,''],['A8','FCAM_D1_P','voie 1 +'],['A9','FCAM_D1_N','voie 1 −'],['A10',G,''],
+  ['A11','FCAM_MCLK','Horloge capteur 24 MHz'],['A12','FCAM_RST','Réinitialisation capteur'],['A13','FCAM_SCL','I²C caméra, horloge'],['A14','FCAM_SDA','I²C caméra, données'],['A15',G,''],
+  ['B1','FCAM_AVDD_2V8','Analogique capteur 2,8 V'],['B2','FCAM_DVDD_1V1','Cœur capteur 1,1 V'],['B3','FCAM_DOVDD_1V8','E/S capteur 1,8 V'],['B4',G,''],['B5','REC_P','Écouteur +'],['B6','REC_N','Écouteur −'],['B7',G,''],['B8','SENS_SCL','I²C capteurs, horloge'],['B9','SENS_SDA','I²C capteurs, données'],['B10','PROX_INT','Proximité, interruption'],
+  ['B11','VDD_SENS_1V8','Capteurs 1,8 V'],['B12','VLED_IR_3V3','LED infrarouge de proximité'],['B13','TOP_ID','Identification'],['B14',G,''],['B15',G,'']]},
+ J2:{t:'J2 · Module photo',s:'30 contacts · interposeur 2 × 15, pas 0,8 mm',rows:[
+  ['A1',G,''],['A2','CAM_CLK_P','Horloge CSI-2 +'],['A3','CAM_CLK_N','Horloge CSI-2 −'],['A4',G,''],['A5','CAM_D0_P','voie 0 +'],['A6','CAM_D0_N','voie 0 −'],['A7',G,''],['A8','CAM_D1_P','voie 1 +'],['A9','CAM_D1_N','voie 1 −'],['A10',G,''],
+  ['A11','CAM_D2_P','voie 2 +'],['A12','CAM_D2_N','voie 2 −'],['A13',G,''],['A14','CAM_D3_P','voie 3 +'],['A15','CAM_D3_N','voie 3 −'],
+  ['B1',G,''],['B2','CAM_MCLK','Horloge capteur 24 MHz'],['B3','CAM_RST','Réinitialisation'],['B4','CAM_SCL','I²C, horloge'],['B5','CAM_SDA','I²C, données'],['B6','CAM_AVDD_2V8','Analogique 2,8 V'],['B7','CAM_DVDD_1V1','Cœur 1,1 V'],['B8','CAM_DOVDD_1V8','E/S 1,8 V'],['B9','VDD_AFOIS_2V8','Mise au point et stabilisation 2,8 V'],['B10','FLASH_W','LED chaude, 1 A en impulsion'],
+  ['B11','FLASH_C','LED froide, 1 A en impulsion'],['B12','MIC_CLK','Horloge PDM des 2 micros'],['B13','MIC_DATA','Données PDM (haut sur front montant, dos sur front descendant)'],['B14','VDD_MIC_1V8','Micros 1,8 V'],['B15','CAM_ID','Identification du module (1 capteur, sans LiDAR)']]},
+ J3:{t:'J3 · Nano-SIM',s:'6 contacts ISO 7816 + détection',rows:[['C1','SIM_VCC','1,8 / 3,0 V'],['C2','SIM_RST','Réinitialisation'],['C3','SIM_CLK','Horloge'],['C5',G,''],['C6','—','Non connecté'],['C7','SIM_IO','Données'],['SW','SIM_DET','Présence de carte']]},
+ J4:{t:'J4 · Batterie',s:'7 lames au pas de 3 mm, de gauche à droite vu de dos',rows:[['1','BAT+','Batterie +, 3 A'],['2','BAT+','3 A'],['3','BAT+','3 A'],['4','BAT_SWI','Bus 1 fil : jauge, température, authentification'],['5','BAT−','Batterie −, lame plus longue de 0,2 mm'],['6','BAT−',''],['7','BAT−','']]},
+ J5:{t:'J5 · Stockage',s:'20 contacts · interposeur 2 × 10, pas 0,8 mm',rows:[
+  ['A1',G,''],['A2','PCIE_TX_P','SoC → SSD +'],['A3','PCIE_TX_N','SoC → SSD −'],['A4',G,''],['A5','PCIE_RX_P','SSD → SoC +'],['A6','PCIE_RX_N','SSD → SoC −'],['A7',G,''],['A8','REFCLK_P','Horloge de référence 100 MHz +'],['A9','REFCLK_N','−'],['A10',G,''],
+  ['B1','VDD_3V3','3,3 V, 1 A sur B1–B2'],['B2','VDD_3V3',''],['B3','VDD_1V8','1,8 V'],['B4','VDD_1V2','1,2 V'],['B5','PERST#','Réinitialisation PCIe'],['B6','CLKREQ#','Demande d\'horloge'],['B7','PEWAKE#','Réveil'],['B8','PRSNT#','Présence du module'],['B9',G,''],['B10',G,'']]},
+ J6:{t:'J6 · Coque : Qi2 + NFC',s:'4 plages Ø 1,8, pas 3,5 mm',rows:[['1','QI_AC1','Bobine Qi2, borne 1 (2 A)'],['2','QI_AC2','Bobine Qi2, borne 2'],['3','NFC_P','Boucle NFC +'],['4','NFC_N','Boucle NFC −']]},
+ J7:{t:'J7 / J8 · Haut-parleurs A et B',s:'3 lames, pas 2 mm',rows:[['1','SPK_P','Haut-parleur +'],['2','SPK_N','Haut-parleur −'],['3','SPK_ID','Résistance d\'identification (Standard ou Hi-Fi)']]},
+ J9:{t:'J9 · Port USB-C',s:'28 contacts · interposeur 2 × 14, pas 0,8 mm',rows:[
+  ['A1',G,''],['A2','SSTX1_P','USB 3.2 / DP, paire 1'],['A3','SSTX1_N',''],['A4',G,''],['A5','SSRX1_P','paire 2'],['A6','SSRX1_N',''],['A7',G,''],['A8','SSTX2_P','paire 3'],['A9','SSTX2_N',''],['A10',G,''],['A11','SSRX2_P','paire 4'],['A12','SSRX2_N',''],['A13',G,''],['A14','MIC_B_DATA','Micro du bas, données PDM'],
+  ['B1','VBUS','5 à 20 V, 1 A par contact'],['B2','VBUS',''],['B3','VBUS',''],['B4','VBUS',''],['B5',G,''],['B6',G,''],['B7','USB2_DP','USB 2.0 +'],['B8','USB2_DN','USB 2.0 −'],['B9','CC1','Configuration (sens, PD)'],['B10','CC2',''],['B11','SBU1','Canal auxiliaire DisplayPort'],['B12','SBU2',''],['B13','MIC_B_CLK','Micro du bas, horloge'],['B14','VDD_MIC_1V8','Micro du bas 1,8 V']]},
+ J10:{t:'J10 · Coque : dos Connect',s:'4 plages Ø 1,6, pas 2 mm',rows:[['1','VCX','5 V vers la coque (1,5 A) ou entrée depuis un accessoire'],['2','CX_DP','USB 2.0 + vers le hub de la coque'],['3','CX_DN','USB 2.0 −'],['4',G,'Masse (pointe plus longue de 0,2 mm)']]},
+ J12:{t:'J12 · Lecteur d\'empreinte',s:'10 contacts, pas 0,35 mm',rows:[['1','VDD_3V3','3,3 V'],['2','VDD_1V8','1,8 V'],['3',G,''],['4','FP_SPI_CLK','Horloge'],['5','FP_SPI_MOSI','Données vers le capteur'],['6','FP_SPI_MISO','Données vers le SoC'],['7','FP_SPI_CS','Sélection'],['8','FP_INT','Doigt détecté'],['9','FP_RST','Réinitialisation'],['10',G,'']]}};
+
+/* rails d'alimentation */
+const RAILS=[
+ ['VBUS','5 à 20 V','3 A','USB-C','U7'],['VQI','5 à 12 V','1,5 A','U24 (Qi2)','U7'],['VCX','5,0 V','1,5 A','U23 ↔ coque','Dos Connect'],
+ ['VBAT','3,0 à 4,45 V','8 A en charge','Batterie (J4)','U7'],['VSYS','3,4 à 4,45 V','10 A','U7','U4, U5, U6, U8, U14, U15, U23, amplificateurs radio'],
+ ['VDD_CPU_B','0,55 à 1,05 V','8 A','U4','U1, cœurs X925 et X4'],['VDD_CPU_L','0,50 à 0,90 V','3 A','U4','U1, cœurs A720'],['VDD_GPU','0,50 à 0,95 V','6 A','U4','U1, GPU'],
+ ['VDD_NPU','0,50 à 0,90 V','3 A','U4','U1, NPU'],['VDD_CORE','0,55 à 0,80 V','4 A','U4','U1, logique'],['VDD_MODEM','0,55 à 0,85 V','3 A','U4','U1, modem'],
+ ['VDD2H','1,05 V','2 A','U4','Mémoire LPDDR5X'],['VDDQ','0,50 V','2 A','U4','Mémoire LPDDR5X, E/S'],['VDD1','1,8 V','0,3 A','U4','Mémoire LPDDR5X'],
+ ['VIO18','1,8 V','1 A','U4','E/S du SoC, capteurs, VDDI, DOVDD'],['VCC_UFS','2,5 V','0,8 A','U5','U3'],['VCCQ_UFS','1,2 V','0,5 A','U5','U3'],
+ ['V3P3','3,3 V','1,2 A','U5','Stockage (J5), U16, LED IR, J12'],['V1P2_STO','1,2 V','0,5 A','U5','Stockage (J5)'],['VCAM_A','2,8 V','0,3 A','U5','J2, J11'],
+ ['VCAM_D','1,1 V','0,6 A','U5','J2, J11'],['VAF','2,8 V','0,3 A','U5','J2 (mise au point, stabilisation)'],['VTP / VCI','3,0 V','0,2 A','U5','J1'],
+ ['ELVDD','+4,6 V','1 A','U6','J1'],['ELVSS','−1,4 à −5,4 V','1 A','U6','J1'],['VFLASH','2 × 1 A','impulsion','U8','J2'],['VPA','0,5 à 4,5 V','2 A','U4 (suivi d\'enveloppe)','U10, U11']];
+
+/* nomenclature : [réf, qté, désignation, spécification, masse g] ; les lignes 'sub' sont des titres */
+const BOM=[
+ ['sub','Structure'],
+ ['M1-CAD-ALU-NOIR','1','Cadre','Alu 6013-T6 recyclé ≥ 90 %, CNC, anodisé Noir sidéral, 8 coupures PBT-GF30, 8 inserts M1,4','26'],
+ ['M1-CAD-BTN-PWR','1','Bouton d\'alimentation','Alu anodisé 14 × 3, capteur d\'empreinte capacitif sous saphir, nappe 10 contacts','inclus'],
+ ['M1-CAD-BTN-VOL','2','Boutons de volume','Alu anodisé 11 × 3','inclus'],
+ ['—','3','Joints toriques de bouton','Silicone 50 Shore A','—'],
+ ['—','14','Membranes acoustiques','ePTFE, IP54, Ø 2,0 (12 HP, 2 micros)','—'],
+ ['—','2','Joints de haut-parleur','Silicone 14 × 1 × 1,6','—'],
+ ['M1-CAC-ALU-NOIR','1','Cache de carte mère (2 pièces)','Alu 5052 0,3 anodisé noir, 6 pattes','3'],
+ ['M1-VIS-T5','13','Vis','M1,4, inox A2 noir, Torx T5, frein nylon : 4 × 2,5 (carte), 4 × 2,0 (écran), 2 × 3,5 imperdables (photo), 1 × 2,5 imperdable (stockage), 2 × 2,5 (USB)','—'],
+ ['sub','Carte mère M1-MB-P (36 g équipée)'],
+ ['PCB-M1-MB-P','1','Circuit imprimé nu','10 couches any-layer, 64 × 140 × 0,8, ENEPIG + or dur','—'],
+ ['U1','1','SoC','3 nm, 8 cœurs, modem 5G (Dimensity 9400 ou équivalent)','—'],
+ ['U2','1','Mémoire vive','LPDDR5X 12 Go, 8 533 Mb/s, PoP','—'],
+ ['U3','1','Stockage système','UFS 4.0 128 Go, BGA 153','—'],
+ ['U4, U5','2','PMIC','Compagnons de la plateforme','—'],
+ ['U6','1','Alimentation écran','AMOLED ELVDD / ELVSS','—'],
+ ['U7','1','USB PD + chargeur','PD 3.1, pompe de charge 2:1 8 A','—'],
+ ['U8','1','Pilote de flash','2 × 1 A','—'],
+ ['U9, U10, U11','3','Radio','Émetteur-récepteur + 2 modules d\'amplification','—'],
+ ['U12','1','Redresseur USB / DP','10 Gb/s, commutation USB-C','—'],
+ ['U13, U14, U15','3','Audio','Codec + 2 amplificateurs intelligents','—'],
+ ['U16','1','Connectivité','Wi-Fi 7, Bluetooth 5.4, GNSS L1 + L5','—'],
+ ['U17','1','NFC','Contrôleur 13,56 MHz','—'],
+ ['U18, U19, U20, U21','4','Capteurs','Inertiel 6 axes, baromètre, magnétomètre, Hall de coque','—'],
+ ['U22','1','eSIM','eUICC','—'],
+ ['U23','1','5 V Connect','Élévateur bidirectionnel 1,5 A','—'],
+ ['U24','1','Récepteur Qi2','MPP 15 W','—'],
+ ['Y1','1','Oscillateur','TCXO 26 MHz ± 0,5 ppm','—'],
+ ['M1','1','Moteur vibrant','LRA axe X 10 × 7 × 3','—'],
+ ['J1, J2, J5, J9, J11','5','Interposeurs à compression','Contacts en C dorés, pas 0,8 : 40, 30, 20, 28, 30 contacts','—'],
+ ['J4','1','Bloc de lames batterie','7 lames 3 A, pas 3','—'],
+ ['J7, J8','2','Blocs de lames HP','3 lames, pas 2','—'],
+ ['J3','1','Support nano-SIM','À charnière','—'],
+ ['J12','1','Connecteur à nappe','10 contacts, pas 0,35','—'],
+ ['SW1–SW3','3','Interrupteurs latéraux','2,5 N, 200 000 cycles','—'],
+ ['ANT1–ANT8','8','Clips d\'antenne','Bronze phosphoreux doré','—'],
+ ['—','1','Écrou CMS','M1,4, hauteur 1,0 (vis V11)','—'],
+ ['—','≈ 1 200','Composants passifs','01005 et 0201 principalement','—'],
+ ['sub','Modules'],
+ ['M1-ECR-O120','1','Bloc écran','OLED LTPO 6,37″, 1 200 × 2 560, 120 Hz, verre 0,55, caméra 12 Mpx, écouteur, capteurs, 6 clips','24'],
+ ['M1-CAM-1S','1','Module photo','50 Mpx 1/1,56″ f/1,8 OIS, flash 2 LED, 2 micros, plateau PMMA noir fumé, 2 vis imperdables','12'],
+ ['M1-BAT-44','1','Batterie','4 400 mAh, 3,87 V, 17,0 Wh, protection + jauge, languette','63'],
+ ['M1-STO-256Go-STD','1','Stockage','SSD NVMe BGA 256 Go TLC, PCIe 4.0 ×1, 37 × 12,5 × 1,8','3'],
+ ['M1-HP-STD','2','Haut-parleur','6 × 15 mm, 8 Ω, 1 W, boîte close 19 × 6,5 × 3,0','8'],
+ ['M1-USB-U32','1','Port USB-C','Prise 24 broches IPX7, carte 20 × 7, micro du bas, bride vissée','3'],
+ ['sub','Coque et dos Connect'],
+ ['M1-COQ-VERRE-NOIR-CX','1','Coque','Verre recyclé renforcé 0,9 dépoli noir + support PC-GF30 0,5 ; 6 crochets ; loquet ; joint ; mousses ; graphite','18'],
+ ['M1-CX-INS','4','Connecteur Connect','Insert LCP 15,4 × 3,4 × 1,15 noir fumé, 4 plages or dur 3,3 × 1,8','inclus'],
+ ['M1-CX-MAG','8','Aimants Connect','NdFeB N52 Ø 3,0 × 0,8, nickelés','inclus'],
+ ['M1-CX-FPC','1','Circuit Connect','Polyimide 2 couches, îlot rigide 20 × 9 (hub USB 2.0 4 ports, 4 interrupteurs 500 mA, 4 comparateurs, 3,3 V, quartz 24 MHz), 4 pointes vers J10','4 (Connect)'],
+ ['M1-QI-Q15','1','Recharge sans fil','Bobine Litz 16 spires, ferrite Ø 41, anneau MPP 16 aimants, boucle NFC, 4 pointes vers J6','10']];
+
+/* couches de la vue éclatée */
+const LAYERS=[
+ {k:'screen',n:'Bloc écran',r:'M1-ECR-O120',z:'0 à 1,5',fix:'6 clips dans le cadre ; J1 et J11 vissés à travers la carte',m:'24 g',s:'ecran'},
+ {k:'frame',n:'Cadre',r:'M1-CAD-ALU-NOIR',z:'1,5 à 8,2 (plaque 1,5 à 2,5)',fix:'Pièce de base',m:'26 g',s:'cadre'},
+ {k:'board',n:'Carte mère',r:'M1-MB-P',z:'2,5 à 3,3',fix:'4 vis V1 à V4',m:'36 g',s:'carte'},
+ {k:'cover',n:'Cache de carte mère',r:'M1-CAC-ALU-NOIR',z:'3,95 à 4,25',fix:'6 pattes clipsées',m:'3 g',s:'cache'},
+ {k:'mods',n:'Batterie, stockage, haut-parleurs, USB-C',r:'M1-BAT-44 · M1-STO · M1-HP · M1-USB',z:'3,7 à 8,1',fix:'Pions, vis V11 à V13, pression de la coque',m:'77 g',s:'batterie'},
+ {k:'photo',n:'Module photo',r:'M1-CAM-1S',z:'4,5 à 11,4',fix:'2 vis imperdables V9, V10',m:'12 g',s:'photo'},
+ {k:'inner',n:'Intérieur de coque',r:'M1-QI-Q15 · M1-CX',z:'7,8 à 8,6',fix:'Clipsé dans la coque en usine',m:'14 g',s:'connect'},
+ {k:'coque',n:'Coque',r:'M1-COQ-VERRE-NOIR-CX',z:'8,6 à 10,0',fix:'6 crochets + loquet',m:'18 g',s:'coque'}];
+
+return {MODS,PARTS,HOLES,ANT,SCREWS,CONN,PIN,RAILS,BOM,LAYERS,CX:[[-22.5,42],[22.5,42],[-22.5,-61],[22.5,-61]]};
+})();
+</script>
+<script>
+/* ================================================================
+   Plans : chaque fonction dessine une feuille.
+   ================================================================ */
+(function(){
+"use strict";
+const {Dw,rrPts,circPts}=window.VD,V=window.VDATA;
+const BW=71.4,BH=149.4,BR=8.7,HX=BW/2,HY=BH/2;
+const PL={w:67,h:24,r:6.5,cy:60.5};
+const LENS=-22.5,MIC=24.9,FLASH=28.4,LIDAR=20.6;
+
+/* éléments communs du dos */
+function backFeatures(d,o){o=o||{};
+  d.rr(0,0,BW,BH,BR,'o sheetfill');
+  d.rr(0,PL.cy,PL.w,PL.h,PL.r,'o');d.rr(0,PL.cy,PL.w-2.2,PL.h-2.2,PL.r-1.1,'th');
+  d.ci(LENS,PL.cy,12.9,'t');d.ci(LENS,PL.cy,12,'o');d.ci(LENS,PL.cy,10.1,'th');d.ci(LENS,PL.cy,7.2,'th');d.ci(LENS,PL.cy,3.6,'fill',`style="opacity:.8"`);
+  d.ci(MIC,PL.cy,1.6,'fill');
+  d.ci(FLASH,PL.cy,5.4,'t');d.ci(FLASH,PL.cy,4.8,'o');d.rr(FLASH-.75,PL.cy,1.25,1.25,.15,'t');d.rr(FLASH+.75,PL.cy,1.25,1.25,.15,'t');
+  if(o.lidar!==false)d.ci(LIDAR,PL.cy,4.6,'th',`stroke-dasharray="2 2"`);
+  V.CX.forEach(p=>{d.rr(p[0],p[1],16,4,2,'th');d.rr(p[0],p[1],15.4,3.4,1.7,'a');[-5.37,-1.79,1.79,5.37].forEach(dx=>d.rr(p[0]+dx,p[1],3.3,1.8,.55,'gd'));});
+  d.tx(0,-51,'VERTANE',{a:'middle',v:'m',s:1.25,f:'d',ls:'1.2',c:'lm'});
+  d.rr(0,-70.5,22,4.4,2.2,'t');d.rr(0,-70.5,12,3.2,1.6,'o');for(let i=-2;i<=2;i++)d.ln(i*1.6,-71.6,i*1.6,-69.4,'th');
+}
+function buttonsBack(d,mir){const s=mir?-1:1;
+  d.rr(s*(HX+.3),30,.6,14,.3,'o fill');d.rr(-s*(HX+.3),40,.6,11,.3,'o fill');d.rr(-s*(HX+.3),26,.6,11,.3,'o fill');}
+function axes(d,xa,ya){d.ln(-xa,0,xa,0,'cl');d.ln(0,-ya,0,ya,'cl');}
+
+/* ------------------------------------------------ repère */
+function drawAxes(){const d=new Dw({x0:-52,y0:-84,x1:66,y1:96,k:4.6,minw:0,label:'Repère du dossier'});
+  d.rr(0,0,BW,BH,BR,'o sheetfill');d.rr(0,PL.cy,PL.w,PL.h,PL.r,'t');d.ci(LENS,PL.cy,12,'t');
+  V.CX.forEach(p=>d.rr(p[0],p[1],15.4,3.4,1.7,'a'));
+  d.add(`<line x1="0" y1="0" x2="54" y2="0" class="o" style="stroke:var(--accent)" marker-end="url(#ar${d.id})"/>`);
+  d.add(`<line x1="0" y1="0" x2="0" y2="-88" class="o" style="stroke:var(--accent)" marker-end="url(#ar${d.id})"/>`);
+  d.tx(58,0,'X',{v:'m',c:'la',s:1.2});d.tx(0,91,'Y',{a:'middle',c:'la',s:1.2});
+  d.ci(0,0,4,'t');d.ci(0,0,1.2,'fill');d.tx(4,-7,'(0 ; 0)',{c:'dt',s:.9});d.tx(4,-13,'Z vers vous',{c:'lm',s:.8});
+  d.ci(LENS,PL.cy,1.6,'af');d.tx(LENS,43,'(−22,5 ; 60,5)',{a:'middle',c:'dt',s:.8});
+  d.tx(0,-80,'vu de dos',{a:'middle',c:'lm',s:.9});
+  d.mount('dw-axes');}
+
+/* ------------------------------------------------ vue de dos */
+function drawBack(){const d=new Dw({x0:-98,y0:-92,x1:98,y1:90,k:2.9,label:'Vue de dos cotée'});
+  axes(d,HX+4,HY+4);backFeatures(d);buttonsBack(d,false);
+  /* cotes */
+  d.dimH(-HX,HX,-84,'71,4',{e1:-HY,e2:-HY});
+  d.dimV(-HY,HY,-90,'149,4',{e1:-HX,e2:-HX});
+  d.dimH(-PL.w/2,PL.w/2,81,'67,0',{e1:PL.cy+PL.h/2,e2:PL.cy+PL.h/2});
+  d.dimH(-22.5,22.5,46,'45,0',{e1:43.7,e2:43.7});
+  d.dimH(-22.5,22.5,-57,'45,0',{e1:-59.3,e2:-59.3});
+  d.dimV(0,42,22.5,'42,0',{e1:22.5,right:true});
+  d.dimV(-61,0,22.5,'61,0',{e1:22.5,right:true});
+  /* repères à droite */
+  d.call(FLASH,PL.cy+2.4,44,71,'Flash 2 LED');
+  d.call(MIC,PL.cy,44,63,'Micro arrière Ø 1,6');
+  d.call(LIDAR,PL.cy-2.3,44,55,'Emplacement LiDAR : plein',{c:'lm'});
+  d.call(30.2,42,44,39,'Connecteur Connect (×4)',{sub:'15,4 × 3,4, 4 plages dorées'});
+  d.call(HX+.6,30,44,24,'Alimentation + empreinte');
+  d.call(30.2,-61,44,-61,'Connecteur Connect');
+  d.call(15.5,-51,44,-47,'Logo ton sur ton');
+  d.call(6,-70.5,44,-72,'Loquet de coque',{sub:'curseur 12,0 × 3,2'});
+  /* repères à gauche */
+  d.call(LENS-3,PL.cy+5,-44,69,'Objectif 50 Mpx',{sub:'bague Ø 12,0'});
+  d.call(-33.5,53,-44,55,'Plateau photo 67 × 24',{sub:'PMMA noir fumé, +1,0 mm'});
+  d.call(-HX-.6,40,-44,40,'Volume +');
+  d.call(-HX-.6,26,-44,28,'Volume −');
+  d.call(-22,-20,-44,-20,'Coque verre dépoli',{sub:'Noir sidéral, 1,4 mm'});
+  d.mount('dw-back');}
+
+/* ------------------------------------------------ vue de face */
+function drawFront(){const d=new Dw({x0:-98,y0:-96,x1:98,y1:86,k:2.9,label:'Vue de face cotée'});
+  axes(d,HX+4,HY+4);
+  d.rr(0,0,BW,BH,BR,'o sheetfill');d.rr(0,0,BW-.8,BH-.8,BR-.4,'th');
+  d.rr(0,0,68.6,146.6,7.6,'t',`style="fill:var(--zone)"`);
+  d.ci(0,68.3,3.4,'fill');d.rr(0,74.1,11,.8,.4,'fill');
+  buttonsBack(d,true);
+  d.tx(0,-10,'6,37″',{a:'middle',c:'lm',s:1.6,f:'d'});d.tx(0,-16,'1 200 × 2 560 px',{a:'middle',c:'dt',s:.9});
+  d.ln(-30,-60,30,60,'th',`stroke-dasharray="3 3"`);
+  d.dimH(-HX,HX,-82,'71,4',{e1:-HY,e2:-HY});
+  d.dimH(-34.3,34.3,-90,'68,6 (zone active)',{e1:-73.3,e2:-73.3});
+  d.dimV(-HY,HY,-92,'149,4',{e1:-HX,e2:-HX});
+  d.dimV(-73.3,73.3,-84,'146,6',{e1:-34.3,e2:-34.3});
+  d.dimV(68.3,HY,8,'6,4',{e1:1.7,e2:6,right:true});
+  d.call(1.7,68.3,44,68,'Caméra avant 12 Mpx',{sub:'poinçon Ø 3,4'});
+  d.call(5.5,74.1,44,79,'Fente d\'écouteur 11 × 0,8');
+  d.call(HX+.6,40,44,40,'Volume +');d.call(HX+.6,26,44,28,'Volume −');
+  d.call(-HX-.6,30,-44,30,'Alimentation + empreinte');
+  d.call(-34.3,-30,-44,-30,'Bordure 1,4 mm',{c:'lm'});
+  d.call(-20,-45,-44,-46,'Verre 0,55 mm',{sub:'aluminosilicate renforcé'});
+  d.mount('dw-front');}
+
+/* ------------------------------------------------ profils */
+function profile(d,ox,side){
+  const Z=z=>ox+z;
+  d.rr(Z(5),0,10,BH,.8,'o sheetfill');
+  [[0.55,'th'],[1.5,'t'],[8.2,'t'],[8.6,'t']].forEach(a=>d.ln(Z(a[0]),-HY+.9,Z(a[0]),HY-.9,a[1]));
+  d.rr(Z(10.5),PL.cy,1.0,PL.h,.4,'o');d.rr(Z(11.2),PL.cy,.4,12,.15,'o');
+  d.rr(Z(10.35),-70.5,.7,3.2,.25,'t');
+  if(side>0){d.rr(Z(4.85),30,3,14,1,'t',`style="fill:var(--accent-soft);stroke:var(--accent)"`);}
+  else{d.rr(Z(4.85),40,3,11,1,'t',`style="fill:var(--accent-soft);stroke:var(--accent)"`);d.rr(Z(4.85),26,3,11,1,'t',`style="fill:var(--accent-soft);stroke:var(--accent)"`);}
+  [56,-56].forEach(y=>d.hatch(Z(4.85),y,6.7,1.2,0));
+  d.tx(Z(-1),-80,'écran',{a:'end',c:'lm',s:.8});d.tx(Z(11.5),-80,'dos',{c:'lm',s:.8});
+}
+function drawSide(){const d=new Dw({x0:-60,y0:-92,x1:118,y1:92,k:2.8,label:'Profils'});
+  const A=0,B=62;
+  profile(d,A,1);profile(d,B,-1);
+  d.tx(A+5,86,'Côté +X',{a:'middle',c:'lt',s:1});d.tx(A+5,81.5,'droite vu de dos',{a:'middle',c:'lm',s:.8});
+  d.tx(B+5,86,'Côté −X',{a:'middle',c:'lt',s:1});d.tx(B+5,81.5,'gauche vu de dos',{a:'middle',c:'lm',s:.8});
+  d.dimH(A,A+10,-86,'10,0',{e1:-HY,e2:-HY});
+  d.dimH(A,A+11.4,76,'11,4',{e1:66,e2:66.5});
+  d.dimV(37,HY,A+18,'37,7',{e1:A+6.4,e2:A+10,right:true});
+  d.dimV(23,37,A+18,'14,0',{e1:A+6.4,e2:A+6.4,right:true});
+  d.dimV(56,HY,A+26,'18,7',{e1:A+8.2,e2:A+10,right:true});
+  d.dimV(45.5,HY,B+18,'29,2',{e1:B+6.4,e2:B+10,right:true});
+  d.dimV(34.5,45.5,B+18,'11,0',{e1:B+6.4,e2:B+6.4,right:true});
+  d.dimV(31.5,34.5,B+18,'3,0',{e1:B+6.4,e2:B+6.4,right:true});
+  d.dimV(20.5,31.5,B+18,'11,0',{e1:B+6.4,e2:B+6.4,right:true});
+  d.call(A+.3,6,-6,10,'Verre 0,55');
+  d.call(A+1,-2,-6,2,'Dalle OLED');
+  d.call(A+5,-10,-6,-6,'Cadre alu 6,7');
+  d.call(A+8.4,-18,-6,-14,'Joint 0,36');
+  d.call(A+9.3,-26,-6,-22,'Coque 1,4');
+  d.call(A+10.5,52,-6,46,'Plateau +1,0');
+  d.call(A+4.85,56,-6,58,'Coupure d\'antenne',{sub:'1,2 mm'});
+  d.call(A+10.35,-70.5,-6,-66,'Loquet +0,7');
+  d.mount('dw-side');}
+
+/* ------------------------------------------------ bords haut et bas */
+function edge(d,base,top){
+  const Zy=z=>base+z;
+  d.rr(0,Zy(5),BW,10,.8,'o sheetfill');
+  [[1.5,'t'],[8.2,'t'],[8.6,'t']].forEach(a=>d.ln(-HX+.9,Zy(a[0]),HX-.9,Zy(a[0]),a[1]));
+  [-24,24].forEach(x=>d.hatch(x,Zy(4.85),1.2,6.7,0));
+  if(!top){
+    d.rr(0,Zy(4.85),9.2,3.4,1.7,'o');d.rr(0,Zy(4.85),7.6,2,1,'t');
+    for(let i=0;i<6;i++){const x=11+i*2.2;d.ci(x,Zy(4.85),1.1,'fill');d.ci(-x,Zy(4.85),1.1,'fill');}
+    d.ci(8,Zy(4.85),1.1,'t');
+    d.rr(0,Zy(10.35),12,.7,.3,'t');
+  }else{
+    d.ci(10,Zy(4.85),1.0,'t');
+    d.rr(0,Zy(10.5),PL.w,1.0,.4,'o');d.rr(LENS,Zy(11.2),12,.4,.15,'o');
+  }
+}
+function drawEdges(){const d=new Dw({x0:-100,y0:-72,x1:100,y1:42,k:2.4,label:'Bords haut et bas'});
+  const T=14,Bb=-40;
+  edge(d,T,true);edge(d,Bb,false);
+  d.tx(-HX,T+19.5,'Bord haut',{c:'lt',s:1.1});d.tx(-HX,T+15.8,'dos vers le haut, X comme vu de dos',{c:'lm',s:.8});
+  d.tx(-HX,Bb+19.5,'Bord bas',{c:'lt',s:1.1});d.tx(-HX,Bb+15.8,'dos vers le haut, X comme vu de dos',{c:'lm',s:.8});
+  /* haut */
+  d.call(10.5,T+4.85,50,T+4,'Micro haut Ø 1,0');
+  d.call(24,T+2.5,50,T-1,'Coupure d\'antenne 1,2');
+  d.call(LENS-6,T+11.3,-52,T+12,'Objectif +0,4');
+  d.call(-33.5,T+10.5,-52,T+7,'Plateau +1,0');
+  d.dimH(0,10,T-6,'10,0',{e1:T+4.3,e2:T+4.3});
+  d.dimV(T,T+10,-HX-4,'10,0',{e1:-HX,e2:-HX});
+  /* bas */
+  d.call(-22,Bb+4.85,-52,Bb+4.85,'Haut-parleur A',{sub:'6 trous Ø 1,1, pas 2,2'});
+  d.call(4.6,Bb+5.5,50,Bb+14,'USB-C 9,2 × 3,4');
+  d.call(8.5,Bb+4.85,50,Bb+9,'Micro bas Ø 1,1');
+  d.call(22.5,Bb+4.85,50,Bb+4,'Haut-parleur B',{sub:'6 trous Ø 1,1, pas 2,2'});
+  d.call(24,Bb+2,50,Bb-4,'Coupure d\'antenne 1,2');
+  d.call(6,Bb+10.35,-52,Bb+12,'Loquet +0,7');
+  d.dimH(0,8,Bb-8,'8,0',{e1:Bb+4.3,e2:Bb+4.3});
+  d.dimH(0,11,Bb-13,'11,0',{e1:Bb+4.3,e2:Bb+4.3});
+  d.dimH(0,22,Bb-18,'22,0',{e1:Bb+4.3,e2:Bb+4.3});
+  d.dimH(0,24,Bb-23,'24,0',{e1:Bb+1.5,e2:Bb+1.5});
+  d.dimV(Bb,Bb+4.85,-HX-4,'4,85',{e1:-HX,e2:-4.6});
+  d.dimV(Bb,Bb+10,-HX-10,'10,0',{e1:-HX,e2:-HX});
+  d.mount('dw-edges');}
+
+/* ------------------------------------------------ vue éclatée */
+const EX={sep:30,ax:.93,ay:.4,bx:-.1,by:.17};
+function pj(x,y,L){return [x*EX.ax+y*EX.ay, -(y*EX.by+x*EX.bx)+L*EX.sep];}
+function ppoly(pts,L){return pts.map(p=>pj(p[0],p[1],L));}
+function explodeLayer(d,L,key){
+  const P=(pts,c,close,a)=>{const q=ppoly(pts,L).map(p=>[p[0],-p[1]]);d.pl(q,c,close!==false,a);};
+  const RR=(cx,cy,w,h,r,c,a)=>P(rrPts(cx,cy,w,h,r,6),c,true,a);
+  const CI=(cx,cy,dd,c,a)=>P(circPts(cx,cy,dd,28),c,true,a);
+  const slab=(cx,cy,w,h,r,t)=>{const pts=ppoly(rrPts(cx,cy,w,h,r,6),L);
+    const sh=pts.map(p=>[p[0],-(p[1]+t)]);d.pl(sh,'t sheetfill',true,`style="fill:var(--line)"`);d.pl(pts.map(p=>[p[0],-p[1]]),'o sheetfill',true);};
+  if(key==='screen'){slab(0,0,BW,BH,BR,1.6);RR(0,4,60,112,3,'z');RR(0,66.5,9,7,1.2,'t');RR(-12,68.5,12,4,1,'t');RR(0,-63.5,30,13,1,'th');RR(0,-68,20,4.2,.6,'a');RR(-6.5,66,14,3,.5,'a');
+    [-45,0,45].forEach(y=>[-1,1].forEach(s=>RR(s*34.9,y,.6,7,.2,'t')));}
+  if(key==='frame'){slab(0,0,BW,BH,BR,3.2);RR(0,0,69.7,147.7,7.95,'t');RR(0,0,69.2,147.2,7.7,'th');RR(-6.5,67,26,8,1.5,'z');RR(0,-68,22,5,1,'z');
+    V.HOLES.forEach(h=>CI(h[0],h[1],1.6,'t'));[[-24.5,53],[-6.5,53],[8,-69.5],[-8,-69.5]].forEach(h=>CI(h[0],h[1],1.6,'t'));}
+  if(key==='board'){slab(0,0,64,140,5,1.2);RR(0,-11,64,80,3,'z');RR(17.5,42.5,25,17,1.2,'t');RR(-4.5,44,13,11,.8,'t');RR(-21,38,14,12,.8,'t');
+    V.PARTS.filter(p=>p.f==='dos'&&p.k==='conn').forEach(p=>RR(p.x,p.y,p.w,p.h,.5,'a'));RR(25.5,-58,9,9,.8,'t');RR(-24.5,-58,10,7,.8,'t');}
+  if(key==='cover'||key==='mods'||key==='photo')RR(0,0,BW,BH,BR,'th',`stroke-dasharray="3 3"`);
+  if(key==='cover'){slab(0,48.6,61,38.8,3,.6);slab(0,-58.55,61,13.9,3,.6);RR(17.5,42.5,25.6,17.6,1.4,'th');RR(-15.5,53,23.6,5.6,1,'th');RR(-21,38,15,13,1,'w');RR(0,-58,37.8,13.3,1.5,'th');}
+  if(key==='mods'){slab(0,-11,64,80,3,4);RR(-22,29.5,12,9,1,'t',`style="fill:var(--warn-soft)"`);RR(0,-8,50,40,2,'th');
+    slab(0,-58,37,12.5,1.5,1.4);slab(-20.5,-69.8,19,6.5,1.5,2.4);slab(20.5,-69.8,19,6.5,1.5,2.4);slab(0,-71,9.4,7,1.2,2.4);}
+  if(key==='photo'){slab(0,61,63.6,20,4.5,4);slab(0,PL.cy,PL.w,PL.h,PL.r,1.2);CI(LENS,PL.cy,12,'o');CI(LENS,PL.cy,7,'th');CI(FLASH,PL.cy,4.8,'t');CI(MIC,PL.cy,1.6,'t');}
+  if(key==='inner'){slab(0,0,BW,BH,BR,.6);
+    for(let i=0;i<16;i++){const a0=i*Math.PI/8+.04,a1=(i+1)*Math.PI/8-.04,pts=[];for(let j=0;j<=6;j++){const a=a0+(a1-a0)*j/6;pts.push([27*Math.cos(a),-11+27*Math.sin(a)]);}for(let j=6;j>=0;j--){const a=a0+(a1-a0)*j/6;pts.push([23.5*Math.cos(a),-11+23.5*Math.sin(a)]);}P(pts,'z');}
+    [38,30,22,14].forEach(dd=>CI(0,-11,dd,'th'));CI(0,-11,44,'a',`style="fill:none"`);
+    V.CX.forEach(p=>RR(p[0],p[1],17.4,5,2.2,'a'));
+    P([[-32.6,42],[-32.6,-64.5],[32.6,-64.5],[32.6,42]],'a',false,`style="fill:none"`);P([[-32.6,36],[-6,36]],'a',false,`style="fill:none"`);
+    RR(0,-58,20,9,1,'w');RR(14.75,20,3,22,.5,'th');}
+  if(key==='coque'){slab(0,0,BW,BH,BR,1.4);RR(0,PL.cy,PL.w+.6,PL.h+.6,PL.r+.3,'z');V.CX.forEach(p=>{RR(p[0],p[1],15.4,3.4,1.7,'a');});
+    RR(0,-51,30,3.7,.5,'th');RR(0,-70.5,12,3.2,1.6,'o');}
+}
+function drawExplode(){const n=V.LAYERS.length;
+  const d=new Dw({x0:-70,y0:-(n-1)*EX.sep-22,x1:150,y1:24,k:3.4,minw:460,label:'Vue éclatée'});
+  /* l'écran est en bas de l'image, la coque en haut ; on dessine du bas vers le haut pour que chaque couche masque celle du dessous */
+  for(let i=0;i<n;i++){const Lz=n-1-i,l=V.LAYERS[i];
+    d.cmp(l.k,l.n);explodeLayer(d,Lz,l.k);
+    const c=pj(HX,HY,Lz),ty=-Lz*EX.sep;
+    d.pl([[c[0]+1,-c[1]],[76,ty],[80,ty]],'th',false);
+    d.tx(82,ty,l.n,{v:'m',s:.95,c:'lt'});d.tx(82,ty-4.2,'z '+l.z,{v:'m',s:.75,c:'dt'});
+    d.ge();}
+  return d.mount('dw-explode');}
+
+/* ------------------------------------------------ coupes A-A et B-B */
+function drawZstack(){const S=4;/* exagération en Z */
+  const d=new Dw({x0:-74,y0:-120,x1:94,y1:14,k:2.6,label:'Coupes'});
+  const sec=(y0,title,items)=>{
+    const Z=z=>y0+z*S;
+    d.tx(-HX,Z(13.4),title,{c:'lt',s:1});
+    /* verre, dalle */
+    d.box(-HX,Z(0),HX,Z(.55),'t',`style="fill:var(--accent-soft)"`);d.box(-HX+.6,Z(.55),HX-.6,Z(1.5),'t',`style="fill:var(--zone)"`);
+    /* cadre : parois et plaque */
+    d.box(-HX,Z(1.5),-HX+.85,Z(8.2),'h',`style="fill:url(#hatch)"`);d.box(HX-.85,Z(1.5),HX,Z(8.2),'h',`style="fill:url(#hatch)"`);
+    d.box(-34.6,Z(1.5),34.6,Z(2.5),'h',`style="fill:url(#hatch)"`);
+    /* carte */
+    d.box(-32,Z(2.5),32,Z(3.3),'t',`style="fill:var(--accent-soft);stroke:var(--accent)"`);
+    items(Z);
+    /* coque */
+    d.box(-HX,Z(8.6),HX,Z(10),'t',`style="fill:var(--zone)"`);
+    d.box(-35.4,Z(8.2),-34.7,Z(8.56),'fill');d.box(34.7,Z(8.2),35.4,Z(8.56),'fill');
+  };
+  /* A-A à y = 42 */
+  sec(-50,'Coupe A-A, à y = 42 (processeur, connecteurs Connect du haut)',Z=>{
+    d.box(5,Z(3.3),30,Z(4.4),'t');d.box(7.5,Z(4.4),13.3,Z(8.55),'z');d.box(13.8,Z(7.5),31.2,Z(7.8),'w');
+    [[-30.2,-14.8],[14.8,30.2]].forEach(a=>{d.box(a[0],Z(8.85),a[1],Z(10),'a');d.box(a[0]-.9,Z(7.8),a[1]+.9,Z(8.05),'fill');});
+    [-28.6,-16.4,16.4,28.6].forEach(x=>d.box(x-1.5,Z(8.05),x+1.5,Z(8.85),'t',`style="fill:var(--warn-soft)"`));
+    d.box(-28,Z(3.3),-14,Z(4.6),'t');d.box(-11,Z(3.3),2,Z(4.3),'t');
+    d.box(-30.5,Z(3.95),-28.1,Z(4.25),'fill');d.box(2.5,Z(3.95),4.8,Z(4.25),'fill');d.box(30.2,Z(3.95),30.5,Z(4.25),'fill');d.box(-13.5,Z(3.95),-11.5,Z(4.25),'fill');
+    d.call(17.5,Z(3.9),50,Z(2.5),'Capot du SoC (U1)');
+    d.call(10,Z(6.5),50,Z(5.6),'Pad thermique échancré');
+    d.call(29,Z(7.65),50,Z(8.2),'Isolant aérogel',{c:'lw'});
+    d.call(22.5,Z(9.5),50,Z(10.8),'Connecteur Connect');
+    d.call(-21,Z(4.4),-40,Z(6.4),'SIM');d.call(-4.5,Z(4.1),-40,Z(9.8),'UFS');
+    d.call(0,Z(2.9),-40,Z(2.9),'Carte 0,8');
+  });
+  /* B-B à y = −11 */
+  sec(-108,'Coupe B-B, à y = −11 (batterie, bobine Qi2)',Z=>{
+    d.box(-32,Z(3.7),32,Z(8.1),'t',`style="fill:var(--zone)"`);
+    d.box(-20.5,Z(8.13),20.5,Z(8.23),'fill');
+    [[-19,-6],[6,19]].forEach(a=>d.box(a[0],Z(8.28),a[1],Z(8.5),'a'));
+    [[-27,-23.5],[23.5,27]].forEach(a=>d.box(a[0],Z(8.2),a[1],Z(8.6),'t',`style="fill:var(--warn-soft)"`));
+    [-32.6,32.6].forEach(x=>d.box(x-.8,Z(8.5),x+.8,Z(8.58),'a'));
+    d.call(-10,Z(6),-40,Z(6),'Batterie 4,4');d.call(12,Z(8.4),50,Z(9.8),'Bobine Qi2');
+    d.call(25,Z(8.4),50,Z(7),'Aimants MPP');d.call(32.6,Z(8.55),50,Z(4.2),'Circuit Connect');
+    d.call(-HX+.4,Z(5),-40,Z(1.2),'Cadre');
+  });
+  d.tx(-HX,-118,'Z exagéré 4 fois. Coque, verre et cadre en coupe hachurée.',{c:'lm',s:.8});
+  d.mount('dw-zstack');}
+
+window.VPLANS1={drawAxes,drawBack,drawFront,drawSide,drawEdges,drawExplode,drawZstack,backFeatures,buttonsBack,BW,BH,BR,HX,HY,PL,LENS,MIC,FLASH,LIDAR,pj,EX};
+})();
+</script>
+<script>
+(function(){
+"use strict";
+const {Dw,rrPts,circPts}=window.VD,V=window.VDATA,Q=window.VPLANS1;
+const {BW,BH,BR,HX,HY,PL,LENS,MIC,FLASH,LIDAR}=Q;
+
+/* ------------------------------------------------ carte mère */
+function pads(d,p){const id=p.id;
+  const row=(n,pitch,yy,s)=>{for(let i=0;i<n;i++)d.rr(p.x+(i-(n-1)/2)*pitch,yy,s,s,.1,'gd');};
+  if(id==='J1'){row(20,.8,p.y+.6,.45);row(20,.8,p.y-.6,.45);}
+  if(id==='J11'){row(15,.8,p.y+.6,.45);row(15,.8,p.y-.6,.45);}
+  if(id==='J2'){row(15,.8,p.y+.6,.45);row(15,.8,p.y-.6,.45);}
+  if(id==='J5'){row(10,.8,p.y+.6,.45);row(10,.8,p.y-.6,.45);}
+  if(id==='J9'){row(14,.8,p.y+.6,.45);row(14,.8,p.y-.6,.45);}
+  if(id==='J4'){for(let i=0;i<7;i++)d.rr(-9+i*3,p.y,2,3,.3,'gd');[-13,13].forEach(x=>d.ci(x,p.y,1.3,'t'));}
+  if(id==='J6'){[9.5,13,16.5,20].forEach(x=>d.ci(x,p.y,1.8,'gd'));}
+  if(id==='J10'){[-9,-7,-5,-3].forEach(x=>d.ci(x,p.y,1.6,'gd'));}
+  if(id==='J7'||id==='J8'){[-2,0,2].forEach(dx=>d.rr(p.x+dx,p.y,.9,1.8,.2,'gd'));}
+  if(id==='J12'){row(5,.7,p.y+.5,.3);row(5,.7,p.y-.5,.3);}
+  if(id==='J3'){d.rr(p.x,p.y,12.3,8.8,.8,'th');d.ln(p.x-7,p.y+5,p.x+7,p.y+5,'th');}
+}
+function part(d,p){const cls=p.k==='conn'?'a':p.k==='zone'?'z':p.add?'w':'t';
+  d.cmp(p.id,p.id+' · '+p.t);
+  if(p.k==='tp'){d.rr(p.x,p.y,p.w,p.h,.8,'z');for(let i=0;i<5;i++){d.ci(p.x-4+i*2,p.y+1,1,'gd');d.ci(p.x-4+i*2,p.y-1,1,'gd');}}
+  else{d.rr(p.x,p.y,p.w,p.h,Math.min(1,p.w/5),cls);
+    if(p.k==='ic'&&p.w>6)d.rr(p.x,p.y,p.w-1.2,p.h-1.2,Math.min(.8,p.w/6),'th');
+    if(p.add&&p.k==='conn')d.rr(p.x,p.y,p.w+1.2,p.h+1.2,Math.min(1,p.w/5),'w',`style="fill:none"`);
+    pads(d,p);}
+  const big=p.w*p.h>60,fs=big?1:.72;
+  let ty=p.y,tx=p.x,anchor='middle';
+  if(!big){/* petites pièces : étiquette à côté */
+    if(p.id==='J6'){tx=p.x-p.w/2-1;anchor='end';}else if(p.id==='J10'){ty=p.y-3;}else if(p.id==='J12'){ty=p.y-2.8;}
+    else if(p.id==='SW1'){tx=p.x-1.4;ty=p.y-4.2;anchor='end';}
+    else if(/^SW/.test(p.id)){tx=p.x+(p.x>0?-1.6:1.6);anchor=p.x>0?'end':'start';}
+    else if(p.id==='J7'||p.id==='J8'){ty=p.y+2.6;}else if(p.id==='J9'){ty=p.y+2.6;}else if(p.id==='J5'){ty=p.y+2.5;}
+    else if(p.id==='TP1'){ty=p.y+3.4;}else if(p.id==='J1'){ty=p.y+3.4;}else if(p.id==='J11'){ty=p.y-3.2;}
+    else if(p.w<=4.5){ty=p.y-p.h/2-1.6;}}
+  else if(p.id==='J2'){ty=p.y+3.2;}else if(p.id==='J4'){ty=p.y+3.6;}else if(p.id==='J1'){ty=p.y+3.6;}
+  if(p.k==='zone')d.tx(tx,ty,'Pad thermique 0,3',{a:anchor,v:'m',s:.72,c:'lm'});else d.tx(tx,ty,p.id,{a:anchor,v:'m',s:fs,w:600,f:'m'});
+  d.ge();}
+function boardBase(d,face){
+  d.rr(0,0,64,140,5,'o sheetfill');
+  V.HOLES.forEach((h,i)=>{d.ci(h[0],h[1],3,'gd',`style="opacity:.55"`);d.ci(h[0],h[1],1.55,'t sheetfill');d.tx(h[0]+(h[0]>0?-2.4:2.4),h[1]+(h[1]>0?-3:3),'H'+(i+1),{a:h[0]>0?'end':'start',v:'m',s:.62,c:'dt'});});
+  V.ANT.forEach(a=>{d.rr(a[1],a[2],1.2,2.5,.2,'gd');});
+  Object.keys(V.SCREWS).forEach(k=>{const s=V.SCREWS[k];if(k==='V11'){d.ci(s[0],s[1],2.4,'t');d.ci(s[0],s[1],1.4,'th');}else d.ci(s[0],s[1],1.6,'t');
+    if(k==='V9')d.tx(s[0]-1.8,s[1],k,{a:'end',v:'m',s:.55,c:'dt'});else if(k==='V10')d.tx(s[0]+1.8,s[1],k,{v:'m',s:.55,c:'dt'});else d.tx(s[0],s[1]+2.2,k,{a:'middle',v:'m',s:.55,c:'dt'});});
+}
+function drawBoard(face){const top=face==='dos';
+  const d=new Dw({x0:-52,y0:-84,x1:52,y1:80,k:2.6,label:'Carte mère, face '+face});
+  boardBase(d,face);
+  if(top){
+    d.rr(0,-11,64,80,3,'z');d.tx(0,-2,'Zone batterie',{a:'middle',v:'m',s:1,c:'lm'});d.tx(0,-6.5,'aucun composant, hauteur libre 0,4',{a:'middle',v:'m',s:.72,c:'lm'});
+    d.rr(0,61,63.6,20,4.5,'th',`stroke-dasharray="2 2"`);d.tx(7,58.5,'sous le module photo',{s:.62,c:'lm'});
+  }else{
+    d.rr(-6.5,67,26,8,1.5,'z');d.rr(0,-68,22,5,1,'z');
+    const zones=[[-16,-21,28,42,'Radio 5G'],[17,-30,26,32,'Alimentation'],[17,4,26,28,'Wi-Fi · BT · GNSS'],[-10,-56.5,40,13,'Audio · USB']];
+    zones.forEach(z=>{d.rr(z[0],z[1],z[2],z[3],2,'z');d.tx(z[0]-z[2]/2+1.2,z[1]+z[3]/2-2,z[4],{s:.72,c:'lm'});});
+    d.tx(-16,9.5,'Implantation indicative :',{a:'middle',s:.7,c:'lm'});d.tx(-16,6.2,'placement final au routage',{a:'middle',s:.7,c:'lm'});
+  }
+  V.PARTS.filter(p=>p.f===face).forEach(p=>part(d,p));
+  if(top){
+    /* calques optionnels */
+    d.g('class="lay-mods" style="display:none;pointer-events:none"');
+    d.rr(0,-11,64,80,3,'t',`style="fill:var(--accent-soft);stroke:var(--accent);opacity:.9"`);d.tx(0,-32,'Batterie 64 × 80',{a:'middle',s:1,c:'la'});
+    d.rr(0,-58,37,12.5,1.5,'t',`style="fill:var(--accent-soft);stroke:var(--accent)"`);d.tx(0,-58,'Stockage',{a:'middle',v:'m',s:.8,c:'la'});
+    [-20.5,20.5].forEach(x=>{d.rr(x,-69.8,19,6.5,1.5,'t',`style="fill:var(--accent-soft);stroke:var(--accent)"`);});
+    d.rr(0,-71,9.4,7,1.2,'t',`style="fill:var(--accent-soft);stroke:var(--accent)"`);
+    d.rr(0,61,63.6,20,4.5,'t',`style="fill:var(--accent-soft);stroke:var(--accent)"`);d.tx(0,61,'Module photo',{a:'middle',v:'m',s:.9,c:'la'});
+    d.ge();
+    d.g('class="lay-cover" style="display:none;pointer-events:none"');
+    coverShapes(d,'t',`style="fill:var(--zone);stroke:var(--fg);opacity:.95"`);
+    d.ge();
+  }
+  d.dimH(-32,32,-78,'64,0',{e1:-70,e2:-70});d.dimV(-70,70,-44,'140,0',{e1:-32,e2:-32});
+  d.dimH(-29,29,76,'58,0',{e1:66,e2:66});d.dimV(-66,66,42,'132,0',{e1:29,e2:29,right:true});
+  d.mount(top?'dw-board-top':'dw-board-bot');}
+
+/* ------------------------------------------------ cache */
+function rrD(cx,cy,w,h,r){const x0=cx-w/2,x1=cx+w/2,y0=-(cy+h/2),y1=-(cy-h/2);r=Math.min(r,w/2,h/2);const f=VD.fx;
+  return `M${f(x0+r)},${f(y0)}H${f(x1-r)}A${r},${r} 0 0 1 ${f(x1)},${f(y0+r)}V${f(y1-r)}A${r},${r} 0 0 1 ${f(x1-r)},${f(y1)}H${f(x0+r)}A${r},${r} 0 0 1 ${f(x0)},${f(y1-r)}V${f(y0+r)}A${r},${r} 0 0 1 ${f(x0+r)},${f(y0)}Z`;}
+function ciD(cx,cy,dd){const r=dd/2,f=VD.fx;return `M${f(cx-r)},${f(-cy)}a${r},${r} 0 1 0 ${f(2*r)},0a${r},${r} 0 1 0 ${f(-2*r)},0Z`;}
+const COVH=[[-15.5,53,23.6,5.6,1,0],[17.5,42.5,25.6,17.6,1.4,0],[14.75,31.5,14.7,3.8,1,0],[-6,36,10.7,3.8,1,0],
+    [-21,38,15,13,1,1],[-4.5,44,14,12,1,1],[27,31.2,5.5,3.4,.8,1],[-24.5,-58,10.8,7.8,1,0],[25.4,-58,9.8,9.8,1,0]];
+const COVC=[[29,66,2,0],[-18,65.5,3,1],[5,65.5,3,1]];
+function coverShapes(d,cls,a){
+  /* cache haut : contour et découpes en un seul chemin (règle evenodd), pour laisser voir la carte au travers */
+  let top=rrD(0,48.6,61,38.8,3);COVH.filter(h=>h[1]>0).forEach(h=>top+=rrD(h[0],h[1],h[2],h[3],h[4]));COVC.forEach(c=>top+=ciD(c[0],c[1],c[2]));
+  d.path(top,cls,(a||'')+' fill-rule="evenodd"');
+  /* cache bas en U : ouvert vers le haut pour le stockage agrandi */
+  const f=VD.fx,Y=y=>f(-y);
+  let bot=`M${f(-27.5)},${Y(-51.6)}H${f(-18.9)}V${Y(-64.8)}H${f(18.9)}V${Y(-51.6)}H${f(27.5)}A3,3 0 0 1 ${f(30.5)},${Y(-54.6)}V${Y(-62.5)}A3,3 0 0 1 ${f(27.5)},${Y(-65.5)}H${f(-27.5)}A3,3 0 0 1 ${f(-30.5)},${Y(-62.5)}V${Y(-54.6)}A3,3 0 0 1 ${f(-27.5)},${Y(-51.6)}Z`;
+  COVH.filter(h=>h[1]<0).forEach(h=>bot+=rrD(h[0],h[1],h[2],h[3],h[4]));
+  d.path(bot,cls,(a||'')+' fill-rule="evenodd"');
+  /* ajouts par rapport à la maquette, soulignés en orange */
+  COVH.filter(h=>h[5]).forEach(h=>d.rr(h[0],h[1],h[2],h[3],h[4],'w',`style="fill:none"`));COVC.filter(c=>c[3]).forEach(c=>d.ci(c[0],c[1],c[2],'w',`style="fill:none"`));
+  d.path(`M${f(-18.9)},${Y(-51.6)}V${Y(-64.8)}H${f(18.9)}V${Y(-51.6)}`,'w',`style="fill:none"`);
+}
+function drawCover(){const d=new Dw({x0:-50,y0:-74,x1:50,y1:78,k:2.6,label:'Cache de carte mère'});
+  d.rr(0,0,64,140,5,'th',`stroke-dasharray="3 3"`);
+  coverShapes(d,'o',`style="fill:var(--zone)"`);
+  [[-30.4,31.5],[30.4,31.5],[-30.4,-60],[30.4,-60]].forEach(p=>d.rr(p[0],p[1],.8,4,.2,'fill'));[[2.5,68.1],[0,-65.6]].forEach(p=>d.rr(p[0],p[1],4,.8,.2,'fill'));
+  d.tx(-21,38,'SIM',{a:'middle',v:'m',s:.8,c:'lw'});d.tx(-4.5,44,'UFS',{a:'middle',v:'m',s:.8,c:'lw'});d.tx(17.5,42.5,'SoC',{a:'middle',v:'m',s:.9});
+  d.tx(-15.5,53,'J2',{a:'middle',v:'m',s:.8});d.tx(0,-58,'Stockage',{a:'middle',v:'m',s:.8,c:'lw'});
+  d.dimH(-30.5,30.5,74,'61,0',{e1:68,e2:68});d.dimV(29.2,68,36,'38,8',{e1:30.5,e2:30.5,right:true});d.dimV(-65.5,-51.6,36,'13,9',{e1:30.5,e2:30.5,right:true});
+  d.tx(0,-70,'Découpes orange : ajoutées par rapport à la maquette. Contour pointillé : la carte.',{a:'middle',s:.75,c:'lm'});
+  d.mount('dw-cover');}
+
+/* ------------------------------------------------ empilage PCB */
+function drawStackup(){const d=new Dw({x0:0,y0:-118,x1:150,y1:4,k:3.3,minw:0,label:'Empilage des couches'});
+  const L=[['Vernis','',.4,'m'],['L1','Composants face dos, plages or dur',1,'c'],['','Diélectrique 70 µm',1.5,'d'],['L2','Masse',1,'c'],['','',1.5,'d'],['L3','Rapides : MIPI, PCIe (triplaque)',1,'c'],['','',1.5,'d'],['L4','Alimentations VBAT, VDD_CPU',1,'c'],['','',1.5,'d'],
+    ['L5','Signaux, USB 2.0, mémoire',1,'c'],['','',1.5,'d'],['L6','Signaux',1,'c'],['','',1.5,'d'],['L7','Alimentations 1,8 / 1,2 / 3,3 V',1,'c'],['','',1.5,'d'],['L8','Rapides : USB 3.2, DSI',1,'c'],['','',1.5,'d'],['L9','Masse',1,'c'],['','',1.5,'d'],['L10','Composants face écran',1,'c'],['Vernis','',.4,'m']];
+  let y=-4;const U=4.2;
+  L.forEach(l=>{const h=l[2]*U;const c=l[3]==='c'?`style="fill:var(--gold);stroke:none"`:l[3]==='d'?`style="fill:var(--zone);stroke:none"`:`style="fill:var(--accent);stroke:none;opacity:.55"`;
+    d.box(4,y-h,56,y,'t',c);
+    if(l[0]&&l[3]==='c')d.tx(60,y-h/2,l[0],{v:'m',s:.9,w:600,f:'m'});
+    if(l[1])d.tx(l[3]==='c'?72:60,y-h/2,l[1],{v:'m',s:.8,c:l[3]==='c'?'':'lm'});
+    if(l[3]==='m')d.tx(60,y-h/2,'Vernis vert mat 15 µm',{v:'m',s:.75,c:'lm'});
+    y-=h;});
+  /* micro-vias empilés */
+  const x0=22;let yy=-4-.4*U;for(let i=0;i<9;i++){const h=(1+1.5)*U;d.pl([[x0-1.2,yy-U],[x0+1.2,yy-U],[x0+.7,yy-h],[x0-.7,yy-h]],'fill',true,`style="opacity:.75"`);yy-=h;}
+  d.tx(x0,-113,'micro-vias laser empilés',{a:'middle',s:.75,c:'lm'});
+  d.mount('dw-stackup');}
+
+/* ------------------------------------------------ alimentation */
+function drawPower(){const d=new Dw({x0:0,y0:-132,x1:250,y1:0,k:3.3,label:'Arbre d’alimentation'});
+  const B=(x,y,w,h,t,s,c)=>{d.rr(x+w/2,-(y+h/2),w,h,2,c||'t sheetfill');d.tx(x+3,-(y+h/2)+(s?2:0),t,{v:'m',s:.85,w:600});if(s)d.tx(x+3,-(y+h/2)-2.6,s,{v:'m',s:.68,c:'lm'});};
+  const W=(pts,c)=>d.pl(pts.map(p=>[p[0],-p[1]]),c||'t',false,'style="fill:none"');
+  B(4,8,46,14,'USB-C · VBUS','5 à 20 V, PD 45 W');B(4,28,46,14,'Qi2 · U24','bobine de la coque');B(4,48,46,14,'Dos Connect · U23','5 V ↔ accessoire','a');
+  B(70,24,44,22,'U7 chargeur','PD + pompe de charge');
+  B(70,62,44,14,'Batterie · J4','3,0 à 4,45 V, 17 Wh');
+  W([[50,15],[60,15],[60,32],[70,32]]);W([[50,35],[70,35]]);W([[50,55],[60,55],[60,40],[70,40]],'a');
+  W([[92,46],[92,62]]);d.tx(95,-54,'VBAT',{v:'m',s:.7,c:'dt'});
+  W([[114,35],[132,35]]);d.tx(116,-31.5,'VSYS',{s:.75,c:'dt'});
+  W([[132,8],[132,126]]);
+  const C=[[8,'U4 PMIC principal','CPU, GPU, NPU, cœur, modem, LPDDR5X, 1,8 V'],[26,'U5 PMIC secondaire','UFS, 3,3 V stockage, caméras, capteurs, tactile'],[44,'U6 écran','ELVDD +4,6 V, ELVSS −1,4 à −5,4 V'],[62,'U8 flash','2 × 1 A'],[80,'U14, U15 amplis HP','boost interne ≈ 10 V'],[98,'U10, U11 radio','VPA par suivi d’enveloppe'],[116,'U23 dos Connect','VCX 5 V, 1,5 A']];
+  C.forEach(c=>{W([[132,c[0]+7],[142,c[0]+7]]);B(142,c[0],104,14,c[1],c[2],c[1].indexOf('Connect')>=0?'a':null);});
+  d.mount('dw-power');}
+
+/* ------------------------------------------------ schéma bloc */
+function drawBlock(){const d=new Dw({x0:0,y0:-156,x1:250,y1:0,k:3.1,label:'Schéma bloc'});
+  const blk=(id,x,y,w,h,t,s,c,tip)=>{d.cmp(id,tip||t);d.rr(x+w/2,-(y+h/2),w,h,2,(c||'t')+' sheetfill');d.tx(x+2.6,-(y+h/2)+(s?2:0),t,{v:'m',s:.82,w:600});if(s)d.tx(x+2.6,-(y+h/2)-2.4,s,{v:'m',s:.66,c:'lm'});d.ge();};
+  const W=(pts,fast)=>d.pl(pts.map(p=>[p[0],-p[1]]),fast?'a':'t',false,fast?'style="fill:none;stroke-width:1.8"':'style="fill:none"');
+  /* SoC */
+  d.cmp('U1','U1 · SoC 3 nm');d.rr(122,-78,52,44,4,'o sheetfill');d.tx(100,-66,'U1 · SoC 3 nm',{s:1.1,w:600,f:'d'});
+  ['CPU 8 cœurs','GPU · NPU · ISP','Modem 5G','Contrôleurs E/S'].forEach((t,i)=>d.tx(100,-74-i*5,t,{s:.75,c:'lm'}));d.ge();
+  blk('U2',102,26,40,14,'U2 · LPDDR5X 12 Go','empilée (PoP)');W([[122,40],[122,56]],1);
+  /* gauche */
+  const Lf=[['J1',8,'J1 · Écran OLED','DSI 4 voies',1],['J11',26,'J11 · Caméra avant','CSI 2 voies',1],['J2',44,'J2 · Capteur 50 Mpx','CSI 4 voies',1],['U3',62,'U3 · UFS 128 Go','UFS 4.0',1],['J5',80,'J5 · Stockage 256 Go','PCIe 4.0 ×1',1],['J12',98,'J12 · Empreinte','SPI',0],['U18',116,'U18–U21 · Capteurs','I²C, I³C',0]];
+  const EXL=[82,79,76,73,64,67,70];
+  Lf.forEach((l,i)=>{blk(l[0],6,l[1],50,14,l[2],l[3],l[4]?'a':null);const yb=l[1]+7,ys=60+i*5,ex=EXL[i];W([[56,yb],[ex,yb],[ex,ys],[96,ys]],l[4]);});
+  /* droite */
+  const R1=[['U9',20,'U9 · Radio 5G','émetteur-récepteur',1],['U16',40,'U16 · Wi-Fi 7 · BT · GNSS','',1],['U17',60,'U17 · NFC','',0],['U12',80,'U12 · Redresseur','USB 3.2 / DP',1],['J10',100,'J10 · Dos Connect','USB 2.0',0]];
+  R1.forEach((l,i)=>{blk(l[0],160,l[1],44,14,l[2],l[3],l[4]?'a':null);const yb=l[1]+7,ys=60+i*8,ex=150+i*2;W([[148,ys],[ex,ys],[ex,yb],[160,yb]],l[4]);});
+  const R2=[['ANTa',20,'U10, U11 → antennes','A B D E F'],['ANTc',40,'Antennes C, E, D','Wi-Fi, GNSS'],['J6',60,'J6 · boucle NFC','coque'],['J9',80,'J9 · USB-C','10 Gb/s, DP'],['HUB',100,'Hub de la coque','→ 4 connecteurs']];
+  R2.forEach((l,i)=>{blk(l[0],210,l[1],36,14,l[2],l[3],l[0]==='HUB'?'a':null);W([[204,l[1]+7],[210,l[1]+7]],i===3||i<2);});
+  /* bas */
+  blk('U4',100,122,44,14,'U4, U5 · PMIC','toutes les tensions');W([[122,100],[122,122]]);
+  blk('U7',150,122,40,14,'U7 · Chargeur + PD','');W([[144,129],[150,129]]);
+  blk('J4',196,122,32,14,'J4 · Batterie','17 Wh');W([[190,127],[196,127]]);
+  blk('U24',150,140,40,12,'U24 · Qi2','J6');W([[170,140],[170,136]]);
+  blk('U13',6,136,50,14,'U13–U15 · Audio','HP J7, J8 · écouteur · micros');W([[56,143],[88,143],[88,97],[96,97]]);
+  d.mount('dw-block');}
+
+/* ------------------------------------------------ antennes */
+function drawAnt(){const d=new Dw({x0:-80,y0:-90,x1:80,y1:90,k:2.9,label:'Antennes'});
+  d.rr(0,0,BW,BH,BR,'o sheetfill');d.rr(0,0,BW-1.7,BH-1.7,BR-.85,'th');
+  const raw=rrPts(0,0,BW-.85,BH-.85,BR-.4,24),pts=[];raw.forEach((p,i)=>{const q=raw[(i+1)%raw.length],n=Math.max(1,Math.ceil(Math.hypot(q[0]-p[0],q[1]-p[1])/0.8));for(let j=0;j<n;j++)pts.push([p[0]+(q[0]-p[0])*j/n,p[1]+(q[1]-p[1])*j/n]);});
+  const seg=p=>{const x=p[0],y=p[1];if(y>56.6){return x<-24.6?'E':x>24.6?'F':(Math.abs(x)<23.4?'D':null);}if(y<-56.6){return x<-24.6?'B':x>24.6?'C':(Math.abs(x)<23.4?'A':null);}if(Math.abs(y)<55.4)return 'G';return null;};
+  let run=[],cur=null;const flush=()=>{if(run.length>1){d.pl(run,cur==='G'?'t':'a',false,cur==='G'?'style="fill:none;stroke-width:2.4;stroke:var(--mute)"':'style="fill:none;stroke-width:4"');}run=[];};
+  pts.concat([pts[0]]).forEach(p=>{const s=seg(p);if(s!==cur){flush();cur=s;}if(s)run.push(p);});flush();
+  [[-HX,56],[HX,56],[-HX,-56],[HX,-56]].forEach(p=>d.rr(p[0]+(p[0]>0?-.5:.5),p[1],1.8,1.2,0,'fill'));[[-24,HY],[24,HY],[-24,-HY],[24,-HY]].forEach(p=>d.rr(p[0],p[1]+(p[1]>0?-.5:.5),1.2,1.8,0,'fill'));
+  V.ANT.forEach(a=>{d.ci(a[1],a[2],2.2,'gd');d.tx(a[1]+(a[1]>0?-2.2:2.2),a[2]+(a[2]>0?-3:3),a[0],{a:a[1]>0?'end':'start',v:'m',s:.72,f:'m'});});
+  d.rr(0,-11,40,40,20,'th',`stroke-dasharray="3 3"`);d.tx(0,-11,'Boucle NFC (coque)',{a:'middle',v:'m',s:.8,c:'lm'});
+  const lab=[['A · principale',0,-HY,0,-84],['B · 5G haute',-30,-70,-58,-80],['C · Wi-Fi 1',30,-70,58,-80],['D · diversité + GNSS',0,HY,0,84],['E · MIMO 3',-30,70,-58,82],['F · MIMO 4',30,70,58,82]];
+  lab.forEach(l=>{d.ln(l[1],l[2],l[3],l[4]+(l[4]>0?-2:2),'th');d.tx(l[3],l[4],l[0],{a:'middle',v:'m',s:.95,c:'la'});});
+  d.tx(-HX-3,0,'masse',{a:'end',v:'m',s:.85,c:'lm'});d.tx(HX+3,0,'masse',{v:'m',s:.85,c:'lm'});
+  d.tx(0,30,'Coupures : 1,2 mm, polymère teinté',{a:'middle',s:.8,c:'lm'});
+  d.mount('dw-ant');}
+
+/* ------------------------------------------------ bloc écran */
+function drawScreen(){const d=new Dw({x0:-96,y0:-88,x1:96,y1:86,k:2.9,label:'Bloc écran'});
+  d.rr(0,0,BW,BH,BR,'o sheetfill');d.rr(0,0,71,149,8.5,'th');
+  d.rr(0,4,60,112,3,'z');d.tx(0,4,'Graphite + cuivre 60 × 112',{a:'middle',v:'m',s:.9,c:'lm'});
+  d.rr(0,66.5,9,7,1.2,'t');d.ci(0,66.5,4.4,'th');d.rr(-12,68.5,12,4,1,'t');
+  d.rr(-12,62.5,3,8,.3,'th');d.rr(0,59.5,4,8,.3,'th');d.rr(-6.5,66,14,3,.5,'a');
+  d.rr(0,-63.5,30,13,1,'th');d.rr(0,-68,20,4.2,.6,'a');[-11.5,11.5].forEach(x=>d.ci(x,-68,2.2,'t'));
+  [-45,0,45].forEach(y=>[-1,1].forEach(s=>d.rr(s*34.9,y,.8,7,.2,'fill')));
+  d.call(4.5,66.5,44,72,'Caméra avant 12 Mpx',{sub:'module 9 × 7, en (0 ; 66,5)'});
+  d.call(-18,68.5,-44,74,'Écouteur 12 × 4',{sub:'en (−12 ; 68,5)'});
+  d.call(-13.5,66,-44,62,'J11 · 30 contacts',{c:'la'});
+  d.call(-10,-68,-44,-68,'J1 · 40 contacts',{c:'la',sub:'2 vis V5, V6 (±11,5)'});
+  d.call(15,-60,44,-58,'Nappe de dalle 30 × 13');
+  d.call(34.9,45,44,45,'Clips acier (×6)',{sub:'x = ±34,9 ; y = −45, 0, 45'});
+  d.call(25,30,44,28,'Feuille thermique',{sub:'graphite 0,07 + cuivre 18 µm'});
+  d.dimH(-30,30,-82,'60,0',{e1:-52,e2:-52});d.dimV(-52,60,-58,'112,0',{e1:-30,e2:-30});
+  d.mount('dw-screen');}
+
+/* ------------------------------------------------ module photo */
+function drawPhoto(){const d=new Dw({x0:-96,y0:26,x1:78,y1:110,k:2.5,label:'Module photo'});
+  const oy=26,cy=PL.cy+oy;
+  d.rr(0,61+oy,63.6,20,4.5,'th',`stroke-dasharray="2 2"`);
+  d.rr(0,cy,PL.w,PL.h,PL.r,'o sheetfill');d.rr(0,cy,PL.w-2.2,PL.h-2.2,PL.r-1.1,'th');
+  d.ci(LENS,cy,12.9,'t');d.ci(LENS,cy,12,'o');d.ci(LENS,cy,10.1,'th');d.ci(LENS,cy,7.2,'th');d.ci(LENS,cy,3.6,'fill',`style="opacity:.8"`);
+  d.ci(MIC,cy,1.6,'fill');d.ci(FLASH,cy,5.4,'t');d.ci(FLASH,cy,4.8,'o');d.rr(FLASH-.75,cy,1.25,1.25,.15,'t');d.rr(FLASH+.75,cy,1.25,1.25,.15,'t');
+  d.ci(LIDAR,cy,4.6,'th',`stroke-dasharray="2 2"`);
+  d.rr(-15.5,53+oy,12.6,2.2,.4,'a');[-24.5,-6.5].forEach(x=>{d.ci(x,53+oy,2.4,'t');d.ci(x,53+oy,1.2,'th');});
+  d.ln(-36,cy,36,cy,'cl');d.ln(LENS,cy-15,LENS,cy+15,'cl');
+  d.dimH(-33.5,33.5,cy+17,'67,0',{e1:cy+12,e2:cy+12});
+  d.dimV(cy-12,cy+12,-40,'24,0',{e1:-33.5,e2:-33.5});
+  d.dimH(-33.5,LENS,cy-16,'11,0',{e1:cy-6,e2:cy-6});
+  d.dimH(FLASH,33.5,cy+14,'5,1',{e1:cy+2.7,e2:cy+6});
+  d.dimH(MIC,FLASH,cy+14,'3,5',{e1:cy+1,e2:cy+2.7,tx:MIC-2.6});
+  d.call(-15.5,53+oy,-48,cy-9,'J2 · 30 contacts',{c:'la',sub:'sous le module'});
+  d.call(-25.7,53+oy,-48,cy-1,'Vis imperdables V9, V10');
+  d.call(LIDAR,cy-2.3,44,cy-9,'Pas de LiDAR : plein',{c:'lm'});
+  d.call(FLASH+2.4,cy,44,cy+6,'Flash Ø 4,8');
+  d.call(MIC,cy+.8,44,cy+1,'Micro Ø 1,6');
+  /* coupe par l'axe de l'objectif, Z × 3 */
+  const S=3,Z=z=>36+(z-4.5)*S;
+  d.tx(-33.5,Z(4.5)-5,'Coupe par l\'axe de l\'objectif · Z × 3',{s:.8,c:'lm'});
+  d.box(-31.8,Z(4.5),31.8,Z(10.15),'t',`style="fill:var(--zone)"`);
+  d.box(-33.5,Z(10.2),33.5,Z(11),'o',`style="fill:var(--line)"`);
+  d.box(LENS-6,Z(10.15),LENS+6,Z(11.4),'o sheetfill');d.box(LENS-5.05,Z(11.3),LENS+5.05,Z(11.4),'a');
+  d.box(LENS-4,Z(5),LENS+4,Z(11.2),'th');d.box(LENS-3,Z(4.6),LENS+3,Z(4.9),'fill');
+  d.box(-HX,Z(8.6),-33.8,Z(10),'h',`style="fill:url(#hatch)"`);d.box(33.8,Z(8.6),HX,Z(10),'h',`style="fill:url(#hatch)"`);
+  d.dimV(Z(10),Z(11),42,'1,0',{e1:36,e2:33.5,right:true});d.dimV(Z(11),Z(11.4),50,'0,4',{e1:LENS+6,e2:LENS+6,right:true});
+  d.dimV(Z(4.5),Z(10.15),-40,'5,65',{e1:-31.8,e2:-31.8});
+  d.call(LENS-4.5,Z(7),-48,Z(6),'Objectif 7 lentilles + capteur');d.call(-HX+.8,Z(9.3),-48,Z(10.4),'Coque');
+  d.call(0,Z(10.6),10,Z(12.6),'Plateau PMMA noir fumé');
+  d.mount('dw-photo');}
+
+/* ------------------------------------------------ batterie */
+function drawBatt(){const d=new Dw({x0:-82,y0:-60,x1:84,y1:42,k:2.4,label:'Batterie'});
+  d.rr(0,-11,64,80,3,'o sheetfill');d.rr(0,-8,60,70,2,'th');
+  d.tx(-27,18,'M1-BAT-44',{s:1.4,w:600,f:'d'});d.rr(0,14,54,.6,0,'gd');
+  d.tx(-27,9,'Module batterie lithium-ion polymère',{s:.85});d.tx(-27,3,'3,87 V · 4 400 mAh · 17,0 Wh',{s:1,f:'m'});
+  ['Tension de charge max. 4,45 V','Ne pas percer, écraser ni démonter.','Ne pas exposer à plus de 60 °C.'].forEach((t,i)=>d.tx(-27,-4-i*4.2,t,{s:.75,c:'lm'}));
+  d.rr(-22,29.5,12,9,1,'t',`style="fill:var(--warn-soft);stroke:var(--warn)"`);d.tx(-22,31,'languette',{a:'middle',v:'m',s:.7,c:'lw'});
+  d.rr(0,-48,62,6,.5,'th',`stroke-dasharray="2 2"`);for(let i=0;i<7;i++)d.rr(-9+i*3,-48,2,3,.3,'gd');[-13,13].forEach(x=>d.ci(x,-48,1.3,'t'));
+  d.call(9,-48,40,-44,'7 plages or dur 2 × 3, pas 3',{c:'la',sub:'dessous, en retrait de 1,1'});
+  d.call(13,-48.6,40,-54,'Trous de centrage Ø 1,3');
+  d.call(-31,-48,-40,-40,'Protection + jauge',{sub:'carte 62 × 6'});
+  d.dimH(-32,32,36,'64,0',{e1:29,e2:29});d.dimV(-51,29,40,'80,0',{e1:32,e2:32,right:true});
+  d.dimH(-9,9,-56,'6 × 3,0',{e1:-49.5,e2:-49.5});
+  d.mount('dw-batt');}
+
+/* ------------------------------------------------ stockage */
+function drawSto(){const d=new Dw({x0:-40,y0:-80,x1:78,y1:-40,k:2,minw:420,label:'Stockage'});
+  d.rr(0,-58,37,10,1.5,'w',`style="fill:none"`);
+  d.rr(0,-58,37,12.5,1.5,'o sheetfill');d.rr(-11,-58,13,11.5,.8,'t');d.tx(-11,-58,'SSD BGA',{a:'middle',v:'m',s:.8});
+  d.rr(0,-61,9,2,.3,'a');for(let i=0;i<10;i++){d.rr(-3.6+i*.8,-60.4,.45,.45,.1,'gd');d.rr(-3.6+i*.8,-61.6,.45,.45,.1,'gd');}
+  d.ci(0,-55.5,2.4,'t');d.ci(0,-55.5,1.2,'th');
+  d.tx(4,-56.8,'256 Go',{s:1.3,w:600,f:'d'});d.tx(5.6,-61.9,'Standard · TLC',{s:.75,c:'lm'});d.rr(-18,-58,.8,12.5,0,'gd');
+  d.dimH(-18.5,18.5,-44,'37,0',{e1:-51.75,e2:-51.75});d.dimV(-64.25,-51.75,22,'12,5',{e1:18.5,e2:18.5,right:true});
+  d.call(18.5,-63,30,-70,'Ancien contour 37 × 10',{c:'lw'});d.call(2,-61,30,-64,'J5 · 20 contacts (dessous)',{c:'la'});d.call(1.2,-55.5,30,-52,'Vis imperdable V11');
+  d.mount('dw-sto');}
+
+/* ------------------------------------------------ USB */
+function drawUsb(){const d=new Dw({x0:-40,y0:-84,x1:62,y1:-58,k:2,minw:420,label:'Module USB-C'});
+  d.rr(0,-70.5,20,7,1,'o sheetfill');d.rr(0,-71,9.4,7,1.2,'t');d.rr(0,-74.1,8.9,.9,.4,'fill');
+  [-8,8].forEach(x=>{d.ci(x,-69.5,2.4,'t');d.ci(x,-69.5,1.5,'th');});
+  d.rr(8,-73,2.6,1.9,.3,'t');d.rr(0,-68.6,3,1.2,.3,'a',`style="fill:var(--accent)"`);
+  d.ln(-HX,-HY,HX,-HY,'th',`stroke-dasharray="3 2"`);d.tx(-HX+1,-HY-2.2,'bord du téléphone',{s:.7,c:'lm'});
+  d.dimH(-10,10,-61,'20,0',{e1:-67,e2:-67});d.dimH(-8,8,-80.5,'16,0',{e1:-70.7,e2:-70.7});d.call(-9.2,-69.5,-24,-72,'Vis V12, V13');
+  d.call(9.3,-73,24,-78,'Micro du bas');d.call(1.5,-68.6,24,-66,'Pastille bleue USB 3.2');d.call(4.7,-71,24,-72,'Prise USB-C 9,4 × 7');
+  d.mount('dw-usb');}
+
+/* ------------------------------------------------ cadre */
+function drawFrame(){const d=new Dw({x0:-96,y0:-88,x1:96,y1:86,k:2.9,label:'Cadre'});
+  d.rr(0,0,BW,BH,BR,'o sheetfill');d.rr(0,0,69.7,147.7,7.95,'t');d.rr(0,0,69.2,147.2,7.7,'h',`style="fill:url(#hatch)"`);
+  d.rr(-6.5,67,26,8,1.5,'o sheetfill');d.rr(0,-68,22,5,1,'o sheetfill');
+  [[-16,-21,28,42],[17,-30,26,32],[17,4,26,28],[-10,-56.5,40,13]].forEach(z=>d.rr(z[0],z[1],z[2],z[3],2,'t sheetfill',`stroke-dasharray="2 2"`));
+  V.HOLES.concat([[-24.5,53],[-6.5,53],[8,-69.5],[-8,-69.5]]).forEach(h=>{d.ci(h[0],h[1],2.8,'o sheetfill');d.ci(h[0],h[1],1.4,'t');});
+  [-45,0,45].forEach(y=>[-1,1].forEach(s=>{d.rr(s*34.6,y,.8,7,.2,'fill');}));
+  [[-HX+.4,56],[HX-.4,56],[-HX+.4,-56],[HX-.4,-56]].forEach(p=>d.rr(p[0],p[1],1.4,1.2,0,'a',`style="fill:var(--accent)"`));
+  [[-24,HY-.4],[24,HY-.4],[-24,-HY+.4],[24,-HY+.4]].forEach(p=>d.rr(p[0],p[1],1.2,1.4,0,'a',`style="fill:var(--accent)"`));
+  Q.buttonsBack(d,false);
+  d.call(-6.5,71,-44,76,'Fenêtre J11 26 × 8');d.call(-11,-68,-44,-72,'Fenêtre J1 22 × 5');
+  d.call(-29,66,-44,66,'Inserts M1,4 (×8)');d.call(-34.6,45,-44,50,'Crans de clips (×12)');
+  d.call(-16,-2,-44,-10,'Poches 0,7 mm',{sub:'face écran de la carte'});
+  d.call(-20,20,-44,22,'Plaque intermédiaire 1,0');
+  d.call(HX-.4,56,44,58,'Coupures d\'antenne (×8)',{c:'la'});d.call(HX+.6,30,44,30,'Alimentation');d.call(24,-HY+.4,44,-80,'Coupure d\'antenne');
+  d.dimH(-HX,HX,-84,'71,4',{e1:-60,e2:-60});d.dimV(-HY,HY,-90,'149,4',{e1:-20,e2:-20});
+  d.mount('dw-frame');}
+
+/* ------------------------------------------------ coque */
+function drawCoqueExt(){const d=new Dw({x0:-96,y0:-88,x1:96,y1:86,k:2.9,label:'Coque, extérieur'});
+  d.rr(0,0,BW,BH,BR,'o',`style="fill:var(--zone)"`);
+  d.rr(0,PL.cy,PL.w+.6,PL.h+.6,PL.r+.3,'o sheetfill');d.tx(0,PL.cy,'fenêtre du plateau',{a:'middle',v:'m',s:.9,c:'lm'});
+  V.CX.forEach(p=>{d.rr(p[0],p[1],16,4,2,'o sheetfill');d.rr(p[0],p[1],15.4,3.4,1.7,'a');[-5.37,-1.79,1.79,5.37].forEach(dx=>d.rr(p[0]+dx,p[1],3.3,1.8,.55,'gd'));});
+  d.tx(0,-51,'VERTANE',{a:'middle',v:'m',s:1.25,f:'d',ls:'1.2',c:'lm'});
+  d.rr(0,-70.5,22,4.4,2.2,'t sheetfill');d.rr(0,-70.5,12,3.2,1.6,'o');
+  d.dimH(-PL.w/2-.3,PL.w/2+.3,80,'67,6',{e1:73,e2:73});
+  d.dimV(PL.cy-12.3,PL.cy+12.3,-44,'24,6',{e1:-33.8,e2:-33.8});
+  d.dimH(-30.5,-14.5,32,'16,0',{e1:40,e2:40});d.dimV(40,44,-36,'4,0',{e1:-30.5,e2:-30.5});
+  d.call(30.5,-61,44,-58,'Fenêtre Connect 16,0 × 4,0',{sub:'r 2,0 · insert affleurant'});
+  d.call(6,-70.5,44,-72,'Loquet');d.call(15,-51,44,-47,'Logo 30 × 3,7');
+  d.call(-22,-20,-44,-22,'Verre 0,9 dépoli',{sub:'+ support PC-GF30 0,5'});
+  d.mount('dw-coque-ext');}
+function drawCoqueInt(){const d=new Dw({x0:-96,y0:-88,x1:96,y1:86,k:2.9,label:'Coque, intérieur'});
+  d.rr(0,0,BW,BH,BR,'o sheetfill');d.rr(0,0,70.8,148.8,8.4,'th');d.rr(0,0,69.4,147.4,7.8,'th');
+  d.rr(0,PL.cy,PL.w+.6,PL.h+.6,PL.r+.3,'t',`style="fill:var(--line)"`);
+  /* graphite contourné */
+  const cx=22.5-7.7-1.3,y0=42-1.7-1.3,y1=42+1.7+1.3;
+  d.box(4.5,34.5,cx,48.5,'z');d.box(cx,34.5,28.5,y0,'z');d.box(cx,y1,28.5,48.5,'z');
+  /* Qi2 */
+  for(let i=0;i<16;i++){const a0=i*Math.PI/8+.03,a1=(i+1)*Math.PI/8-.03,pts=[];for(let j=0;j<=6;j++){const a=a0+(a1-a0)*j/6;pts.push([27*Math.cos(a),-11+27*Math.sin(a)]);}for(let j=6;j>=0;j--){const a=a0+(a1-a0)*j/6;pts.push([23.5*Math.cos(a),-11+23.5*Math.sin(a)]);}d.pl(pts,'z',true);}
+  d.ci(0,-11,41,'th',`style="fill:var(--zone)"`);for(let r=6;r<=19;r+=1.3)d.ci(0,-11,r*2,'t',`style="fill:none;stroke:var(--gold)"`);
+  d.ci(0,-11,40,'a',`style="fill:none"`);d.ci(0,-11,45,'a',`style="fill:none"`);
+  d.rr(0,-42.5,3,7,.5,'z');[0,2.094,4.189].forEach(a=>d.rr(29*Math.cos(a),-11+29*Math.sin(a),2,1,.2,'fill'));
+  d.rr(14.75,15,3,30,.3,'t',`style="fill:var(--gold);opacity:.35"`);d.rr(14.75,31.5,14,3.2,.6,'o sheetfill');[9.5,13,16.5,20].forEach(x=>d.ci(x,31.5,.9,'gd'));
+  /* dos Connect */
+  V.CX.forEach(p=>{d.rr(p[0],p[1],17.4,5,2.2,'a');[-6.1,6.1].forEach(dx=>d.ci(p[0]+dx,p[1],3,'z'));d.rr(p[0]+(p[0]>0?1:-1)*(9.8),p[1]+3.2,1.1,1.4,.2,'w');});
+  const fl='style="fill:none;stroke-width:2.2"';
+  d.pl([[-30.2,42],[-32.6,42],[-32.6,-64.5],[32.6,-64.5],[32.6,42],[30.2,42]],'a',false,fl);
+  d.pl([[-30.2,-61],[-32.6,-61]],'a',false,fl);d.pl([[30.2,-61],[32.6,-61]],'a',false,fl);
+  d.pl([[-32.6,36],[-11,36]],'a',false,fl);d.rr(-6,36,10,3.2,.6,'o sheetfill');[-9,-7,-5,-3].forEach(x=>d.ci(x,36,.9,'gd'));
+  d.rr(0,-58,20,9,1,'w');d.tx(0,-57,'Contrôleur',{a:'middle',v:'m',s:.75,c:'lw'});d.tx(0,-60.5,'hub USB',{a:'middle',v:'m',s:.65,c:'lw'});d.pl([[0,-62.5],[0,-64.5]],'a',false,fl);
+  /* crochets, loquet */
+  [-45,0,45].forEach(y=>[-1,1].forEach(s=>d.rr(s*34.2,y,.8,6,.2,'fill')));
+  d.rr(0,-72.2,40,1.6,.4,'t');[-7.5,7.5].forEach(x=>d.rr(x,-72.7,3,.8,.2,'fill'));d.rr(24.5,-72.2,7,.8,.3,'th');
+  /* mousses */
+  [[0,-11,40,50],[0,-58,30,6]].forEach(m=>d.rr(m[0],m[1],m[2],m[3],2,'th',`stroke-dasharray="1 2"`));
+  d.call(-32.6,10,-44,12,'Circuit Connect',{c:'la',sub:'le long des bords'});
+  d.call(-14.8,42,-44,42,'Connecteur + 2 aimants',{c:'la'});
+  d.call(-11,36,-44,32,'Vers J10 · 4 pointes',{c:'la'});
+  d.call(-10,-58,-44,-56,'Îlot contrôleur 20 × 9',{c:'lw',sub:'hub, interrupteurs, détection'});
+  d.call(-32.3,45.2,-44,52,'Capteur Hall (×4)',{c:'lw'});
+  d.call(24,-11,44,-4,'Anneau Qi2 MPP',{sub:'16 aimants, Ø 47 à 54'});
+  d.call(0,-2,44,-16,'Bobine 16 spires',{sub:'+ boucle NFC'});
+  d.call(21.75,31.5,44,31,'Vers J6 · 4 pointes');
+  d.call(26,46,44,46,'Graphite contourné');
+  d.call(7.5,-72.2,44,-72,'Loquet et ressort');d.call(34.2,-45,44,-40,'Crochets (×6)');
+  d.mount('dw-coque-int');}
+
+/* ------------------------------------------------ détail Connect */
+function drawCx(){const d=new Dw({x0:-21,y0:-13,x1:22,y1:8.2,k:.95,label:'Connecteur Connect'});
+  /* plan, centré en (0 ; 2) */
+  const y=2;
+  d.rr(0,y,17.4,5,2.2,'th',`stroke-dasharray=".6 .4"`);
+  d.rr(0,y,16,4,2,'t');d.rr(0,y,15.4,3.4,1.7,'a');
+  [-5.37,-1.79,1.79,5.37].forEach((dx,i)=>{d.rr(dx,y,3.3,1.8,.55,'gd');d.tx(dx,y,String(i+1),{a:'middle',v:'m',s:.9,w:600,c:'sheetfill'});});
+  [-6.1,6.1].forEach((dx,i)=>{d.ci(dx,y,3,'th',`stroke-dasharray=".4 .3"`);d.tx(dx,y+2.2,i?'N':'S',{a:'middle',v:'m',s:.8,c:'la'});});
+  d.tx(-8.6,y+3.1,'bord',{a:'end',s:.7,c:'lm'});d.tx(8.6,y+3.1,'centre',{s:.7,c:'lm'});
+  d.dimH(-7.7,7.7,y+4.4,'15,4',{e1:y+1.7,e2:y+1.7});
+  d.dimV(y-1.7,y+1.7,-9.6,'3,4',{e1:-7.7,e2:-7.7});
+  d.dimH(-5.37,-1.79,y-3.3,'3,58',{e1:y-.9,e2:y-.9});
+  d.dimH(-1.79,1.79,y-3.3,'3,58',{e1:y-.9,e2:y-.9});
+  d.dimH(1.79,5.37,y-3.3,'3,58',{e1:y-.9,e2:y-.9});
+  d.call(7,y,10.5,y-1.2,'Plage 3,3 × 1,8',{s:.8,c:'la'});
+  d.call(6.1,y-1.4,10.5,y-3.1,'Aimant Ø 3,0 × 0,8',{s:.8});
+  /* coupe, Z × 2, sous le plan */
+  const Z=z=>-5.5+(z-10)*2;
+  d.tx(-12,-4.3,'Coupe · Z × 2',{s:.75,c:'lm'});
+  d.box(-10,Z(9.1),-8,Z(10),'h',`style="fill:url(#hatch)"`);d.box(8,Z(9.1),10,Z(10),'h',`style="fill:url(#hatch)"`);
+  d.box(-10,Z(8.6),10,Z(9.1),'t',`style="fill:var(--zone)"`);
+  d.box(-7.7,Z(8.85),7.7,Z(10),'a');[-5.37,-1.79,1.79,5.37].forEach(dx=>d.box(dx-1.65,Z(9.86),dx+1.65,Z(10),'gd'));
+  [-6.1,6.1].forEach(dx=>d.box(dx-1.5,Z(8.05),dx+1.5,Z(8.85),'t',`style="fill:var(--warn-soft)"`));
+  d.box(-8.7,Z(7.8),8.7,Z(8.05),'fill');
+  d.dimV(Z(8.6),Z(10),11.5,'1,4',{e1:10,e2:10,right:true});
+  d.dimV(Z(7.8),Z(8.6),15,'0,8',{e1:8.7,e2:10,right:true});
+  d.call(-9,Z(9.5),-11,Z(9.6)+1.2,'Verre',{s:.75});d.call(-9,Z(8.8),-11,Z(8.4)-.2,'Support',{s:.75});
+  d.call(-3,Z(7.9),-11,Z(7.6)-1.4,'Platine alu 0,25',{s:.75});
+  d.mount('dw-cx');}
+
+/* ------------------------------------------------ thermique */
+function drawTherm(){const d=new Dw({x0:-8,y0:24,x1:72,y1:58,k:1.5,minw:420,label:'Zone du processeur'});
+  d.rr(17.5,42.5,25,17,1.2,'t',`style="fill:var(--zone)"`);d.tx(6.2,50,'Capot SoC 25 × 17',{s:.8,c:'lm'});
+  d.pl([[7.5,36.5],[27.5,36.5],[27.5,39],[13.3,39],[13.3,45],[27.5,45],[27.5,48.5],[7.5,48.5]],'o',true,`style="fill:var(--accent-soft);stroke:var(--accent)"`);
+  d.rr(22.5,42,18,6,.8,'w');d.rr(22.5,42,17.4,5,2.2,'t');d.rr(22.5,42,15.4,3.4,1.7,'o');
+  d.tx(9,42,'Pad',{v:'m',s:.85,c:'la'});
+  d.dimH(13.3,27.5,53,'14,2',{e1:45,e2:48.5});d.dimV(39,45,34,'6,0',{e1:31.5,e2:31.5,right:true});
+  d.dimH(7.5,27.5,27,'20,0',{e1:36.5,e2:36.5});d.dimV(36.5,48.5,3,'12,0',{e1:7.5,e2:7.5});
+  d.call(30,40,40,36,'Isolant aérogel 18 × 6',{c:'lw'});d.call(31.2,42,40,42,'Connecteur Connect haut droit');d.call(20,46.5,40,48,'Pad thermique échancré',{c:'la',sub:'155 mm² au lieu de 240'});
+  d.mount('dw-therm');}
+
+window.VPLANS2={drawBoard,drawCover,drawStackup,drawPower,drawBlock,drawAnt,drawScreen,drawPhoto,drawBatt,drawSto,drawUsb,drawFrame,drawCoqueExt,drawCoqueInt,drawCx,drawTherm};
+})();
+</script>
+<script>
+/* ================================================================
+   Page : tableaux générés, onglets, sélection dans les plans, sommaire.
+   ================================================================ */
+(function(){
+"use strict";
+const V=window.VDATA,{esc}=window.VD;
+const $=(s,r)=>(r||document).querySelector(s),$$=(s,r)=>Array.from((r||document).querySelectorAll(s));
+const n=v=>String(v).replace('.',',').replace(/^-/,'−');
+const pos=(x,y)=>'('+n(x)+' ; '+n(y)+')';
+const PRINT=/print/.test(location.search)||location.hash==='#print';
+
+/* ---------- tableaux ---------- */
+$('#modcards').innerHTML=V.MODS.map(m=>`<div class="mod"><a href="#${m.s}"><span class="r">${esc(m.r)}</span><b>${esc(m.n)}</b><span>${esc(m.d)} · ${m.m} g</span></a></div>`).join('');
+
+const faceName={dos:'dos',ecran:'écran'};
+$('#tbl-parts').innerHTML='<tr><th>Réf.</th><th>Fonction</th><th>Face</th><th>Centre (x ; y)</th><th>Taille</th><th>Hauteur</th><th>Exemple</th></tr>'+
+  V.PARTS.filter(p=>p.k!=='zone').map(p=>`<tr><td class="m">${p.id}${p.add?' <span class="pill w">ajout</span>':''}</td><td>${esc(p.t)}</td><td>${faceName[p.f]}</td><td class="m">${pos(p.x,p.y)}</td><td class="m">${n(p.w)} × ${n(p.h)}</td><td class="m">${esc(p.z||'—')}</td><td>${esc(p.ex||'—')}</td></tr>`).join('');
+
+$('#tbl-conn').innerHTML=V.CONN.map(c=>`<tr><td class="m"><a href="#pin-${c[0]==='J8'?'J7':c[0]}" data-open="pin-${c[0]==='J8'?'J7':c[0]}">${c[0]}</a></td><td>${esc(c[1])}</td><td>${c[2]}</td><td class="m">${c[3]}</td><td>${esc(c[4])}</td><td class="m r">${c[5]}</td><td>${esc(c[6])}</td></tr>`).join('');
+
+const order=['J1','J11','J2','J3','J4','J5','J6','J7','J9','J10','J12'];
+$('#pinouts').innerHTML=order.map(k=>{const P=V.PIN[k];let body;
+  const ab=P.rows.some(r=>/^A\d/.test(r[0]));
+  if(ab){const A=P.rows.filter(r=>r[0][0]==='A'),B=P.rows.filter(r=>r[0][0]==='B'),L=Math.max(A.length,B.length);let t='<tr><th>A</th><th>Signal</th><th>Rôle</th><th>B</th><th>Signal</th><th>Rôle</th></tr>';
+    for(let i=0;i<L;i++){const a=A[i]||['','',''],b=B[i]||['','',''];t+=`<tr><td class="m">${a[0]}</td><td class="m">${esc(a[1])}</td><td>${esc(a[2])}</td><td class="m">${b[0]}</td><td class="m">${esc(b[1])}</td><td>${esc(b[2])}</td></tr>`;}body=t;}
+  else body='<tr><th>Contact</th><th>Signal</th><th>Rôle</th></tr>'+P.rows.map(r=>`<tr><td class="m">${r[0]}</td><td class="m">${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join('');
+  return `<details id="pin-${k}"><summary>${esc(P.t)} <span class="s">${esc(P.s)}</span></summary><div class="in"><div class="tw"><table>${body}</table></div></div></details>`;}).join('');
+
+$('#tbl-rails').innerHTML='<tr><th>Rail</th><th>Tension</th><th>Courant max.</th><th>Source</th><th>Alimente</th></tr>'+V.RAILS.map(r=>`<tr><td class="m">${r[0]}</td><td class="m">${r[1]}</td><td class="m">${r[2]}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td></tr>`).join('');
+
+$('#tbl-bom').innerHTML='<tr><th>Référence</th><th class="r">Qté</th><th>Désignation</th><th>Spécification</th><th class="r">Masse (g)</th></tr>'+V.BOM.map(b=>b[0]==='sub'?`<tr class="sub"><td colspan="5">${esc(b[1])}</td></tr>`:`<tr><td class="m">${esc(b[0])}</td><td class="m r">${esc(b[1])}</td><td class="k" style="white-space:normal">${esc(b[2])}</td><td>${esc(b[3])}</td><td class="m r">${esc(b[4])}</td></tr>`).join('')+
+  '<tr class="sub"><td colspan="4">Total</td><td class="m r" style="color:var(--fg)">210</td></tr>';
+
+/* ---------- plans ---------- */
+const P1=window.VPLANS1,P2=window.VPLANS2;
+const draws=[P1.drawAxes,P1.drawBack,P1.drawFront,P1.drawSide,P1.drawEdges,P1.drawExplode,P1.drawZstack,()=>P2.drawBoard('dos'),()=>P2.drawBoard('ecran'),
+  P2.drawCover,P2.drawStackup,P2.drawPower,P2.drawBlock,P2.drawAnt,P2.drawScreen,P2.drawPhoto,P2.drawBatt,P2.drawSto,P2.drawUsb,P2.drawFrame,P2.drawCoqueExt,P2.drawCoqueInt,P2.drawCx,P2.drawTherm];
+draws.forEach(f=>{try{f();}catch(e){console.error(e);}});
+
+/* ---------- onglets ---------- */
+$$('[data-tabs]').forEach(g=>{const grp=g.dataset.tabs;
+  g.addEventListener('click',e=>{const b=e.target.closest('button[data-tab]');if(!b)return;
+    $$('button[data-tab]',g).forEach(x=>x.setAttribute('aria-selected',x===b?'true':'false'));
+    $$(`[data-panel^="${grp}:"]`).forEach(p=>p.hidden=p.dataset.panel!==grp+':'+b.dataset.tab);
+    try{localStorage.setItem('tab-'+grp,b.dataset.tab);}catch(_){}});
+  let saved=null;try{saved=localStorage.getItem('tab-'+grp);}catch(_){}
+  if(saved){const b=$(`button[data-tab="${saved}"]`,g);if(b)b.click();}});
+
+/* ---------- info-bulle ---------- */
+const tip=$('#tip');
+document.addEventListener('mousemove',e=>{const c=e.target.closest&&e.target.closest('.cmp');
+  if(!c||!c.dataset.tip){tip.classList.remove('on');return;}
+  tip.textContent=c.dataset.tip;tip.classList.add('on');
+  const w=tip.offsetWidth,h=tip.offsetHeight;let x=e.clientX+14,y=e.clientY+16;
+  if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+h>innerHeight-8)y=e.clientY-h-16;tip.style.left=x+'px';tip.style.top=y+'px';});
+
+/* ---------- sélection : carte mère ---------- */
+function partCard(id){const p=V.PARTS.find(x=>x.id===id);if(!p)return;
+  const pin=V.PIN[id==='J8'?'J7':id];
+  $('#board-card').innerHTML=`<h4>${esc(p.t)}</h4><span class="ref">${p.id}${p.add?' · ajout par rapport à la maquette':''}</span><p style="margin:0">${esc(p.d)}</p>
+   <dl><dt>Face</dt><dd>${faceName[p.f]}</dd><dt>Centre</dt><dd class="mono">${pos(p.x,p.y)}</dd><dt>Taille</dt><dd class="mono">${n(p.w)} × ${n(p.h)} mm</dd><dt>Hauteur</dt><dd class="mono">${esc(p.z||'—')}</dd><dt>Liaison</dt><dd>${esc(p.l||'—')}</dd>${p.ex?`<dt>Exemple</dt><dd>${esc(p.ex)}</dd>`:''}</dl>
+   ${pin?`<p style="margin:12px 0 0"><a href="#pin-${id==='J8'?'J7':id}" data-open="pin-${id==='J8'?'J7':id}">Voir le brochage de ${id}</a></p>`:''}`;}
+function select(svgWrap,id,fn){$$('.cmp',svgWrap).forEach(g=>g.classList.toggle('sel',g.dataset.id===id));fn(id);}
+['dw-board-top','dw-board-bot'].forEach(w=>{const el=document.getElementById(w);if(!el)return;
+  el.addEventListener('click',e=>{const c=e.target.closest('.cmp');if(c)select(el,c.dataset.id,partCard);});
+  el.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const c=e.target.closest('.cmp');if(c){e.preventDefault();select(el,c.dataset.id,partCard);}});});
+select($('#dw-board-top'),'U1',partCard);
+
+/* ---------- sélection : vue éclatée ---------- */
+function layerCard(k){const l=V.LAYERS.find(x=>x.k===k);if(!l)return;
+  $('#explode-card').innerHTML=`<h4>${esc(l.n)}</h4><span class="ref">${esc(l.r)}</span>
+   <dl><dt>Cote Z</dt><dd class="mono">${esc(l.z)} mm</dd><dt>Fixation</dt><dd>${esc(l.fix)}</dd><dt>Masse</dt><dd class="mono">${esc(l.m)}</dd></dl>
+   <p style="margin:12px 0 0"><a href="#${l.s}">Aller au chapitre</a></p>`;}
+const ex=$('#dw-explode');
+if(ex){const on=e=>{const c=e.target.closest('.cmp');if(c)select(ex,c.dataset.id,layerCard);};
+  ex.addEventListener('click',on);ex.addEventListener('mouseover',on);
+  ex.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();on(e);}});
+  select(ex,'board',layerCard);}
+
+/* ---------- calques de la carte ---------- */
+[['tg-mods','.lay-mods'],['tg-cover','.lay-cover']].forEach(t=>{const b=document.getElementById(t[0]);if(!b)return;
+  b.addEventListener('click',()=>{const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',String(on));
+    $$('#dw-board-top '+t[1]).forEach(g=>g.style.display=on?'':'none');});});
+
+/* ---------- liens vers un brochage : ouvrir le détail ---------- */
+document.addEventListener('click',e=>{const a=e.target.closest('[data-open]');if(!a)return;const d=document.getElementById(a.dataset.open);if(d)d.open=true;});
+
+/* ---------- sommaire : chapitre courant ---------- */
+const links=$$('nav.toc a'),map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
+if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){links.forEach(a=>a.classList.remove('on'));const a=map.get(en.target.id);if(a)a.classList.add('on');}});},{rootMargin:'-20% 0px -70% 0px'});
+  $$('section.ch').forEach(s=>io.observe(s));}
+
+/* ---------- relecture locale : une seule feuille (?solo=id) ---------- */
+const SOLO=(location.search.match(/solo=([\w-]+)/)||[])[1];
+if(SOLO){const el=document.getElementById(SOLO);if(el){const sv=el.querySelector('svg');document.documentElement.setAttribute('data-theme',/dark/.test(location.search)?'dark':'light');
+  document.body.innerHTML='<div class="sheet" style="max-width:1240px;margin:10px auto"><div class="draw"></div></div>';document.querySelector('.draw').appendChild(sv);}}
+
+/* ---------- version imprimable ---------- */
+if(PRINT){$$('details').forEach(d=>d.open=true);$$('[data-panel]').forEach(p=>p.hidden=false);document.documentElement.setAttribute('data-theme','light');}
+window.addEventListener('beforeprint',()=>$$('details').forEach(d=>d.open=true));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vertane M1 sur mesure</title>
+<meta name="description" content="Configure et achète ton Vertane M1, module par module.">
+<meta name="theme-color" content="#F3F1EA">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vertane.css">
+<style>
+.buy-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;padding-top:112px;padding-bottom:28px}
+.buy-head .eyebrow{margin-bottom:8px}
+.buy-head p.muted{margin:10px 0 0;font-size:15px}
+.head-links{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:15px}
+.head-links .link{font-size:15px}
+.resume{margin-bottom:24px}
+.resume-in{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:16px 20px;border-radius:var(--r-m);background:var(--blanc);box-shadow:inset 0 0 0 1px var(--lin)}
+.resume-in p{margin:0;flex:1;min-width:220px;font-size:15px}
+
+.buy-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,56px);align-items:start}
+.viewer-col{position:sticky;top:84px}
+.viewer{position:relative;height:calc(100vh - 190px);height:calc(100svh - 190px);min-height:440px;max-height:860px;border-radius:var(--r-l);background:var(--blanc);overflow:hidden}
+.viewer iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;opacity:0;transition:opacity .6s var(--ease)}
+.viewer.live iframe{opacity:1}
+.viewer .fallback{position:absolute;left:50%;top:46%;height:72%;width:auto;max-width:none;transform:translate(-50%,-50%);transition:opacity .5s}
+.viewer.live .fallback{opacity:0}
+.v-load{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;border:2.5px solid var(--lin);border-top-color:var(--vert);animation:spin 1s linear infinite}
+.viewer.live .v-load,.viewer.dead .v-load{display:none}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.v-cap{position:absolute;left:24px;top:22px;right:24px;margin:0;font-size:14px;color:var(--pierre);pointer-events:none}
+.v-cap b{display:block;font:500 17px/1.3 var(--display);color:var(--noir);letter-spacing:-.01em;margin-bottom:2px}
+.v-ctrl{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:8px;align-items:center;padding:6px;border-radius:999px;background:rgba(243,241,234,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 0 0 1px rgba(201,196,184,.6);max-width:calc(100% - 24px)}
+.v-ctrl button{border:0;background:transparent;padding:8px 14px;border-radius:999px;font-size:13.5px;white-space:nowrap;color:var(--noir);transition:background .2s,color .2s}
+.v-ctrl button:hover{background:rgba(22,24,26,.06)}
+.v-ctrl button[aria-pressed="true"]{background:var(--noir);color:var(--ivoire)}
+.v-ctrl .sep{width:1px;height:20px;background:var(--lin)}
+.viewer.dead .v-ctrl{display:none}
+.v-hint{position:absolute;right:20px;top:22px;font-size:12px;color:var(--pierre);opacity:.8}
+
+.step{padding:0 0 52px;margin-bottom:52px;border-bottom:1px solid var(--lin);scroll-margin-top:96px;transition:opacity .5s var(--ease)}
+.step:last-child{border-bottom:0}
+.step.locked{opacity:.34;pointer-events:none;user-select:none}
+.step h2{font:500 clamp(24px,2.4vw,30px)/1.2 var(--display);letter-spacing:-.02em;margin:0 0 22px}
+.step h2 span{color:var(--pierre)}
+.step .help{display:inline-flex;align-items:center;gap:8px;border:0;background:none;padding:0;margin-top:16px;color:var(--vert);font-size:15px}
+.step .help svg{width:20px;height:20px}
+.step .help:hover{text-decoration:underline;text-underline-offset:.18em}
+.subs{display:grid;gap:26px;margin-top:30px;animation:subin .6s var(--ease-out)}
+@keyframes subin{from{opacity:0;transform:translateY(10px)}}
+.sub-t{font:600 15px/1.3 var(--text);margin:0 0 12px}
+.sub-t span{font-weight:400;color:var(--pierre)}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips .choice{flex:1 1 90px;align-items:center;text-align:center;padding:14px 10px}
+.chips .choice .c-p{text-align:center}
+.step-note{margin:14px 0 0;font-size:14px;color:var(--pierre)}
+.trade-extra{display:grid;gap:14px;margin-top:18px;animation:subin .5s var(--ease-out)}
+.trade-val{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:16px 20px;border-radius:var(--r-s);background:rgba(47,122,85,.08);color:var(--vert);font-weight:600}
+
+/* récapitulatif final */
+.recap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,72px);align-items:center;background:var(--blanc);border-radius:var(--r-l);padding:clamp(28px,5vw,64px);margin:24px 0 120px}
+.recap-img{display:flex;justify-content:center}
+.recap-img img{height:min(460px,60vw);width:auto;max-width:100%;object-fit:contain}
+.recap h2{margin-bottom:8px}
+.recap ul{list-style:none;margin:22px 0;padding:0;border-top:1px solid var(--lin-2)}
+.recap li{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--lin-2);font-size:14.5px}
+.recap li span:first-child b{display:block;font-weight:600}
+.recap li span:first-child small{color:var(--pierre)}
+.recap li span:last-child{white-space:nowrap}
+.recap .tot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:6px 0 4px}
+.recap .tot b{font:500 30px/1.1 var(--display);letter-spacing:-.03em}
+.recap .ship{display:flex;gap:10px;align-items:flex-start;margin:18px 0 24px;font-size:14px;color:var(--pierre)}
+.recap .ship svg{width:22px;height:22px;flex:0 0 auto;color:var(--noir)}
+.recap .ship b{color:var(--noir);font-weight:600}
+
+/* barre d’achat collante */
+.buybar{position:fixed;left:0;right:0;bottom:0;z-index:90;background:rgba(255,255,255,.9);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 -1px 0 rgba(201,196,184,.7);transform:translateY(110%);transition:transform .5s var(--ease-out)}
+.buybar.on{transform:none}
+.buybar .shell{display:flex;align-items:center;gap:16px 28px;min-height:76px;padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+.bb-price{display:flex;flex-direction:column}
+.bb-price b{font:500 22px/1.15 var(--display);letter-spacing:-.02em}
+.bb-price span{font-size:13px;color:var(--pierre)}
+.bb-ship{margin-left:auto;font-size:13px;color:var(--pierre);text-align:right}
+.bb-ship b{display:block;color:var(--noir);font-weight:600}
+.bb-left{font-size:13px;color:var(--pierre)}
+
+@media (max-width:980px){
+  .buy-head{padding-top:96px}
+  .buy-grid{grid-template-columns:1fr}
+  .viewer-col{top:76px;z-index:5;margin:0 calc(-1*var(--gut));padding:0 var(--gut) 10px;background:linear-gradient(var(--ivoire) 88%,rgba(243,241,234,0));box-shadow:0 -90px 0 var(--ivoire)}
+  .viewer{height:36svh;min-height:250px;border-radius:var(--r-m)}
+  .v-cap{display:none}
+  .v-hint{display:none}
+  .v-ctrl{bottom:8px;padding:4px;gap:2px}.v-ctrl button{padding:6px 10px;font-size:12px}
+  .step{scroll-margin-top:calc(76px + 36svh + 24px)}
+  .recap{grid-template-columns:1fr}
+  .bb-ship{display:none}
+  .buybar .btn{margin-left:auto}
+}
+@media (max-width:480px){.v-ctrl .opt3{display:none}}
+</style>
+</head>
+<body data-page="acheter">
+<script src="assets/site.js"></script>
+<main id="main">
+  <header class="shell buy-head">
+    <div><p class="eyebrow">Sur mesure</p><h1 class="h1">Vertane M1 sur mesure</h1><p class="muted" id="fromPrice"></p></div>
+    <div class="head-links"><a class="link" href="telephones.html">Voir les modèles prêts à partir</a><a class="link" href="configurateur-m1.html">Configurateur 3D avancé</a></div>
+  </header>
+  <div class="shell resume" id="resume" hidden><div class="resume-in"><p id="resumeTxt"></p><button class="btn btn-sm" id="resumeYes">Reprendre cette configuration</button><button class="btn btn-sm btn-ghost" id="resumeNo">Partir de zéro</button></div></div>
+  <div class="shell buy-grid">
+    <div class="viewer-col">
+      <div class="viewer" id="viewer">
+        <img class="fallback" id="fallback" src="assets/img/back-verre-noir.webp" alt="" width="548" height="1364">
+        <div class="v-load" role="status" aria-label="Chargement de l’aperçu 3D"></div>
+        <p class="v-cap" id="vcap" aria-live="polite"></p>
+        <span class="v-hint" id="vhint">Glisse pour tourner</span>
+        <div class="v-ctrl" role="group" aria-label="Réglages de l’aperçu">
+          <button data-view="back" aria-pressed="true">Dos</button><button data-view="front" aria-pressed="false">Écran</button><button class="opt3" data-view="side" aria-pressed="false">Profil</button>
+          <span class="sep"></span><button id="vOpen" aria-pressed="false">Ouvrir</button><button id="vSpin" aria-pressed="false">360°</button>
+        </div>
+      </div>
+    </div>
+    <div class="steps" id="steps"></div>
+  </div>
+  <div class="shell"><section class="recap" id="recap" hidden aria-labelledby="recap-t"></section></div>
+</main>
+
+<div class="buybar" id="buybar" aria-label="Prix et ajout au panier">
+  <div class="shell">
+    <div class="bb-price"><b id="bbPrice"></b><span id="bbMonthly"></span></div>
+    <div class="bb-ship" id="bbShip"></div>
+    <button class="btn" id="bbBtn">Continuer</button>
+  </div>
+</div>
+
+<template id="foot-notes">
+  <ol>
+    <li>Paiement en 12 fois sans frais, sous réserve d’acceptation. Prix TTC, livraison offerte en France métropolitaine.</li>
+    <li>Valeur de reprise estimée, confirmée après inspection de l’appareil. Elle est déduite du total de la commande.</li>
+    <li>Autonomie estimée en usage mixte, épaisseur hors plateau photo. Estimations de prototype.</li>
+  </ol>
+</template>
+
+<script src="assets/m1-data.js"></script>
+<script>
+(function(){
+"use strict";
+const M=window.M1,V=window.V,$=s=>document.querySelector(s),esc=V.esc,money=V.money;
+const OPT=M.OPT,COLORS=M.COLORS;
+
+/* ---------- étapes ---------- */
+const STEPS=[
+  {k:'modele',t:'Modèle.',s:'Quel écran te ressemble ?',main:'tech',subs:[['hz','Fréquence d’affichage','chip'],['front','Caméra frontale','card']],help:'modele',view:{v:'front',focus:null,ex:0}},
+  {k:'finition',t:'Finition.',s:'Une matière, une couleur. Le cadre est assorti.',main:'cmat',subs:[['ccol','Couleur du téléphone','swatch'],['conn','Dos','card'],['fmat','Cadre','card'],['cover','Cache de carte mère','card'],['kcol','Couleur du cache','swatch']],view:{v:'back',focus:null,ex:0}},
+  {k:'puissance',t:'Carte mère.',s:'Quelle puissance te faut-il ?',main:'board',subs:[],help:'board',view:{v:'back',focus:'board',ex:.55}},
+  {k:'stockage',t:'Stockage.',s:'Quelle place pour tes photos ?',main:'cap',subs:[['tier','Qualité de la mémoire','card']],help:'sto',view:{v:'back',focus:'sto',ex:.55}},
+  {k:'photo',t:'Module photo.',s:'Combien de capteurs ?',main:'cams',subs:[['sensor','Capteur principal','card'],['lidar','Capteur LiDAR','card']],view:{v:'back',focus:'photo',ex:.25}},
+  {k:'batterie',t:'Batterie.',s:'Combien de temps entre deux charges ?',main:'batt',subs:[['chem','Chimie','card']],view:{v:'back',focus:'batt',ex:.55}},
+  {k:'options',t:'Connectique et son.',s:'Les derniers détails.',main:'qi',subs:[['port','Port de charge','card'],['spk','Haut-parleurs','card']],view:{v:'back',focus:'qi',ex:.5}},
+  {k:'reprise',t:'Reprise.',s:'As-tu un smartphone à faire reprendre ?',custom:'trade',view:{v:'back',focus:null,ex:0}},
+  {k:'care',t:'Vertane Care.',s:'Protège ton M1.',custom:'care',view:{v:'back',focus:null,ex:0}}
+];
+const LABEL={tech:'Écran',cmat:'Coque',board:'Carte mère',cap:'Capacité',cams:'Nombre de capteurs',batt:'Batterie',qi:'Recharge sans fil'};
+const DEV=[['iphone-recent','iPhone de 2022 ou plus récent',220],['iphone-old','iPhone plus ancien',90],['android-hdg','Android haut de gamme de moins de 4 ans',150],['android-mdg','Android milieu de gamme',60],['vertane','Téléphone Vertane',160],['autre','Autre appareil (recyclage gratuit)',0]];
+const STATE=[['ok','Fonctionne parfaitement',1],['ecran','Écran ou dos fissuré',.5],['hs','Ne s’allume plus',.15]];
+const CARE={name:'Vertane Care, 2 ans',price:79};
+const SEC2STEP={screen:'modele',frame:'finition',coque:'finition',cover:'finition',board:'puissance',sto:'stockage',photo:'photo',batt:'batterie',qi:'options',spk:'options',port:'options'};
+
+let cfg=Object.assign({},M.DEF),done={},trade={on:null,dev:'',state:''},care=null;
+
+/* entrée : préréglage, finition choisie, ou configuration du configurateur 3D */
+const qp=new URLSearchParams(location.search);
+const PRESETS={essentiel:{tech:'ips',hz:90,front:12,cams:2,sensor:'std',lidar:0,batt:4400,chem:'li',cap:128,tier:'eco',board:'e',cover:'none',fmat:'pla',fcol:'blanc',cmat:'pla',ccol:'blanc',qi:'none',spk:'std',port:'u2'},equilibre:{},
+  pro:{tech:'oled',hz:144,front:32,cams:4,sensor:'big',lidar:1,batt:5200,chem:'sic',cap:512,tier:'pro',board:'x',cover:'alu',kcol:'noir',fmat:'ti',fcol:'intense',cmat:'alu',ccol:'intense',qi:'mag',spk:'hifi',port:'u4'}};
+function valid(k,v){return OPT[k]?OPT[k].some(o=>o.v===v):true;}
+function applyCfg(src){Object.keys(M.DEF).forEach(k=>{if(src[k]!==undefined&&valid(k,src[k]))cfg[k]=src[k];});M.fix(cfg);}
+function allConfigDone(){STEPS.forEach(s=>{if(s.main)done[s.k]=true;});}
+const saved=V.store.get('m1-config-v1',null);
+if(qp.get('preset')&&PRESETS[qp.get('preset')]){applyCfg(PRESETS[qp.get('preset')]);allConfigDone();}
+else if(qp.get('from')==='config'){applyCfg(saved&&typeof saved==='object'?saved:M.DEF);allConfigDone();}
+else if(qp.get('cmat')&&COLORS[qp.get('cmat')]){cfg.cmat=qp.get('cmat');if(COLORS[cfg.cmat].some(x=>x[0]===qp.get('ccol')))cfg.ccol=qp.get('ccol');M.fix(cfg);done.finition=true;}
+if(qp.get('conn')==='connect'){cfg.conn='connect';}
+else if(saved&&typeof saved==='object'){const c=Object.assign({},M.DEF);Object.keys(M.DEF).forEach(k=>{if(saved[k]!==undefined)c[k]=saved[k];});
+  $('#resumeTxt').innerHTML='Tu as une configuration enregistrée dans le configurateur 3D : <b>'+money(M.price(c))+'</b>.';$('#resume').hidden=false;
+  $('#resumeYes').onclick=()=>{applyCfg(saved);allConfigDone();$('#resume').hidden=true;render();send3d();V.toast('Configuration reprise. Vérifie la reprise et Vertane Care.');const s=STEPS.find(x=>!isDone(x));if(s)goStep(s.k);};
+  $('#resumeNo').onclick=()=>{$('#resume').hidden=true;};}
+
+const LOW={tech:'ips',hz:60,front:12,cams:1,sensor:'std',lidar:0,batt:3600,chem:'li',cap:64,tier:'eco',board:'e',cover:'none',fmat:'pla',fcol:'noir',cmat:'pla',ccol:'noir',qi:'none',spk:'std',port:'u2'};
+const minPrice=M.price(Object.assign({},M.DEF,LOW));
+$('#fromPrice').textContent='À partir de '+money(minPrice)+' ou '+V.monthly(minPrice)+'/mois sur 12 mois¹';
+
+function isDone(s){if(s.main)return !!done[s.k];if(s.custom==='trade')return trade.on===false||(trade.on===true&&!!trade.dev&&!!trade.state);if(s.custom==='care')return care!==null;return true;}
+function unlockedIdx(){let i=0;while(i<STEPS.length&&isDone(STEPS[i]))i++;return i;}
+function allDone(){return STEPS.every(isDone);}
+function tradeVal(){if(!trade.on||!trade.dev||!trade.state)return 0;const d=DEV.find(x=>x[0]===trade.dev),s=STATE.find(x=>x[0]===trade.state);return Math.round(d[2]*s[2]);}
+function total(){return M.price(cfg)+(care?CARE.price:0)-tradeVal();}
+
+/* ---------- rendu des options ---------- */
+function minOf(f){return Math.min(...OPT[f].map(o=>priceWith(f,o.v)));}
+function priceWith(f,v){const c=Object.assign({},cfg);c[f]=v;return M.price(c);}
+function deltaTxt(f,v){const d=priceWith(f,v)-minOf(f);return d>0?'+ '+money(d):'';}
+function extra(f,o){
+  if(f==='tech')return o.v==='fold'?'Écrans 8,0″ et 6,4″':'Écran 6,3″';
+  if(f==='batt'){const c=Object.assign({},cfg,{batt:o.v});return '≈ '+Math.round(M.hours(c))+' h d’autonomie³';}
+  if(f==='cams')return '';
+  return '';}
+function card(f,o,name,main){const on=(main?!!doneFor(f):true)&&cfg[f]===o.v,w=on?null:M.why(f,o.v,cfg);
+  let p;if(f==='tech'){p='<span class="c-p"><small>À partir de</small>'+money(M.price(Object.assign({},M.DEF,LOW,{tech:o.v})))+'</span>';}
+  else p='<span class="c-p">'+deltaTxt(f,o.v)+'</span>';
+  const t=f==='cams'?(o.v+' capteur'+(o.v>1?'s':'')):o.t,x=extra(f,o);
+  return '<label class="choice'+(on?' on':'')+(w?' dis':'')+'"><input type="radio" name="'+name+'" value="'+o.v+'"'+(on?' checked':'')+(w?' disabled':'')+'>'+
+    (f==='tech'&&o.v==='fold'?'<span class="c-tag">Nouveau</span>':'')+
+    '<span class="c-row"><span class="c-t">'+esc(t)+(x?'<small>'+esc(x)+'</small>':'')+'</span>'+p+'</span>'+
+    (o.d?'<span class="c-d">'+esc(o.d)+'</span>':'')+(w?'<span class="c-why">'+esc(w)+'</span>':'')+'</label>';}
+function doneFor(f){const s=STEPS.find(x=>x.main===f);return s?done[s.k]:true;}
+function chip(f,o){const on=cfg[f]===o.v,w=on?null:M.why(f,o.v,cfg);
+  return '<label class="choice'+(on?' on':'')+(w?' dis':'')+'"'+(w?' title="'+esc(w)+'"':'')+'><input type="radio" name="'+f+'" value="'+o.v+'"'+(on?' checked':'')+(w?' disabled':'')+'><span class="c-t">'+esc(o.t)+'</span><span class="c-p">'+(deltaTxt(f,o.v)||'&nbsp;')+'</span></label>';}
+function swatch(f){const m=f==='fcol'?cfg.fmat:f==='kcol'?cfg.cover:cfg.cmat;if(!COLORS[m])return '';
+  return '<div class="swatches" role="radiogroup">'+COLORS[m].map(x=>{const on=cfg[f]===x[0];return '<label class="sw'+(on?' on':'')+'" title="'+x[1]+'"><input type="radio" name="'+f+'" value="'+x[0]+'"'+(on?' checked':'')+' aria-label="'+x[1]+'"><span style="--c:'+x[2]+'"></span></label>';}).join('')+'</div>';}
+function subHTML(f,label,type){
+  if(f==='kcol'&&cfg.cover==='none')return '';
+  if(type==='swatch'){const m=f==='fcol'?cfg.fmat:f==='kcol'?cfg.cover:cfg.cmat;return '<div><p class="sub-t">'+label+' <span>'+esc(M.colName(m,cfg[f]))+'</span></p>'+swatch(f)+'</div>';}
+  const blocked=type==='chip'?OPT[f].map(o=>M.why(f,o.v,cfg)).filter(Boolean)[0]:null,cur=M.byV(f,cfg[f]);
+  return '<div><p class="sub-t">'+label+'</p><div class="'+(type==='chip'?'chips':'choices')+'">'+OPT[f].map(o=>type==='chip'?chip(f,o):card(f,o,f,false)).join('')+'</div>'+
+    (type==='chip'&&cur.d?'<p class="step-note">'+esc(cur.d)+'.</p>':'')+(blocked?'<p class="step-note" style="color:var(--danger)">'+esc(blocked)+'</p>':'')+
+    (f==='cover'?'<p class="step-note">Deux plaques fines clipsées sur la carte mère, visibles une fois la coque retirée.</p>':'')+'</div>';}
+function stepHTML(s,i,ul){
+  const locked=i>ul,id='etape-'+s.k;let b='';
+  if(s.main){const two=['cap','cams','batt'].indexOf(s.main)>=0;
+    b='<div class="choices'+(two?' two':'')+'" role="radiogroup" aria-label="'+LABEL[s.main]+'">'+OPT[s.main].map(o=>card(s.main,o,s.main,true)).join('')+'</div>';
+    if(s.help)b+='<button class="help" data-help="'+s.help+'">'+V.I.help+{modele:'Quel écran choisir ?',board:'Quelle carte mère choisir ?',sto:'Combien de stockage me faut-il ?'}[s.help]+'</button>';
+    if(done[s.k]&&s.subs.length)b+='<div class="subs">'+s.subs.map(x=>subHTML(x[0],x[1],x[2])).join('')+'</div>';}
+  else if(s.custom==='trade'){
+    b='<div class="choices two" role="radiogroup" aria-label="Reprise">'+
+      '<label class="choice'+(trade.on===true?' on':'')+'"><input type="radio" name="trade" value="1"'+(trade.on===true?' checked':'')+'><span class="c-t">Oui<small>Jusqu’à '+money(220)+' de réduction²</small></span></label>'+
+      '<label class="choice'+(trade.on===false?' on':'')+'"><input type="radio" name="trade" value="0"'+(trade.on===false?' checked':'')+'><span class="c-t">Non<small>Pas de reprise</small></span></label></div>';
+    if(trade.on)b+='<div class="trade-extra"><div class="field"><select id="tDev" name="tDev"><option value=""'+(trade.dev?'':' selected')+' disabled>Choisir</option>'+DEV.map(d=>'<option value="'+d[0]+'"'+(trade.dev===d[0]?' selected':'')+'>'+esc(d[1])+'</option>').join('')+'</select><label for="tDev">Ton appareil</label></div>'+
+      '<div><p class="sub-t">Son état</p><div class="chips">'+STATE.map(x=>'<label class="choice'+(trade.state===x[0]?' on':'')+'"><input type="radio" name="tState" value="'+x[0]+'"'+(trade.state===x[0]?' checked':'')+'><span class="c-t" style="font-size:14px">'+esc(x[1])+'</span></label>').join('')+'</div></div>'+
+      (trade.dev&&trade.state?'<div class="trade-val"><span>Reprise estimée</span><span>− '+money(tradeVal())+'</span></div>':'')+
+      '<p class="step-note">Tu reçois un kit d’envoi gratuit avec ton M1. Si l’appareil ne vaut rien, on le recycle gratuitement.</p></div>';}
+  else if(s.custom==='care'){
+    b='<div class="choices" role="radiogroup" aria-label="Vertane Care">'+
+      '<label class="choice'+(care===true?' on':'')+'"><input type="radio" name="care" value="1"'+(care===true?' checked':'')+'><span class="c-row"><span class="c-t">Vertane Care, 2 ans</span><span class="c-p">'+money(CARE.price)+'</span></span><span class="c-d">Casse accidentelle et panne couvertes, module de remplacement expédié en 24 h, batterie changée si elle descend sous 80 %.</span></label>'+
+      '<label class="choice'+(care===false?' on':'')+'"><input type="radio" name="care" value="0"'+(care===false?' checked':'')+'><span class="c-t">Sans Vertane Care<small>Garantie légale de 2 ans incluse</small></span></label></div>';}
+  return '<section class="step'+(locked?' locked':'')+'" id="'+id+'" data-k="'+s.k+'" aria-labelledby="'+id+'-t"'+(locked?' aria-disabled="true"':'')+'><h2 id="'+id+'-t">'+s.t+' <span>'+s.s+'</span></h2>'+b+'</section>';}
+
+const stepsEl=$('#steps');
+function render(){const ul=unlockedIdx();const a=document.activeElement,fk=a&&a.name?[a.name,a.value]:null;
+  stepsEl.innerHTML=STEPS.map((s,i)=>stepHTML(s,i,ul)).join('');
+  if(fk){const el=stepsEl.querySelector('[name="'+fk[0]+'"][value="'+fk[1]+'"]')||stepsEl.querySelector('#'+fk[0]);if(el)el.focus({preventScroll:true});}
+  summary();recap();observe();}
+
+/* ---------- prix, barre, récapitulatif ---------- */
+function eta(){const d=new Date();let n=0;while(n<5){d.setDate(d.getDate()+1);if(d.getDay()%6)n++;}return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});}
+function summary(){const ok=allDone(),t=total(),left=STEPS.filter(s=>!isDone(s)).length;
+  $('#bbPrice').textContent=ok?money(t):money(M.price(cfg));
+  $('#bbMonthly').textContent=ok?'ou '+V.monthly(t)+'/mois sur 12 mois¹':'Encore '+left+' étape'+(left>1?'s':'')+' à choisir';
+  $('#bbShip').innerHTML='<b>Livraison gratuite</b>Livré au plus tard le '+eta();
+  const b=$('#bbBtn');b.textContent=ok?'Ajouter au panier':'Continuer';
+  $('#buybar').classList.toggle('on',!!done.modele||ok);
+  const tech=M.byV('tech',cfg.tech);
+  $('#vcap').innerHTML='<b>M1 sur mesure'+(cfg.tech==='fold'?', pliable':'')+'</b>'+esc(tech.t+' · '+M.colName(cfg.cmat,cfg.ccol)+' · '+M.capL(cfg.cap));}
+function recap(){const r=$('#recap');if(!allDone()){r.hidden=true;return;}r.hidden=false;
+  const lines=M.refs(cfg).map(x=>'<li><span><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></span><span>'+money(x[3])+'</span></li>').join('')+
+    (care?'<li><span><b>'+CARE.name+'</b></span><span>'+money(CARE.price)+'</span></li>':'')+
+    (tradeVal()?'<li><span><b>Reprise estimée²</b><small>'+esc(DEV.find(d=>d[0]===trade.dev)[1])+'</small></span><span>− '+money(tradeVal())+'</span></li>':'');
+  r.innerHTML='<div class="recap-img"><img id="recapImg" src="'+V.phoneImg(cfg)+'" alt="Ton Vertane M1"></div><div><p class="eyebrow">Récapitulatif</p><h2 class="h2" id="recap-t">Ton M1 sur mesure est prêt.</h2>'+
+    '<p class="muted" style="margin:10px 0 0;font-size:15px">'+Math.round(M.hours(cfg))+' h d’autonomie³ · '+M.fmtD(M.thick(cfg),1)+' mm · '+M.mass(cfg)+' g</p><ul>'+lines+'</ul>'+
+    '<div class="tot"><span>Total</span><b>'+money(total())+'</b></div><p class="muted" style="margin:0;text-align:right;font-size:14px">ou '+V.monthly(total())+'/mois sur 12 mois¹</p>'+
+    '<div class="ship"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 6h12v10H2zM14 9h4l4 4v3h-8z"/><circle cx="6" cy="18" r="2" fill="#fff"/><circle cx="18" cy="18" r="2" fill="#fff"/></svg><span><b>Livraison gratuite.</b> Livré au plus tard le '+eta()+'. Retours gratuits pendant 30 jours.</span></div>'+
+    '<button class="btn btn-lg btn-block" id="addBag">Ajouter au panier</button></div>';
+  if(snapUrl)$('#recapImg').src=snapUrl;else requestSnap();}
+
+/* ---------- interactions ---------- */
+let lastStep=null;
+stepsEl.addEventListener('change',e=>{const t=e.target,n=t.name;if(!n)return;
+  if(n==='trade'){trade.on=t.value==='1';if(!trade.on){trade.dev='';trade.state='';}render();if(!trade.on)next('reprise');return;}
+  if(n==='tDev'){trade.dev=t.value;render();return;}
+  if(n==='tState'){trade.state=t.value;render();if(isDone(STEPS[7]))next('reprise');return;}
+  if(n==='care'){care=t.value==='1';render();next('care');return;}
+  let v=t.value;if(OPT[n]){const o=OPT[n].find(x=>String(x.v)===v);if(!o)return;v=o.v;if(M.why(n,v,cfg))return;}
+  const st=STEPS.find(s=>s.main===n),first=st&&!done[st.k];cfg[n]=v;const msgs=M.fix(cfg);if(st)done[st.k]=true;
+  snapUrl=null;render();send3d();if(msgs.length)V.toast(msgs[0]);
+  if(first&&!st.subs.length)next(st.k);});
+function next(k){const i=STEPS.findIndex(s=>s.k===k),n=STEPS.slice(i+1).find(s=>!isDone(s));if(!n)return;setTimeout(()=>{const el=document.getElementById('etape-'+n.k);if(el&&el.getBoundingClientRect().top>innerHeight*.55)el.scrollIntoView({behavior:V.reduce?'auto':'smooth',block:'start'});},250);}
+function goStep(k){const el=document.getElementById('etape-'+k);if(el)el.scrollIntoView({behavior:V.reduce?'auto':'smooth',block:'start'});}
+stepsEl.addEventListener('click',e=>{const h=e.target.closest('[data-help]');if(h)help(h.dataset.help);});
+$('#bbBtn').addEventListener('click',()=>{if(allDone())addToBag();else{const s=STEPS.find(x=>!isDone(x));goStep(s.k);}});
+document.addEventListener('click',e=>{if(e.target.id==='addBag')addToBag();});
+
+/* ---------- aide au choix ---------- */
+function help(k){let h='';
+  if(k==='modele'){const T=OPT.tech;h='<p class="eyebrow">Comparer</p><h2 class="h2">Quel écran choisir ?</h2><p class="lead" style="margin-top:12px">Le bloc écran se change plus tard : tu peux commencer simple et passer au pliable sans changer de téléphone.</p>'+
+    '<table class="cmp"><thead><tr><th></th>'+T.map(o=>'<th>'+esc(o.t)+'</th>').join('')+'</tr></thead><tbody>'+
+    [['Taille',o=>o.v==='fold'?'8,0″ ouvert, 6,4″ fermé':'6,3″'],['Épaisseur du bloc',o=>M.fmtD(o.th,1)+' mm'],['Fréquence maximale',o=>o.v==='ips'||o.v==='fold'?'144 Hz':'240 Hz avec carte Pro'],['Consommation',o=>o.f<1?'La plus faible':o.f===1?'Référence':o.f<1.2?'Plus élevée':'La plus élevée'],['Masse',o=>o.m+' g'],['Prix du bloc',o=>money(o.p)]]
+    .map(r=>'<tr><th>'+r[0]+'</th>'+T.map(o=>'<td>'+esc(r[1](o))+'</td>').join('')+'</tr>').join('')+'</tbody></table>';}
+  if(k==='board'){const T=OPT.board;h='<p class="eyebrow">Comparer</p><h2 class="h2">Quelle carte mère choisir ?</h2><p class="lead" style="margin-top:12px">Elle se change sans toucher au reste. La Performance convient à presque tout le monde.</p>'+
+    '<table class="cmp"><thead><tr><th></th>'+T.map(o=>'<th>'+esc(o.t)+'</th>').join('')+'</tr></thead><tbody>'+
+    [['Processeur',o=>o.v==='e'?'4 nm':'3 nm'],['Mémoire vive',o=>({e:'8 Go',p:'12 Go',x:'16 Go'})[o.v]],['Capteurs photo',o=>o.v==='e'?'3 au maximum':'4'],['Écran 240 Hz',o=>o.v==='x'?'Oui':'Non'],['USB4',o=>o.v==='x'?'Oui':'Non'],['Modem satellite',o=>o.v==='x'?'Oui':'Non'],['Pour qui',o=>({e:'Appels, messages, réseaux',p:'Photo, jeux, usage intensif',x:'Vidéo 4K, IA, jeux exigeants'})[o.v]]]
+    .map(r=>'<tr><th>'+r[0]+'</th>'+T.map(o=>'<td>'+esc(r[1](o))+'</td>').join('')+'</tr>').join('')+'</tbody></table>';}
+  if(k==='sto'){h='<p class="eyebrow">Stockage</p><h2 class="h2">Combien de stockage ?</h2><p class="lead" style="margin-top:12px">Android et tes applications restent sur 128 Go soudés à la carte mère. Le module garde tes photos, vidéos et fichiers, et passe d’un téléphone à l’autre.</p>'+
+    '<table class="cmp"><tbody>'+[['64 à 128 Go','Environ 15 000 à 30 000 photos. Suffisant si tu sauvegardes en ligne.'],['256 à 512 Go','Le bon choix pour la photo et un peu de vidéo 4K.'],['1 à 2 To','Pour filmer beaucoup en 4K et tout garder sur toi.'],['Qualité Pro','Mémoire plus rapide et plus endurante, conseillée pour la vidéo 4K en continu.']]
+    .map(r=>'<tr><th>'+r[0]+'</th><td>'+r[1]+'</td></tr>').join('')+'</tbody></table>';}
+  V.openModal(h,'Aide au choix');}
+
+/* ---------- aperçu 3D ---------- */
+const viewer=$('#viewer');let frame=null,live=false,snapUrl=null,snapId=0,curView='back',openOn=false;
+function post(m){if(live&&frame)frame.contentWindow.postMessage(Object.assign({src:'m1-shop'},m),'*');}
+function load3D(){frame=document.createElement('iframe');frame.title='Aperçu 3D de ta configuration';
+  frame.src='configurateur-m1.html?embed=1&ex=0#c='+encodeURIComponent(JSON.stringify(cfg));viewer.insertBefore(frame,viewer.firstChild);
+  setTimeout(()=>{if(!live){viewer.classList.add('dead');}},20000);}
+window.addEventListener('message',e=>{const d=e.data;if(!d||d.src!=='m1-3d'||!frame||e.source!==frame.contentWindow)return;
+  if(d.t==='ready'){live=true;viewer.classList.add('live');send3d();applyView(true);}
+  else if(d.t==='fail'){viewer.classList.add('dead');frame.remove();frame=null;}
+  else if(d.t==='pick'){const k=SEC2STEP[d.k];const i=STEPS.findIndex(s=>s.k===k);if(i>=0&&i<=unlockedIdx())goStep(k);else V.toast('Termine d’abord les étapes précédentes.');}
+  else if(d.t==='snap'&&d.id===snapId){applyView(true);cropAlpha(d.url).then(u=>{snapUrl=u;const im=$('#recapImg');if(im)im.src=u;});}});
+/* recadre l’image sur le téléphone (fond transparent) */
+function cropAlpha(url){return new Promise(res=>{const i=new Image();i.onload=()=>{try{const c=document.createElement('canvas');c.width=i.width;c.height=i.height;const g=c.getContext('2d');g.drawImage(i,0,0);
+  const d=g.getImageData(0,0,c.width,c.height).data;let x0=c.width,y0=c.height,x1=0,y1=0;for(let y=0;y<c.height;y+=2)for(let x=0;x<c.width;x+=2)if(d[(y*c.width+x)*4+3]>8){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
+  if(x1<=x0){res(url);return;}const m=6;x0=Math.max(0,x0-m);y0=Math.max(0,y0-m);x1=Math.min(c.width,x1+m);y1=Math.min(c.height,y1+m);const o=document.createElement('canvas');o.width=x1-x0;o.height=y1-y0;o.getContext('2d').drawImage(i,-x0,-y0);res(o.toDataURL('image/webp',.86));}catch(e){res(url);}};i.onerror=()=>res(url);i.src=url;});}
+let sent='';function send3d(){$('#fallback').src=V.phoneImg(cfg);const s=JSON.stringify(cfg);if(s===sent||!live)return;sent=s;post({t:'cfg',cfg});}
+let activeStep=STEPS[0];
+function applyView(force){const v=activeStep.view||{};post({t:'focus',k:v.focus||null});post({t:'explode',v:openOn?.6:(v.ex||0)});
+  const want=v.v||'back';if(force||want!==curView){curView=want;post({t:'view',v:want});setSeg(want);}}
+function setSeg(v){viewer.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.view===v));}
+viewer.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{curView=b.dataset.view;setSeg(curView);post({t:'focus',k:null});post({t:'view',v:curView});}));
+$('#vOpen').addEventListener('click',e=>{openOn=!openOn;e.currentTarget.setAttribute('aria-pressed',openOn);post({t:'explode',v:openOn?.6:((activeStep.view||{}).ex||0)});});
+$('#vSpin').addEventListener('click',e=>{const on=e.currentTarget.getAttribute('aria-pressed')!=='true';e.currentTarget.setAttribute('aria-pressed',on);post({t:'spin',on});});
+function requestSnap(){if(!live)return;snapId++;post({t:'focus',k:null});post({t:'explode',v:0,instant:true});post({t:'snap',id:snapId,w:1000,h:1250,type:'image/webp',q:.88,dir:[230,95,250],pad:1});}
+
+/* étape visible : l’aperçu montre le module concerné */
+let io=null;
+function observe(){if(io)io.disconnect();io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){const s=STEPS.find(x=>x.k===en.target.dataset.k);if(s&&s!==activeStep){activeStep=s;applyView();}}});},{rootMargin:'-45% 0px -50% 0px'});
+  stepsEl.querySelectorAll('.step').forEach(s=>io.observe(s));}
+
+/* ---------- ajout au panier ---------- */
+let adding=false;
+function addToBag(){if(adding||!allDone())return;adding=true;
+  const finish=img=>{const item={type:'phone',sku:'M1',name:'Vertane M1 sur mesure'+(cfg.tech==='fold'?', pliable':''),cfg:Object.assign({},cfg),img:img||V.phoneImg(cfg),
+      lines:M.refs(cfg).map(r=>[r[0],r[1],r[3]]),price:M.price(cfg),care:care?{name:CARE.name,price:CARE.price}:null,
+      trade:tradeVal()?{label:DEV.find(d=>d[0]===trade.dev)[1]+', '+STATE.find(s=>s[0]===trade.state)[1].toLowerCase(),value:tradeVal()}:null,
+      specs:Math.round(M.hours(cfg))+' h · '+M.fmtD(M.thick(cfg),1)+' mm · '+M.mass(cfg)+' g'};
+    const ed=V.store.get('vertane-edit',null);if(ed&&qp.get('from')==='config'){V.Bag.remove(ed);}V.store.set('vertane-edit',null);
+    const id=V.Bag.add(item);location.href='panier.html?ajout='+encodeURIComponent(id);};
+  if(snapUrl)finish(snapUrl);else if(live){requestSnap();const t0=Date.now(),w=()=>{if(snapUrl||Date.now()-t0>2500)finish(snapUrl);else setTimeout(w,60);};w();}else finish(null);}
+
+render();
+if(Object.keys(done).length){$('#buybar').classList.add('on');}
+load3D();
+if(location.hash&&location.hash.indexOf('#etape-')===0)setTimeout(()=>goStep(location.hash.slice(7)),300);
+})();
+</script>
+</body>
+</html>

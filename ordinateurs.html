@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ordinateurs — Store Vertane</title>
+<meta name="description" content="Vertane B1 SE, B1, B1 Pro et B1 Ultra, ou un B1 sur mesure : des ordinateurs portables qui se réparent, avec les ports que tu choisis.">
+<meta name="theme-color" content="#F3F1EA">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/vertane-favicon-16.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vertane.css">
+<style>
+.lineup{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:clamp(20px,3vw,36px)}
+.mcard{position:relative;background:var(--blanc);border-radius:var(--r-l);padding:28px 22px 30px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.mcard.dark{background:var(--noir);color:var(--ivoire)}
+.mcard .m-im{position:relative;width:100%;height:300px;margin-bottom:22px}
+.mcard .m-im img{position:absolute;left:0;right:0;margin:0 auto;height:100%;width:auto;max-width:none;opacity:0;transform:scale(.97);transition:opacity .5s var(--ease),transform .8s var(--ease-out);filter:drop-shadow(0 18px 24px rgba(22,24,26,.14))}
+.mcard .m-im img.on{opacity:1;transform:none}
+.mcard .swatches{justify-content:center;gap:6px;margin-bottom:6px}
+.mcard .sw{width:28px;height:28px}
+.mcard .sw span{inset:3px}
+.mcard.dark .sw.on{box-shadow:0 0 0 2px var(--sauge)}
+.mcard .m-col{font-size:12.5px;color:var(--pierre);min-height:18px;margin:0 0 16px}
+.mcard.dark .m-col,.mcard.dark .m-pitch{color:#B9BBB2}
+.mcard .m-tag{font:600 12px/1 var(--text);letter-spacing:.06em;text-transform:uppercase;color:var(--vert);min-height:12px;margin:0 0 10px}
+.mcard.dark .m-tag{color:var(--sauge)}
+.mcard h2{font:500 clamp(22px,2vw,26px)/1.15 var(--display);letter-spacing:-.02em;margin:0}
+.mcard .m-pitch{margin:8px 0 0;font-size:15px;color:var(--pierre);min-height:2.9em}
+.mcard .m-price{margin:14px 0 18px;font-size:15px}
+.mcard .ctas{gap:12px 18px;margin-bottom:24px}
+.mcard.dark .btn{background:var(--sauge);color:var(--noir)}
+.mcard.dark .link{color:var(--sauge)}
+.mcard ul{list-style:none;margin:auto 0 0;padding:20px 0 0;border-top:1px solid var(--lin-2);width:100%;display:grid;gap:16px}
+.mcard.dark ul{border-top-color:rgba(201,196,184,.2)}
+.mcard li{font-size:13.5px;line-height:1.35;color:var(--pierre)}
+.mcard.dark li{color:#B9BBB2}
+.mcard li b{display:block;font:500 16px/1.25 var(--display);letter-spacing:-.015em;color:var(--noir);margin-bottom:2px}
+.mcard.dark li b{color:var(--ivoire)}
+@media (max-width:1060px){.lineup{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.lineup{grid-template-columns:1fr}.mcard .m-im{height:320px}}
+
+/* sur mesure */
+.custom{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);align-items:center;gap:clamp(24px,4vw,56px);background:var(--vert);color:var(--ivoire);border-radius:var(--r-l);padding:clamp(32px,5vw,64px);overflow:hidden;margin-top:clamp(56px,7vw,96px)}
+.custom .eyebrow{color:var(--ivoire);opacity:.85}
+.custom .lead{color:rgba(243,241,234,.9);margin-top:16px}
+.custom ul{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:26px 0 30px;padding:0}
+.custom li{padding:7px 13px;border-radius:999px;background:rgba(243,241,234,.14);font-size:14px}
+.custom .btn{background:var(--ivoire);color:var(--vert)}
+.custom .btn:hover{background:#fff}
+.custom .link{color:var(--ivoire)}
+.custom-im{position:relative;margin:-8% -10% -14% 0}
+.custom-im img{width:100%;filter:drop-shadow(0 30px 40px rgba(0,0,0,.25))}
+@media (max-width:833px){.custom{grid-template-columns:1fr}.custom-im{margin:0 -6% -18%}}
+
+/* comparer */
+.cmp-wrap{overflow-x:auto;margin:0 calc(-1*var(--gut));padding:0 var(--gut)}
+.cmp4{width:100%;min-width:720px;border-collapse:collapse;font-size:15px;table-layout:fixed}
+.cmp4 th,.cmp4 td{padding:14px 12px;border-top:1px solid var(--lin);text-align:left;vertical-align:top}
+.cmp4 tbody th{font-weight:600;font-size:13px;color:var(--pierre);width:16%}
+.cmp4 thead th{border-top:0;padding-bottom:18px;vertical-align:bottom}
+.cmp4 thead img{height:150px;width:auto;margin-bottom:14px}
+.cmp4 thead b{display:block;font:500 19px/1.2 var(--display);letter-spacing:-.015em}
+.cmp4 thead span{display:block;font-weight:400;font-size:14px;color:var(--pierre);margin:4px 0 10px}
+
+/* ordinateurs : images en largeur */
+.mcard .m-im{height:210px;margin-bottom:18px}
+.mcard .m-im img{top:0;height:100%;width:100%;object-fit:contain}
+.cmp4 thead img{height:110px}
+.custom-im.lap{margin:0}
+.custom-im.lap img{filter:drop-shadow(0 24px 30px rgba(0,0,0,.25))}
+.bays{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4vw,56px);align-items:center;background:var(--blanc);border-radius:var(--r-l);padding:clamp(28px,5vw,56px);margin-top:clamp(56px,7vw,96px)}
+.bays .h2{font-size:clamp(28px,3vw,40px)}
+.bays .lead{margin-top:14px;font-size:17px}
+.bays ul{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:12px}
+.bays li{display:flex;gap:12px;font-size:15px;color:var(--pierre)}
+.bays li b{color:var(--noir);font-weight:600}
+.bays li svg{width:22px;height:22px;flex:0 0 auto;color:var(--vert);margin-top:1px}
+.bays-art svg{width:100%;height:auto}
+@media (max-width:833px){.bays{grid-template-columns:minmax(0,1fr)}.mcard .m-im{height:230px}}
+</style>
+</head>
+<body data-page="ordinateurs">
+<script src="assets/site.js"></script>
+<main id="main">
+  <header class="shell store-head">
+    <h1 class="h-hero rv"><a href="store.html" style="color:inherit">Store</a>. <span>Ordinateurs.</span></h1>
+    <div class="store-aside rv d1"><img src="assets/logo/vertane-icone-principal.svg" alt=""><span><b>Tous les B1 se réparent.</b>Écran, dessus, carte mère, batterie, mémoire, SSD, ports et haut-parleurs se changent. <a href="modules.html?p=ordinateur&amp;v=b1">Voir les modules</a></span></div>
+  </header>
+
+  <nav aria-label="Catégories du Store"><ul class="cats rv d1" id="cats"></ul></nav>
+
+  <section class="shell" aria-labelledby="line-t" style="padding-top:clamp(20px,3vw,36px)">
+    <div class="shelf-h"><h2 id="line-t">Choisis ton B1. <span>Tu choisis la couleur, le stockage et les ports.</span></h2><a class="link" href="#comparer">Comparer</a></div>
+    <div class="lineup" id="lineup"></div>
+
+    <section class="bays rv" aria-labelledby="bays-t">
+      <div>
+        <p class="eyebrow">Ports au choix</p>
+        <h2 class="h2" id="bays-t">Les ports que tu veux. Des caches pour le reste.</h2>
+        <p class="lead">Chaque B1 a 6 ou 8 baies. Tu y glisses une carte USB-C, USB-A, HDMI, DisplayPort, Ethernet, SD, casque ou haut-parleur. Les baies dont tu n’as pas besoin reçoivent un cache à la couleur du châssis.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.7 2.7L16 9.6"/></svg><span><b>Sans outil.</b> Un loquet sous l’ordinateur libère la carte, une autre se clipse à la place.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.7 2.7L16 9.6"/></svg><span><b>Une seule prise à l’intérieur.</b> Chaque baie est reliée en USB-C : n’importe quelle carte va dans n’importe quelle baie.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.7 2.7L16 9.6"/></svg><span><b>Le son aussi se clipse.</b> Les haut-parleurs sont des cartes de baie, tournés vers l’extérieur. La baie 1, à gauche, reste l’USB-C de charge.</span></li>
+        </ul>
+      </div>
+      <div class="bays-art" id="baysArt"></div>
+    </section>
+
+    <section class="custom rv" aria-labelledby="custom-t">
+      <div>
+        <p class="eyebrow">Sur mesure</p>
+        <h2 class="h2" id="custom-t">Aucun ne te ressemble&nbsp;? Compose le tien.</h2>
+        <p class="lead">Avec le B1 sur mesure, tu choisis chaque composant : taille, écran, puce, mémoire, stockage, couleur et ports.</p>
+        <ul><li>13,5, 14 ou 16 pouces</li><li>IPS, OLED ou Mini-LED</li><li>4 puces</li><li>16 à 64 Go</li><li>Jusqu’à 4 To</li><li>8 couleurs</li></ul>
+        <div class="ctas left"><a class="btn btn-lg" href="acheter-ordinateur.html?m=mesure">Composer mon B1</a><a class="link" href="configurateur-b1.html">Configurateur 3D avancé</a></div>
+        <p style="margin:18px 0 0;font-size:14px;color:rgba(243,241,234,.8)" id="customFrom"></p>
+      </div>
+      <div class="custom-im lap" id="customIm"></div>
+    </section>
+  </section>
+
+  <section class="sec-tight" id="comparer" aria-labelledby="cmp-t" style="padding-bottom:clamp(72px,9vw,120px)">
+    <div class="shell">
+      <div class="shelf-h"><h2 id="cmp-t">Comparer les modèles. <span>Tout ce qui change.</span></h2></div>
+      <div class="cmp-wrap"><table class="cmp4" id="cmp"></table></div>
+    </div>
+  </section>
+</main>
+
+<template id="foot-notes">
+  <ol>
+    <li>Paiement en 12 fois sans frais, sous réserve d’acceptation. Montants arrondis au centime supérieur. Prix TTC, livraison offerte en France métropolitaine.</li>
+    <li>Autonomie estimée en usage bureautique, luminosité à 50 %. Estimations de prototype.</li>
+  </ol>
+</template>
+
+<script src="assets/laptop.js"></script>
+<script>
+(function(){
+"use strict";
+const B=window.LAPTOP,V=window.V,$=s=>document.querySelector(s),esc=V.esc,money=V.money;
+
+$('#cats').innerHTML=V.CATS.map(c=>'<li><a class="cat" href="'+c.href+'"'+(c.k==='ordinateur'?' aria-current="page"':'')+'><span class="ci">'+V.CI[c.k]+'</span>'+esc(c.s)+(c.live?'':'<small>Bientôt</small>')+'</a></li>').join('')+
+  '<li><a class="cat" href="modules.html?p=ordinateur&amp;v=b1"><span class="ci">'+V.CI.modules+'</span>Modules</a></li>';
+requestAnimationFrame(()=>{const a=$('#cats [aria-current]'),u=$('#cats');if(!a)return;const r=a.getBoundingClientRect(),b=u.getBoundingClientRect();if(r.left<b.left||r.right>b.right)u.scrollLeft+=r.left-b.left-(b.width-r.width)/2;});
+
+/* les quatre modèles */
+const KEY=m=>{const c=B.cfgOf(m),s=B.sizeOf(c),sc=B.byV(B.SCREENS,c.screen);return [
+  [s.t,sc.t],[B.byV(B.BOARDS,c.board).t,c.ram+' Go de mémoire'],
+  ['Jusqu’à '+B.hours(c)+' h²','Batterie '+String(s.batt).replace('.',',')+' Wh'],
+  [s.bays+' baies',B.portsSum(c)],[B.kg(c)+' kg',String(s.mm).replace('.',',')+' mm d’épaisseur']];};
+$('#lineup').innerHTML=B.MODELS.map((m,i)=>{const dark=m.k==='ultra',p=B.from(m);
+  return '<article class="mcard rv d'+i+(dark?' dark':'')+'" data-m="'+m.k+'"><div class="m-im">'+m.fins.map((f,j)=>'<img src="'+B.photo(m,f)+'"'+(j?' loading="lazy"':'')+' width="1084" height="850" alt="Vertane '+esc(m.name)+', '+esc(B.COL[f][0])+'" class="'+(j?'':'on')+'" data-f="'+f+'">').join('')+'</div>'+
+    '<div class="swatches" role="radiogroup" aria-label="Couleur du '+esc(m.name)+'">'+m.fins.map((f,j)=>'<label class="sw'+(j?'':' on')+'" title="'+esc(B.COL[f][0])+'"><input type="radio" name="c-'+m.k+'" value="'+f+'"'+(j?'':' checked')+' aria-label="'+esc(B.COL[f][0])+'"><span style="--c:'+B.COL[f][1]+'"></span></label>').join('')+'</div>'+
+    '<p class="m-col">'+esc(B.COL[m.fins[0]][0])+'</p><p class="m-tag">'+esc(m.tag)+'</p><h2><span class="sr">Vertane </span>'+esc(m.name)+'</h2><p class="m-pitch">'+esc(m.pitch)+'</p>'+
+    '<p class="m-price">À partir de '+money(p)+'<br><span class="muted" style="font-size:13px">ou '+V.monthly(p)+'/mois sur 12 mois¹</span></p>'+
+    '<div class="ctas"><a class="btn btn-sm" href="acheter-ordinateur.html?m='+m.k+'">Acheter</a><a class="link" href="b1.html" style="font-size:15px">En savoir plus</a></div>'+
+    '<ul>'+KEY(m).map(r=>'<li><b>'+esc(r[0])+'</b>'+esc(r[1])+'</li>').join('')+'</ul></article>';}).join('');
+$('#lineup').addEventListener('change',e=>{const card=e.target.closest('.mcard');if(!card)return;const m=B.byK(card.dataset.m),f=e.target.value;
+  card.querySelectorAll('.sw').forEach(s=>s.classList.toggle('on',s.querySelector('input').value===f));
+  card.querySelectorAll('.m-im img').forEach(im=>im.classList.toggle('on',im.dataset.f===f));
+  card.querySelector('.m-col').textContent=B.COL[f][0];card.querySelector('.btn').href='acheter-ordinateur.html?m='+m.k+'&c='+f;});
+
+/* ports : l’exemple du B1, deux baies fermées par des caches */
+$('#baysArt').innerHTML='<img src="assets/img/b1-cote-gauche.webp" alt="Côté gauche d’un B1 sauge : une carte USB-C, une carte USB-A, un cache et un haut-parleur" loading="lazy" width="1236" height="756" style="width:100%;height:auto;margin-bottom:8px">'+B.sides(B.cfgOf(B.byK('b1'),'sauge'));
+
+/* sur mesure */
+const low=B.price(B.fix({size:13,screen:'ips',board:'e',ram:16,sto:512,col:'argent',ports:['usbc','cache','cache','cache']}));
+$('#customFrom').textContent='À partir de '+money(low)+' selon les composants choisis.';
+$('#customIm').innerHTML='<img src="'+B.photo(B.MESURE,'sauge')+'" width="1084" height="850" alt="Vertane B1 sur mesure, finition sauge" loading="lazy">';
+
+/* tableau comparatif */
+const rows=B.specs(B.cfgOf(B.MODELS[0])).map(r=>r[0]);
+$('#cmp').innerHTML='<thead><tr><th><span class="sr">Caractéristique</span></th>'+B.MODELS.map(m=>'<th scope="col"><img src="'+B.photo(m,m.fins[0])+'" alt="" loading="lazy"><b>'+esc(m.name)+'</b><span>À partir de '+money(B.from(m))+'</span><a class="btn btn-sm" href="acheter-ordinateur.html?m='+m.k+'">Acheter</a></th>').join('')+'</tr></thead>'+
+  '<tbody>'+rows.map((r,i)=>'<tr><th scope="row">'+esc(r)+(r==='Batterie'?'²':'')+'</th>'+B.MODELS.map(m=>'<td>'+esc(B.specs(B.cfgOf(m))[i][1])+'</td>').join('')+'</tr>').join('')+
+  '<tr><th scope="row">Stockage au choix</th>'+B.MODELS.map(m=>'<td>'+esc(m.caps.map(B.capL).join(', '))+'</td>').join('')+'</tr>'+
+  '<tr><th scope="row">Couleurs</th>'+B.MODELS.map(m=>'<td>'+esc(m.fins.map(f=>B.COL[f][0]).join(', '))+'</td>').join('')+'</tr></tbody>';
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertane OS TV et Jeu — simulateur</title>
+<meta name="description" content="Aperçu de Vertane OS TV et Vertane OS Jeu : boîtier TV, console de salon et console portable Vertane.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/os/os.css">
+<style>
+body{background:#000}
+.tv{position:fixed;inset:0;overflow:hidden;color:#fff;font-size:calc(var(--u)*1.6);--u:10px;background:#07090a;user-select:none;-webkit-user-select:none}
+.bg{position:absolute;inset:0;transition:background .6s,opacity .6s;filter:saturate(1.1)}
+.bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.78) 0%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.1)),linear-gradient(0deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,0) 55%)}
+.top{position:absolute;left:0;right:0;top:0;height:calc(var(--u)*7.2);display:flex;align-items:center;gap:calc(var(--u)*.6);padding:0 calc(var(--u)*4);z-index:5}
+.logo{display:flex;align-items:center;gap:calc(var(--u)*.8);font:500 calc(var(--u)*1.7)/1 var(--display);margin-right:calc(var(--u)*2)}
+.logo span{width:calc(var(--u)*2.4);height:calc(var(--u)*2.4);color:#8DB89A}
+.tab{height:calc(var(--u)*3.8);padding:0 calc(var(--u)*1.8);border-radius:999px;font:600 calc(var(--u)*1.5)/1 var(--font);color:rgba(255,255,255,.75);transition:all .25s var(--out)}
+.tab.cur{color:#fff}
+.sp{flex:1}
+.ti{width:calc(var(--u)*3.8);height:calc(var(--u)*3.8);border-radius:50%;display:grid;place-items:center;color:#fff}
+.ti svg{width:calc(var(--u)*1.9);height:calc(var(--u)*1.9)}
+.clock{font:600 calc(var(--u)*1.6)/1 var(--font);margin:0 calc(var(--u)*1)}
+.pad{display:flex;align-items:center;gap:calc(var(--u)*.5);font:600 calc(var(--u)*1.3)/1 var(--font);opacity:.85}
+.pad svg{width:calc(var(--u)*2);height:calc(var(--u)*2)}
+.av{width:calc(var(--u)*3.8);height:calc(var(--u)*3.8);border-radius:50%;background:linear-gradient(160deg,#8DB89A,#2F7A55);display:grid;place-items:center;font:600 calc(var(--u)*1.5)/1 var(--font)}
+.f{outline:0;position:relative}
+.f.foc{box-shadow:0 0 0 calc(var(--u)*.3) #fff,0 calc(var(--u)*1.6) calc(var(--u)*4) rgba(0,0,0,.5);transform:scale(1.07);z-index:3}
+.tab.f.foc,.ti.f.foc,.btn.f.foc{transform:scale(1.06);background:#fff;color:#111;box-shadow:0 calc(var(--u)*.8) calc(var(--u)*2.4) rgba(0,0,0,.4)}
+.hero{position:absolute;left:calc(var(--u)*6);top:calc(var(--u)*11);width:46%;z-index:4}
+.hero .ey{font:600 calc(var(--u)*1.3)/1 var(--font);letter-spacing:.12em;text-transform:uppercase;color:#8DB89A}
+.hero h1{font:500 calc(var(--u)*5.4)/1.02 var(--display);letter-spacing:-.03em;margin:calc(var(--u)*1.2) 0}
+.hero p{font:400 calc(var(--u)*1.7)/1.45 var(--font);color:rgba(255,255,255,.8);margin:0 0 calc(var(--u)*2.4);max-width:48ch}
+.hero .meta{display:flex;gap:calc(var(--u)*1.2);font:600 calc(var(--u)*1.3)/1 var(--font);color:rgba(255,255,255,.7);margin-bottom:calc(var(--u)*2)}
+.btns{display:flex;gap:calc(var(--u)*1.2)}
+.btn{height:calc(var(--u)*4.6);padding:0 calc(var(--u)*2.6);border-radius:999px;display:flex;align-items:center;gap:calc(var(--u)*.9);font:600 calc(var(--u)*1.6)/1 var(--font);color:#fff;transition:all .25s var(--out)}
+.btn svg{width:calc(var(--u)*1.8);height:calc(var(--u)*1.8)}
+.rows{position:absolute;left:0;right:0;bottom:0;height:47%;z-index:4;overflow:hidden}
+.rowt{font:600 calc(var(--u)*1.7)/1 var(--font);margin:0 0 calc(var(--u)*1.2) calc(var(--u)*6)}
+.strip{display:flex;gap:calc(var(--u)*1.6);padding:calc(var(--u)*1) calc(var(--u)*6) calc(var(--u)*2.4);transition:transform .45s var(--out)}
+.rowwrap{transition:transform .45s var(--out)}
+.card{flex:0 0 auto;width:calc(var(--u)*25);height:calc(var(--u)*14);border-radius:calc(var(--u)*1.8);overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:calc(var(--u)*1.4);font:600 calc(var(--u)*1.5)/1.2 var(--font);transition:transform .3s var(--out),box-shadow .3s;background-size:cover;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+.card small{display:block;font-weight:500;opacity:.8;font-size:calc(var(--u)*1.2);margin-top:calc(var(--u)*.3)}
+.card.app{width:calc(var(--u)*14);align-items:center;justify-content:center;gap:calc(var(--u)*.8);text-align:center}
+.card.app .ico{width:calc(var(--u)*6);height:calc(var(--u)*6)}
+.card.tall{width:calc(var(--u)*15);height:calc(var(--u)*20)}
+.card .pb{height:calc(var(--u)*.5);border-radius:3px;background:rgba(255,255,255,.3);margin-top:calc(var(--u)*.8);overflow:hidden}
+.card .pb i{display:block;height:100%;background:#fff}
+/* écrans */
+.scr2{position:absolute;inset:0;z-index:20;background:#07090a;display:none}
+.scr2.on{display:block;animation:fi .35s}
+.player .art{position:absolute;inset:0;animation:drift 20s ease-in-out infinite alternate}
+@keyframes drift{to{transform:scale(1.12) translate(-3%,2%)}}
+.player .ov{position:absolute;left:0;right:0;bottom:0;padding:calc(var(--u)*4) calc(var(--u)*6);background:linear-gradient(0deg,rgba(0,0,0,.8),transparent);transition:opacity .4s}
+.player h2{font:500 calc(var(--u)*3)/1.1 var(--display);margin:0 0 calc(var(--u)*1.6)}
+.bar4{height:calc(var(--u)*.6);border-radius:4px;background:rgba(255,255,255,.25);overflow:hidden}
+.bar4 i{display:block;height:100%;background:#fff;transition:width .5s linear}
+.player .ctl{display:flex;gap:calc(var(--u)*1.2);margin-top:calc(var(--u)*1.8)}
+.panel2{position:absolute;inset:calc(var(--u)*4) calc(var(--u)*6);border-radius:calc(var(--u)*3);padding:calc(var(--u)*3.6);color:var(--ink);overflow:auto}
+.panel2 h2{font:500 calc(var(--u)*3.2)/1.1 var(--display);margin:0 0 calc(var(--u)*.6);letter-spacing:-.02em}
+.panel2 .sub{color:var(--ink-2);font-size:calc(var(--u)*1.6);margin:0 0 calc(var(--u)*2.4)}
+.mods{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--u)*1.4)}
+.mod2{background:var(--card);border-radius:calc(var(--u)*1.8);padding:calc(var(--u)*1.8)}
+.mod2 b{display:block;font:600 calc(var(--u)*1.7)/1.2 var(--font)}
+.mod2 small{display:block;color:var(--ink-2);font-size:calc(var(--u)*1.3);margin-top:calc(var(--u)*.4)}
+.mod2 .bar2{margin-top:calc(var(--u)*1.2);height:calc(var(--u)*.8)}
+.mod2 .v{display:flex;justify-content:space-between;align-items:baseline;margin-top:calc(var(--u)*1)}
+.mod2 .v span{font:700 calc(var(--u)*2.4)/1 var(--font)}
+.tip2{display:flex;gap:calc(var(--u)*1.4);align-items:flex-start;background:var(--card);border-radius:calc(var(--u)*1.8);padding:calc(var(--u)*1.8);margin-top:calc(var(--u)*1.4)}
+.tip2 svg{width:calc(var(--u)*2.6);height:calc(var(--u)*2.6);flex:0 0 auto}
+.tip2 b{display:block;font:600 calc(var(--u)*1.7)/1.3 var(--font)}
+.tip2 span{color:var(--ink-2);font-size:calc(var(--u)*1.45)}
+canvas.game{position:absolute;inset:0;width:100%;height:100%}
+.hud2{position:absolute;left:calc(var(--u)*3);top:calc(var(--u)*2.4);font:600 calc(var(--u)*1.8)/1 var(--font);text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.hud2 small{display:block;font-weight:500;opacity:.7;font-size:calc(var(--u)*1.3);margin-top:calc(var(--u)*.6)}
+/* Capsule flottante */
+.tcap{position:absolute;z-index:30;left:50%;top:calc(var(--u)*1.4);transform:translateX(-50%) scale(.6);opacity:0;height:calc(var(--u)*4.2);min-width:calc(var(--u)*20);border-radius:999px;background:#000;display:flex;align-items:center;justify-content:space-between;gap:calc(var(--u)*2);padding:0 calc(var(--u)*1.6);font:600 calc(var(--u)*1.5)/1 var(--font);transition:transform .55s var(--spring),opacity .3s,width .5s var(--spring);box-shadow:0 calc(var(--u)*1) calc(var(--u)*3) rgba(0,0,0,.5);white-space:nowrap}
+.tcap.on{transform:translateX(-50%);opacity:1}
+.tcap svg{width:calc(var(--u)*1.8);height:calc(var(--u)*1.8)}
+.tcap .l,.tcap .r{display:flex;align-items:center;gap:calc(var(--u)*.8)}
+.toast2{position:absolute;z-index:31;right:calc(var(--u)*3);top:calc(var(--u)*8);width:calc(var(--u)*36);border-radius:calc(var(--u)*2.2);padding:calc(var(--u)*1.6);display:flex;gap:calc(var(--u)*1.2);align-items:center;transform:translateX(120%);transition:transform .5s var(--spring)}
+.toast2.on{transform:none}
+.toast2 .ico{width:calc(var(--u)*4.4);height:calc(var(--u)*4.4);flex:0 0 auto}
+.toast2 b{display:block;font:600 calc(var(--u)*1.6)/1.2 var(--font)}
+.toast2 span{font-size:calc(var(--u)*1.4);opacity:.85}
+.voice{position:absolute;z-index:32;left:50%;bottom:calc(var(--u)*5);width:calc(var(--u)*64);margin-left:calc(var(--u)*-32);border-radius:calc(var(--u)*3);padding:calc(var(--u)*2.2);color:var(--ink);transform:translateY(150%);transition:transform .5s var(--spring)}
+.voice.on{transform:none}
+.voice .q{color:var(--ink-2);font-size:calc(var(--u)*1.6)}
+.voice .a{font-size:calc(var(--u)*1.9);line-height:1.4;margin-top:calc(var(--u)*.8)}
+.voice .wave{height:calc(var(--u)*3);color:var(--accent);gap:calc(var(--u)*.4)}
+.voice .wave i{width:calc(var(--u)*.5)}
+.vglow{position:absolute;inset:0;z-index:29;pointer-events:none;opacity:0;transition:opacity .4s;box-shadow:inset 0 0 calc(var(--u)*6) calc(var(--u)*1) rgba(120,170,255,.45),inset 0 0 calc(var(--u)*14) calc(var(--u)*2) rgba(141,184,154,.35)}
+.vglow.on{opacity:1}
+.boot3{position:absolute;inset:0;z-index:50;background:#000;display:none;place-items:center}
+.boot3.on{display:grid}
+.boot3 img{width:calc(var(--u)*10);animation:fi 1s}
+.off3{position:absolute;inset:0;z-index:51;background:#000;display:none}
+.off3.on{display:block}
+</style>
+</head>
+<body>
+<script>
+(function(){
+"use strict";
+const doc=document,Q=new URLSearchParams(location.search),EMBED=window.parent!==window,MODE=['tv','salon','portable'].indexOf(Q.get('d'))>=0?Q.get('d'):'tv';
+const $=(s,r)=>(r||doc).querySelector(s),$$=(s,r)=>Array.from((r||doc).querySelectorAll(s));
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),wait=ms=>new Promise(r=>setTimeout(r,ms));
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+const S=(d,sw)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(sw||1.8)+'" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+d+'</svg>';
+const G={search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.8l1.6 2.3 2.7-.7.4 2.8 2.6 1.1-1.2 2.5 1.2 2.5-2.6 1.1-.4 2.8-2.7-.7L12 21.2l-1.6-2.3-2.7.7-.4-2.8-2.6-1.1L5.9 13 4.7 10.5l2.6-1.1.4-2.8 2.7.7z"/>',
+  play:'<path d="M7 4.5v15l13-7.5z" fill="currentColor" stroke="none"/>',pause:'<path d="M7 4.5h3.5v15H7zM13.5 4.5H17v15h-3.5z" fill="currentColor" stroke="none"/>',plus:'<path d="M12 5v14M5 12h14"/>',back:'<path d="M15 5l-7 7 7 7"/>',
+  pad:'<path d="M7 9h4M9 7v4M15 10h0M18 8h0"/><rect x="2.5" y="5" width="19" height="12" rx="6"/>',batt:'<rect x="3" y="7" width="16" height="10" rx="2.5"/><path d="M21 10.5v3"/>',timer:'<circle cx="12" cy="13" r="8"/><path d="M12 13V9M10 2.5h4"/>',
+  down:'<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/>',person:'<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1-4 4-6 7.5-6s6.5 2 7.5 6"/>',info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6" fill="currentColor"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',spark:'<path d="M12 2.5c.6 4.6 2.9 6.9 7.5 7.5-4.6.6-6.9 2.9-7.5 7.5-.6-4.6-2.9-6.9-7.5-7.5 4.6-.6 6.9-2.9 7.5-7.5z" fill="currentColor" stroke="none"/>',box:'<path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5v-9Z"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9"/>',
+  note:'<path d="M9 18V5.5l11-2V16"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="17.5" cy="16" r="2.5" fill="currentColor"/>',video:'<rect x="3" y="6.5" width="12.5" height="11" rx="2.5"/><path d="M15.5 10.5l5-3v9l-5-3z"/>'};
+const VL='<svg viewBox="0 0 1024 1024" aria-hidden="true"><path fill="currentColor" d="M537 700H490L682 276H795L572 748H452L229 276H343Z"/></svg>';
+const TV=MODE==='tv',GAME=!TV,PORT=MODE==='portable';
+
+/* contenus (titres inventés pour la démo) */
+const ART=[ 'radial-gradient(60% 60% at 70% 30%,#f4a6d8,transparent 70%),radial-gradient(60% 60% at 20% 70%,#4F7BF0,transparent 70%),linear-gradient(160deg,#2a2170,#0b0820)',
+  'radial-gradient(60% 60% at 30% 30%,#ffb38a,transparent 70%),radial-gradient(60% 60% at 80% 80%,#a45a3f,transparent 70%),linear-gradient(160deg,#5a2330,#1b0d10)',
+  'radial-gradient(60% 60% at 60% 30%,#9fd1b0,transparent 70%),radial-gradient(60% 60% at 20% 80%,#2d7e74,transparent 70%),linear-gradient(160deg,#16372f,#081410)',
+  'radial-gradient(60% 60% at 40% 30%,#ffd36b,transparent 70%),radial-gradient(60% 60% at 80% 80%,#f09a26,transparent 70%),linear-gradient(160deg,#5a3a10,#1b1206)',
+  'radial-gradient(60% 60% at 70% 40%,#9ad7ff,transparent 70%),radial-gradient(60% 60% at 20% 70%,#3E6FB0,transparent 70%),linear-gradient(160deg,#1a2d45,#0a1220)',
+  'radial-gradient(60% 60% at 50% 30%,#c7b8ff,transparent 70%),radial-gradient(50% 50% at 20% 80%,#8537E0,transparent 70%),linear-gradient(160deg,#241a3a,#0e0a18)'];
+const DATA=TV?{tabs:['Pour toi','Films','Séries','Apps','Vertane'],
+  hero:[{t:'Les Réparateurs',e:'Nouvelle série',d:'Dans un atelier de Lyon, quatre amis redonnent vie aux objets que tout le monde jette. Saison 1.',m:['2026','Série','8 épisodes'],a:0},{t:'Verre et lumière',e:'Documentaire',d:'Comment on fabrique un écran, de la dune de sable à ta poche.',m:['2025','1 h 32'],a:4}],
+  rows:[['Continuer',[['Les Réparateurs','Épisode 3 · 24 min restantes',0,.6],['Minuit à Lyon','Film · 40 min restantes',5,.3],['Planète durable','Épisode 6',2,.8],['Cuisine du marché','Épisode 2',3,.15]]],
+        ['Apps',[['Vertane','app:vertane'],['Musique','app:music'],['Photos','app:photos'],['Réglages','app:settings'],['Jeux','app:game']]],
+        ['Recommandé',[['La Grande Traversée','Film',1],['Sauge','Série',2],['Terracotta','Documentaire',3],['Orbite','Film d’animation',5],['Le Dernier Atelier','Film',0]]]]}
+ :{tabs:['Accueil','Jeux','Boutique','Amis','Vertane'],
+  hero:[{t:'Orbite',e:'Jeu du moment',d:'Pilote ta sonde entre les planètes et ramasse les étoiles. Change d’orbite au bon moment.',m:['Action','1 joueur','Hors ligne'],a:5,game:1},{t:'Atelier Rush',e:'Nouveau',d:'Répare les objets avant la fermeture : chaque module compte.',m:['Réflexion','1 à 4 joueurs'],a:1,game:1}],
+  rows:[['Récemment joué',[['Orbite','74 % terminé',5,.74,1],['Atelier Rush','Niveau 12',1,.4,1],['Sentiers','Carte 3',2,.2,1],['Course des modules','Coupe Sauge',3,.55,1]]],
+        ['Apps',[['Vertane','app:vertane'],['Musique','app:music'],['Captures','app:photos'],['Réglages','app:settings']]],
+        ['Ta bibliothèque',[['Orbite','Installé · 4,2 Go',5,0,1],['Atelier Rush','Installé · 12 Go',1,0,1],['Sentiers','Installé · 8 Go',2,0,1],['Course des modules','Installé · 30 Go',3,0,1],['Constellations','Téléchargement…',4,0,1]]]]};
+const DEVN=TV?'Boîtier TV Vertane':PORT?'Console portable Vertane':'Console de salon Vertane';
+const KEY='vos1-tv-'+MODE;
+function fresh(){return TV?{cfg:{sto:128,remote:'std'},usage:{days:200},parts:{},batt:null}:PORT?{cfg:{batt:'std',stickL:'std',stickR:'std',sto:1024},usage:{days:260,cycles:310,driftL:6.2,driftR:1.4,hours:620},parts:{},batt:71}:{cfg:{sto:2048,fan:'std',pad:'std'},usage:{days:320,fanH:1900,driftL:3.1,driftR:.8,padBatt:64},parts:{},batt:null};}
+let DS=Object.assign(fresh(),LS.get(KEY,{}));const save=()=>{LS.set(KEY,DS);sync();};
+
+/* ---------- structure ---------- */
+const root=doc.createElement('div');root.className='tv os';root.dataset.theme='dark';
+root.innerHTML='<div class="bg" id="bg"></div><div class="top" id="top"></div><div class="hero" id="hero"></div><div class="rows" id="rows"></div>'+
+  '<div class="scr2 player" id="player"></div><div class="scr2" id="app"></div><div class="scr2" id="game"><canvas class="game" id="cv"></canvas><div class="hud2" id="hud"></div></div>'+
+  '<div class="tcap" id="tcap"></div><div class="toast2 gl dk" id="toast"></div><div class="vglow" id="vglow"></div><div class="voice gu" id="voice"></div><div class="boot3" id="boot"><img src="assets/logo/vertane-icone-principal.svg" alt=""></div><div class="off3" id="off"></div>';
+doc.body.appendChild(root);
+function scale(){const k=Math.min(innerWidth/1280,innerHeight/720);root.style.setProperty('--u',(10*k).toFixed(2)+'px');}
+addEventListener('resize',scale);scale();
+
+/* ---------- focus au clavier (télécommande) ---------- */
+let tabI=0,heroI=0,zone='rows',rowI=0,colI=[0,0,0],heroBtn=0,topI=0;
+const hm=d=>String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+function renderTop(){$('#top').innerHTML='<div class="logo"><span>'+VL+'</span>'+(TV?'Vertane TV':'Vertane Jeu')+'</div>'+DATA.tabs.map((t,i)=>'<button class="tab f'+(i===tabI?' cur':'')+'" data-z="top" data-i="'+i+'">'+esc(t)+'</button>').join('')+'<span class="sp"></span>'+
+  '<button class="ti f" data-z="top" data-i="'+DATA.tabs.length+'" aria-label="Rechercher">'+S(G.search)+'</button><button class="ti f" data-z="top" data-i="'+(DATA.tabs.length+1)+'" aria-label="Parler">'+S(G.mic)+'</button>'+
+  (GAME?'<span class="pad">'+S(PORT?G.batt:G.pad)+(PORT?DS.batt+' %':DS.usage.padBatt+' %')+'</span>':'')+'<span class="clock">'+hm(new Date())+'</span><span class="av">L</span>';}
+function heroData(){return DATA.hero[heroI%DATA.hero.length];}
+function renderHero(){const h=heroData();$('#bg').style.background=ART[h.a];
+  $('#hero').innerHTML='<div class="ey">'+esc(h.e)+'</div><h1>'+esc(h.t)+'</h1><div class="meta">'+h.m.map(esc).join('<span>·</span>')+'</div><p>'+esc(h.d)+'</p><div class="btns"><button class="btn f gl dk" data-z="hero" data-i="0">'+S(G.play)+(h.game?'Jouer':'Regarder')+'</button><button class="btn f gl dk" data-z="hero" data-i="1">'+S(G.plus)+'Ma liste</button><button class="btn f gl dk" data-z="hero" data-i="2">'+S(G.info)+'Détails</button></div>';}
+const cardHTML=(c,r,i)=>{if(typeof c[1]==='string'&&c[1].indexOf('app:')===0){const k=c[1].slice(4),bg={vertane:'linear-gradient(160deg,#FAF8F2,#E4E0D3)',music:'linear-gradient(160deg,#FF7C6D,#EE355C)',photos:'linear-gradient(160deg,#FFD36B,#F09A26)',settings:'linear-gradient(160deg,#A8ADB4,#6A6F76)',game:'radial-gradient(circle at 30% 30%,#4a3a9a,#0b0820)'}[k];
+    const g=k==='vertane'?'<span style="width:62%;height:62%;color:#2F7A55;display:block">'+VL+'</span>':S(k==='music'?G.note:k==='settings'?G.gear:k==='game'?G.pad:G.video,1.8);
+    return '<button class="card app f gl dk" data-z="rows" data-r="'+r+'" data-i="'+i+'" data-app="'+k+'"><div class="ico" style="background:'+bg+';color:#fff">'+g+'</div>'+esc(c[0])+'</button>';}
+  return '<button class="card f'+(r===2&&!TV?' tall':'')+'" data-z="rows" data-r="'+r+'" data-i="'+i+'" style="background:'+ART[c[2]]+'">'+esc(c[0])+'<small>'+esc(c[1])+'</small>'+(c[3]?'<div class="pb"><i style="width:'+c[3]*100+'%"></i></div>':'')+'</button>';};
+function renderRows(){$('#rows').innerHTML='<div class="rowwrap" id="rw">'+DATA.rows.map((r,ri)=>'<div class="rowt">'+esc(r[0])+'</div><div class="strip" data-strip="'+ri+'">'+r[1].map((c,i)=>cardHTML(c,ri,i)).join('')+'</div>').join('')+'</div>';}
+function applyFocus(){$$('.f.foc').forEach(e=>e.classList.remove('foc'));let el=null;
+  if(zone==='top')el=$('[data-z="top"][data-i="'+topI+'"]');if(zone==='hero')el=$('[data-z="hero"][data-i="'+heroBtn+'"]');
+  if(zone==='rows'){el=$('[data-z="rows"][data-r="'+rowI+'"][data-i="'+colI[rowI]+'"]');const st=$('[data-strip="'+rowI+'"]');if(st&&el){const x=el.offsetLeft-st.offsetLeft-60*parseFloat(root.style.getPropertyValue('--u'))/10;st.style.transform='translateX('+(-Math.max(0,x))+'px)';}
+    const rw=$('#rw');if(rw){const t=$$('.rowt',rw)[rowI];rw.style.transform='translateY('+(-(t?t.offsetTop:0))+'px)';}
+    const c=DATA.rows[rowI][1][colI[rowI]];if(c&&typeof c[2]==='number')$('#bg').style.background=ART[c[2]];}
+  else $('#bg').style.background=ART[heroData().a];
+  if(el)el.classList.add('foc');}
+function move(dx,dy){if(overlay)return overlayKey(dx,dy);
+  if(zone==='top'){if(dy>0){zone='hero';}else topI=clamp(topI+dx,0,DATA.tabs.length+1);}
+  else if(zone==='hero'){if(dy<0)zone='top';else if(dy>0)zone='rows';else heroBtn=clamp(heroBtn+dx,0,2);}
+  else{if(dy<0){if(rowI===0)zone='hero';else rowI--;}else if(dy>0)rowI=clamp(rowI+1,0,DATA.rows.length-1);else colI[rowI]=clamp(colI[rowI]+dx,0,DATA.rows[rowI][1].length-1);}
+  applyFocus();}
+function ok(){if(overlay)return overlayOk();
+  if(zone==='top'){if(topI<DATA.tabs.length){tabI=topI;renderTop();applyFocus();if(DATA.tabs[topI]==='Vertane')openVertane();else if(DATA.tabs[topI]==='Apps'||DATA.tabs[topI]==='Jeux')(rowI=TV?1:2,zone='rows',applyFocus());else{heroI=topI;renderHero();applyFocus();}}else if(topI===DATA.tabs.length+1)voice();else toast('Recherche','Dis ce que tu cherches : maintiens le bouton Parler.');return;}
+  if(zone==='hero'){if(heroBtn===0){heroData().game?openGame():openPlayer(heroData().t,heroData().a);}else if(heroBtn===1)toast('Ma liste','« '+heroData().t+' » ajouté à ta liste.');else toast(heroData().t,heroData().d);return;}
+  const c=DATA.rows[rowI][1][colI[rowI]];if(!c)return;if(typeof c[1]==='string'&&c[1].indexOf('app:')===0){const k=c[1].slice(4);if(k==='vertane')openVertane();else if(k==='settings')openSettings();else if(k==='game')openGame();else if(k==='music')music();else toast(c[0],'Ouverture…');return;}
+  if(c[4]||!TV)openGame(c[0]);else openPlayer(c[0],c[2]);}
+let overlay=null;
+function back(){if(overlay){closeOverlay();return;}if(zone!=='hero'){zone='hero';heroBtn=0;applyFocus();}}
+function home(){if(overlay)closeOverlay();zone='hero';heroBtn=0;tabI=0;renderTop();applyFocus();}
+doc.addEventListener('keydown',e=>{const k=e.key;if(k==='ArrowLeft')move(-1,0);else if(k==='ArrowRight')move(1,0);else if(k==='ArrowUp')move(0,-1);else if(k==='ArrowDown')move(0,1);else if(k==='Enter'||k===' ')ok();else if(k==='Escape'||k==='Backspace')back();else return;e.preventDefault();});
+root.addEventListener('click',e=>{const f=e.target.closest('.f');if(!f||overlay&&!f.closest('.scr2'))return;const z=f.dataset.z;if(z==='top'){zone='top';topI=+f.dataset.i;}if(z==='hero'){zone='hero';heroBtn=+f.dataset.i;}if(z==='rows'){zone='rows';rowI=+f.dataset.r;colI[rowI]=+f.dataset.i;}applyFocus();ok();});
+
+/* ---------- lecteur vidéo ---------- */
+let pT=0,pPos=0,pDur=1560,pOn=false;
+function openPlayer(t,a){overlay='player';const p=$('#player');p.classList.add('on');pPos=Math.round(pDur*.35);pOn=true;
+  p.innerHTML='<div class="art" style="background:'+ART[a]+'"></div><div class="ov" id="pov"><h2>'+esc(t)+'</h2><div class="bar4"><i id="pbar" style="width:'+(pPos/pDur*100)+'%"></i></div><div style="display:flex;justify-content:space-between;margin-top:8px;font-size:calc(var(--u)*1.3);opacity:.8"><span id="pcur"></span><span>'+Math.round(pDur/60)+' min</span></div><div class="ctl"><button class="btn f gl dk foc" data-pp>'+S(G.pause)+'Pause</button><button class="btn f gl dk" data-b>'+S(G.back)+'Retour</button></div></div>';
+  capSet({l:S(G.video),r:'En lecture'},2200);clearInterval(pT);pT=setInterval(()=>{if(pOn)pPos++;const b=$('#pbar');if(b)b.style.width=(pPos/pDur*100)+'%';const c=$('#pcur');if(c)c.textContent=Math.floor(pPos/60)+':'+String(pPos%60).padStart(2,'0');},1000);
+  p.querySelector('[data-pp]').onclick=togglePlay;p.querySelector('[data-b]').onclick=closeOverlay;sync();}
+function togglePlay(){pOn=!pOn;const b=$('#player [data-pp]');if(b)b.innerHTML=S(pOn?G.pause:G.play)+(pOn?'Pause':'Lecture');}
+/* ---------- app Vertane : l’appareil, ses modules, leur usure ---------- */
+function mods(){const c=DS.cfg,u=DS.usage,p=k=>DS.parts[k]||{};
+  if(TV)return [['Stockage',c.sto+' Go','Films téléchargés et apps',100],['Télécommande','Pile rechargeable USB-C','Autonomie : environ 3 mois',82],['Refroidissement','Passif, sans ventilateur','Silencieux, rien ne s’use',100],['Wi-Fi 7 et Ethernet','Module réseau','Signal excellent',100]];
+  if(PORT){const dl=Math.max(0,u.driftL-(p('stickL').dr||0)),dr=Math.max(0,u.driftR-(p('stickR').dr||0)),bh=clamp(100-(u.cycles-(p('batt').cy||0))*.022,55,100);
+    return [['Batterie',c.batt==='xl'?'Grande, 65 Wh':'Standard, 50 Wh','Santé '+Math.round(bh)+' % · '+(u.cycles-(p('batt').cy||0))+' cycles',bh],['Joystick gauche',c.stickL==='hall'?'Effet Hall, sans dérive':'Standard','Dérive mesurée : '+dl.toFixed(1).replace('.',',')+' %',c.stickL==='hall'?100:clamp(100-dl*4,40,100)],
+      ['Joystick droit',c.stickR==='hall'?'Effet Hall, sans dérive':'Standard','Dérive mesurée : '+dr.toFixed(1).replace('.',',')+' %',c.stickR==='hall'?100:clamp(100-dr*4,40,100)],['SSD',(c.sto>=1024?c.sto/1024+' To':c.sto+' Go'),'M.2 2230, se change en 2 minutes',96],['Écran','OLED 7″, 120 Hz',u.hours+' h allumé',97],['Gâchettes','L et R','Aucune usure mesurée',99]];}
+  const fh=u.fanH-(p('fan').fh||0),dl=Math.max(0,u.driftL-(p('pad').dr||0));
+  return [['SSD',c.sto/1024+' To','Jeux installés : 54 Go',98],['Ventilateur',c.fan==='quiet'?'Silencieux, grand diamètre':'Standard',Math.round(fh)+' h · '+(fh>1500?'poussière à retirer':'propre'),clamp(100-fh/60,40,100)],['Alimentation','Interne, 220 W','Aucune anomalie',100],
+    ['Manette',c.pad==='hall'?'Joysticks à effet Hall':'Joysticks standard','Dérive : '+dl.toFixed(1).replace('.',',')+' % · batterie '+u.padBatt+' %',c.pad==='hall'?100:clamp(100-dl*4,40,100)]];}
+function tips(){const c=DS.cfg,u=DS.usage,p=k=>DS.parts[k]||{},t=[];
+  if(PORT){const dl=u.driftL-(p('stickL').dr||0);if(c.stickL!=='hall'&&dl>4)t.push(['warn','Le joystick gauche dérive','Dérive de '+dl.toFixed(1).replace('.',',')+' % : ton personnage bouge tout seul. Recalibre-le, ou change le module (2 minutes, 2 vis). Le modèle à effet Hall ne dérive plus.']);
+    if(c.batt==='std')t.push(['tip','Batterie juste pour l’écran 120 Hz','Environ 4 h en jeu. La grande batterie (65 Wh) donne 5 h 30, dans le même dos.']);}
+  else if(!TV){const fh=u.fanH-(p('fan').fh||0);if(fh>1500)t.push(['tip','Ventilateur à dépoussiérer','Il tourne 15 % plus vite qu’au premier jour. Un nettoyage, ou le modèle silencieux, et la console redevient muette.']);
+    const dl=u.driftL-(p('pad').dr||0);if(c.pad!=='hall'&&dl>2.5)t.push(['tip','La manette commence à dériver','Dérive de '+dl.toFixed(1).replace('.',',')+' %. Les joysticks se changent en 2 minutes.']);}
+  else t.push(['tip','Stockage presque plein','128 Go, dont 104 utilisés par les films téléchargés. Le module de 256 Go se clipse sous le boîtier.']);
+  if(!t.length)t.push(['ok','Tout est bien assorti','Aucun module ne freine les autres.']);return t;}
+function openVertane(){overlay='app';const a=$('#app');a.classList.add('on');a.style.background='radial-gradient(80% 80% at 20% 20%,#1d3a30,#07090a 70%)';
+  const M=mods(),T=tips();
+  a.innerHTML='<div class="panel2 gl dk" style="color:#fff"><div style="display:flex;align-items:center;gap:calc(var(--u)*1.6);margin-bottom:calc(var(--u)*2)"><span style="width:calc(var(--u)*5);height:calc(var(--u)*5);border-radius:calc(var(--u)*1.4);background:linear-gradient(160deg,#FAF8F2,#E4E0D3);color:#2F7A55;display:grid;place-items:center"><span style="width:62%;height:62%">'+VL+'</span></span><div><h2>'+esc(DEVN)+'</h2><p class="sub" style="margin:0;color:rgba(255,255,255,.7)">'+(TV?'Vertane OS TV':'Vertane OS Jeu')+' · aperçu · '+DS.usage.days+' jours d’usage</p></div></div>'+
+    '<div class="mods">'+M.map(m=>'<div class="mod2" style="background:rgba(255,255,255,.08);color:#fff"><b>'+esc(m[0])+'</b><small style="color:rgba(255,255,255,.65)">'+esc(m[1])+'</small><div class="v"><small style="color:rgba(255,255,255,.65);margin:0">'+esc(m[2])+'</small><span>'+Math.round(m[3])+' %</span></div><div class="bar2" style="background:rgba(255,255,255,.12)"><i style="width:'+m[3]+'%;background:'+(m[3]<80?'#E5484D':m[3]<88?'#F5A524':'#34C46A')+'"></i></div></div>').join('')+'</div>'+
+    T.map(t=>'<div class="tip2" style="background:rgba(255,255,255,.08)"><span style="color:'+(t[0]==='warn'?'#F5A524':t[0]==='ok'?'#34C46A':'#8DB89A')+'">'+S(t[0]==='ok'?G.check:G.info,2)+'</span><div><b>'+esc(t[1])+'</b><span style="color:rgba(255,255,255,.7)">'+esc(t[2])+'</span></div></div>').join('')+
+    '<div class="btns" style="margin-top:calc(var(--u)*2.4)"><button class="btn f gl dk foc" data-b>'+S(G.back)+'Retour</button></div></div>';a.querySelector('[data-b]').onclick=closeOverlay;sync();}
+function openSettings(){overlay='app';const a=$('#app');a.classList.add('on');a.style.background='#0b0d0f';
+  a.innerHTML='<div class="panel2 gl dk" style="color:#fff"><h2>Réglages</h2><p class="sub" style="color:rgba(255,255,255,.7)">'+esc(DEVN)+'</p>'+[['Image','4K HDR, 120 Hz'],['Son','Dolby Atmos · Haut-parleurs de la TV'],['Réseau','Wi-Fi 7 · Maison-5G'],['Comptes','Léa, Hugo, Invité'],['Contrôle parental','Désactivé'],['Système','Vertane OS '+(TV?'TV':'Jeu')+' 1.0 · Android 17']].map(r=>'<div class="tip2" style="background:rgba(255,255,255,.08);justify-content:space-between"><b>'+r[0]+'</b><span style="color:rgba(255,255,255,.7)">'+r[1]+'</span></div>').join('')+'<div class="btns" style="margin-top:calc(var(--u)*2.4)"><button class="btn f gl dk foc" data-b>'+S(G.back)+'Retour</button></div></div>';a.querySelector('[data-b]').onclick=closeOverlay;}
+function closeOverlay(){['player','app','game'].forEach(id=>$('#'+id).classList.remove('on'));if(overlay==='player'){clearInterval(pT);}if(overlay==='game')stopGame();overlay=null;applyFocus();sync();}
+function overlayKey(dx,dy){if(overlay==='game'){GM.dir=dx||GM.dir;if(dy)GM.orb=clamp(GM.orb+(dy<0?1:-1),0,2);}}
+function overlayOk(){if(overlay==='player')togglePlay();else if(overlay==='game')GM.boost=1;else closeOverlay();}
+
+/* ---------- mini-jeu : Orbite ---------- */
+const GM={on:false};
+function openGame(name){overlay='game';$('#game').classList.add('on');const cv=$('#cv'),x=cv.getContext('2d');cv.width=cv.clientWidth*devicePixelRatio;cv.height=cv.clientHeight*devicePixelRatio;
+  Object.assign(GM,{on:true,a:0,orb:1,ro:1,score:0,dir:1,stars:Array.from({length:6},()=>({a:Math.random()*6.28,o:Math.floor(Math.random()*3)})),bg:Array.from({length:120},()=>[Math.random(),Math.random(),Math.random()])});
+  capSet({l:S(G.pad),r:'Orbite · en jeu'},2000);
+  const W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=[H*.18,H*.28,H*.38];
+  const loop=()=>{if(!GM.on)return;GM.ro+=(GM.orb-GM.ro)*.12;GM.a+=.02*GM.dir*(GM.boost?2:1);GM.boost=0;
+    x.fillStyle='#07060f';x.fillRect(0,0,W,H);GM.bg.forEach(s=>{x.fillStyle='rgba(255,255,255,'+(s[2]*.8)+')';x.fillRect(s[0]*W,s[1]*H,2,2);});
+    R.forEach(r=>{x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=2;x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();});
+    const g=x.createRadialGradient(cx-H*.03,cy-H*.03,5,cx,cy,H*.1);g.addColorStop(0,'#ffb38a');g.addColorStop(1,'#a45a3f');x.fillStyle=g;x.beginPath();x.arc(cx,cy,H*.1,0,7);x.fill();
+    const rr=R[0]+(R[2]-R[0])*GM.ro/2,px=cx+Math.cos(GM.a)*rr,py=cy+Math.sin(GM.a)*rr;
+    GM.stars.forEach(s=>{const sx=cx+Math.cos(s.a)*R[s.o],sy=cy+Math.sin(s.a)*R[s.o];x.fillStyle='#F6C343';x.beginPath();x.arc(sx,sy,H*.012,0,7);x.fill();
+      if(Math.hypot(sx-px,sy-py)<H*.03){GM.score++;s.a=Math.random()*6.28;s.o=Math.floor(Math.random()*3);}});
+    x.fillStyle='#8DB89A';x.shadowColor='#8DB89A';x.shadowBlur=20;x.beginPath();x.arc(px,py,H*.016,0,7);x.fill();x.shadowBlur=0;
+    $('#hud').innerHTML='Orbite · '+GM.score+' étoile'+(GM.score>1?'s':'')+'<small>Haut / bas : change d’orbite · Gauche / droite : sens · B : quitter</small>';
+    requestAnimationFrame(loop);};loop();sync();}
+function stopGame(){GM.on=false;}
+
+/* ---------- Capsule, notifications, voix ---------- */
+function capSet(a,ms){const c=$('#tcap');c.innerHTML='<span class="l">'+a.l+'</span><span class="r">'+a.r+'</span>';c.classList.add('on');clearTimeout(capSet.t);if(ms)capSet.t=setTimeout(()=>c.classList.remove('on'),ms);}
+let timerT=0;function timer(sec){const end=Date.now()+sec*1000;clearInterval(timerT);const f=()=>{const l=Math.max(0,Math.round((end-Date.now())/1000));capSet({l:'<span style="color:#F5A524">'+S(G.timer,2)+'</span>',r:'<span style="color:#F5A524">'+Math.floor(l/60)+':'+String(l%60).padStart(2,'0')+'</span>'});if(!l){clearInterval(timerT);capSet({l:'<span style="color:#F5A524">'+S(G.timer,2)+'</span>',r:'Minuteur terminé'},3000);}};f();timerT=setInterval(f,500);}
+let mOn=false;function music(){mOn=!mOn;if(mOn)capSet({l:'<span style="width:calc(var(--u)*2.2);height:calc(var(--u)*2.2);border-radius:6px;background:linear-gradient(135deg,#8fb3ff,#f4a6d8);display:block"></span>Verre et lumière',r:'<span class="wave" style="color:#8DB89A"><i></i><i></i><i></i><i></i></span>'});else $('#tcap').classList.remove('on');}
+function toast(t,b,ic){const e=$('#toast');e.innerHTML='<div class="ico" style="background:'+(ic||'linear-gradient(160deg,#FAF8F2,#E4E0D3)')+';color:#2F7A55"><span style="width:60%;height:60%;display:block">'+VL+'</span></div><div><b>'+esc(t)+'</b><span>'+esc(b)+'</span></div>';e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),4500);post('notified',{});}
+function voice(text){const v=$('#voice');$('#vglow').classList.add('on');v.classList.add('on');v.innerHTML='<div class="q">À l’écoute…</div><span class="wave"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
+  setTimeout(()=>{const q=text||(TV?'Mets la suite des Réparateurs':'Pourquoi mon joystick dérive ?');const a=/joystick|dérive|derive|manette/i.test(q)?(PORT||!TV?'La dérive vient de l’usure du capteur. Recalibre-le dans Réglages, ou change le module : 2 minutes. Ouvre l’app Vertane pour la mesurer.':'Le boîtier TV n’a pas de manette, mais il accepte toutes les manettes Bluetooth.'):/réparateurs|reparateurs|suite|regarde/i.test(q)?'Je lance Les Réparateurs, épisode 3.':/minuteur/i.test(q)?'Minuteur de 5 minutes lancé.':'C’est noté. En démonstration, essaie « Mets la suite des Réparateurs » ou « Pourquoi mon joystick dérive ? ».';
+    v.innerHTML='<div class="q">« '+esc(q)+' »</div><div class="a">'+esc(a)+'</div>';if(/Réparateurs/.test(a))setTimeout(()=>{closeVoice();openPlayer('Les Réparateurs',0);},1400);if(/Minuteur/.test(a))timer(300);setTimeout(closeVoice,5000);},1600);}
+function closeVoice(){$('#voice').classList.remove('on');$('#vglow').classList.remove('on');}
+
+/* ---------- modules : remplacement ---------- */
+function catalog(){if(TV)return [{k:'sto',t:'Stockage',fields:[{f:'sto',t:'Capacité',opts:[[128,'128 Go'],[256,'256 Go'],[512,'512 Go']]}]},{k:'remote',t:'Télécommande',fields:[{f:'remote',t:'Modèle',opts:[['std','Standard'],['voice','Avec micro et rétroéclairage']]}]}];
+  if(PORT)return [{k:'batt',t:'Batterie',fields:[{f:'batt',t:'Capacité',opts:[['std','Standard, 50 Wh'],['xl','Grande, 65 Wh']]}]},{k:'stickL',t:'Joystick gauche',fields:[{f:'stickL',t:'Module',opts:[['std','Standard (neuf)'],['hall','Effet Hall, sans dérive']]}]},{k:'stickR',t:'Joystick droit',fields:[{f:'stickR',t:'Module',opts:[['std','Standard (neuf)'],['hall','Effet Hall, sans dérive']]}]},{k:'sto',t:'SSD',fields:[{f:'sto',t:'Capacité',opts:[[512,'512 Go'],[1024,'1 To'],[2048,'2 To']]}]}];
+  return [{k:'sto',t:'SSD',fields:[{f:'sto',t:'Capacité',opts:[[1024,'1 To'],[2048,'2 To'],[4096,'4 To']]}]},{k:'fan',t:'Ventilateur',fields:[{f:'fan',t:'Modèle',opts:[['std','Standard (neuf)'],['quiet','Silencieux, grand diamètre']]}]},{k:'pad',t:'Joysticks de la manette',fields:[{f:'pad',t:'Modules',opts:[['std','Standard (neufs)'],['hall','Effet Hall, sans dérive']]}]}];}
+async function swap(part,patch){post('swap:start',{part});closeOverlay();$('#off').classList.add('on');await wait(2600);Object.keys(patch).forEach(k=>{let v=patch[k];if(k==='sto')v=+v;DS.cfg[k]=v;});
+  const u=DS.usage;DS.parts[part]={cy:u.cycles,dr:part==='stickL'||part==='pad'?u.driftL:part==='stickR'?u.driftR:0,fh:u.fanH};save();
+  $('#off').classList.remove('on');$('#boot').classList.add('on');await wait(1800);$('#boot').classList.remove('on');
+  const lab=catalog().find(p=>p.k===part);capSet({l:'<span style="color:#8DB89A">'+S(G.check,2.4)+'</span>Nouveau module',r:esc(lab?lab.t:'')},3500);setTimeout(()=>toast((lab?lab.t:'Module')+' reconnu','Ouvre l’app Vertane pour voir son état.'),1500);post('swap:done',{part});}
+function age(days){const k=days/365,u=DS.usage;u.days+=days;if(PORT){u.cycles+=Math.round(300*k);u.driftL+=3*k;u.driftR+=1.2*k;u.hours+=Math.round(500*k);}else if(!TV){u.fanH+=Math.round(1400*k);u.driftL+=2*k;u.driftR+=.8*k;}save();toast('Bilan de santé','Ouvre l’app Vertane pour voir l’usure des modules.');if(overlay==='app')openVertane();}
+
+/* ---------- pont avec la page ---------- */
+function post(evt,data){if(!EMBED)return;try{parent.postMessage({vos:1,evt,data:data||{}},'*');}catch(e){}}
+let st=0;function sync(){clearTimeout(st);st=setTimeout(()=>post('state',{dev:MODE,name:DEVN,setup:true,screen:$('#off').classList.contains('on')?'off':'on',locked:false,app:overlay==='app'?'vertane':overlay,batt:PORT?DS.batt:null,cfg:DS.cfg,catalog:catalog(),theme:'dark',score:Math.max(20,100-tips().filter(t=>t[0]==='warn').length*14-tips().filter(t=>t[0]==='tip').length*5)}),120);}
+const CMD={key:d=>{const k=d.k;if(k==='up')move(0,-1);else if(k==='down')move(0,1);else if(k==='left')move(-1,0);else if(k==='right')move(1,0);else if(k==='ok')ok();else if(k==='back')back();else if(k==='home')home();else if(k==='play'){if(overlay==='player')togglePlay();else music();}else if(k==='x'||k==='y'||k==='l'||k==='r'||k==='stickL'||k==='stickR'){if(overlay==='game')GM.boost=1;else toast('Manette','Bouton '+k.toUpperCase()+' reçu.');}},
+  ai:d=>voice(d.text),powerLong:()=>voice(),power:()=>{$('#off').classList.toggle('on');sync();},home:()=>home(),back:()=>back(),
+  notify:d=>{if(d.app==='friend')toast('Léa est en ligne','Elle joue à Orbite. Rejoins-la ?','linear-gradient(160deg,#8DB89A,#2F7A55)');else toast('Livraison','Ta manette à effet Hall arrive demain.');},
+  call:d=>{capSet({l:'<span style="color:#34C46A">'+S(G.video,2)+'</span>'+esc(d.name||'Léa'),r:'Appel vidéo'},4000);},timer:d=>timer(d.sec||300),music:()=>music(),
+  charge:d=>{if(PORT){capSet({l:'En charge',r:'<span style="color:#34C46A">'+DS.batt+' %</span>'},2400);}},battery:d=>{if(PORT){DS.batt=clamp(d.level|0,1,100);renderTop();if(DS.batt<=15)toast('Batterie faible','Il reste '+DS.batt+' %. Branche le câble USB-C.');}},
+  open:d=>{if(d.app==='vertane')openVertane();},swap:d=>swap(d.part,d.patch||{}),age:d=>age(d.days||365),reset:()=>{try{localStorage.removeItem(KEY);}catch(e){}location.reload();},state:()=>sync()};
+window.addEventListener('message',e=>{const m=e.data;if(!m||!m.vos||!CMD[m.cmd])return;try{CMD[m.cmd](m.data||{});}catch(err){console.error(err);}});
+setInterval(()=>{const c=$('.clock');if(c)c.textContent=hm(new Date());},10000);
+if(!TV&&!PORT)setTimeout(()=>{DATA.rows[2][1][4][1]='Téléchargement… 62 %';capSet({l:S(G.down),r:'Constellations · 62 %'},3500);},2500);
+
+renderTop();renderHero();renderRows();zone='hero';applyFocus();
+setTimeout(()=>{post('ready',{});sync();},50);
+})();
+</script>
+</body>
+</html>

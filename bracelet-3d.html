@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bracelet Vertane — 3D</title>
+<meta name="robots" content="noindex">
+<style>
+html,body{margin:0;height:100%;background:transparent;overflow:hidden}
+body.solo{background:radial-gradient(120% 90% at 30% 10%,#2a3a31,#0d1411 70%)}
+canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas:active{cursor:grabbing}
+</style>
+<script>
+/* three.js : local quand la page est servie (marche sans réseau), sinon le CDN */
+(function(){var q=location.search,b=/^https?:$/.test(location.protocol)?'./assets/vendor/three/':'https://cdn.jsdelivr.net/npm/three@0.180.0/';
+document.write('<script type="importmap">{"imports":{"three":"'+b+'build/three.module.js","three/addons/":"'+b+'examples/jsm/"}}<\/script>');})();
+</script>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+
+const Q=new URLSearchParams(location.search);
+const EMBED=window.parent!==window;
+if(!EMBED||Q.has('solo'))document.body.classList.add('solo');
+const post=m=>{if(EMBED)try{parent.postMessage(Object.assign({src:'bracelet-3d'},m),'*');}catch(e){}};
+
+/* ---------- scène ---------- */
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(2,+Q.get('dpr')||Math.min(2,devicePixelRatio||1)));
+renderer.setClearColor(0x000000,0);
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=+Q.get('exp')||1.05;
+document.body.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+const pm=new THREE.PMREMGenerator(renderer);
+scene.environment=pm.fromScene(new RoomEnvironment(),.04).texture;
+scene.environmentIntensity=.5;
+const camera=new THREE.PerspectiveCamera(26,1,10,1000);
+const AZ=(+Q.get('az')||70)*Math.PI/180,EL=(+Q.get('el')||26)*Math.PI/180;
+camera.position.set(Math.sin(AZ)*Math.cos(EL),Math.sin(EL),Math.cos(AZ)*Math.cos(EL)).multiplyScalar(200);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;controls.dampingFactor=.06;controls.enableZoom=false;controls.enablePan=false;
+controls.autoRotate=Q.get('spin')!=='0';controls.autoRotateSpeed=.9;controls.target.set(0,0,0);
+controls.minPolarAngle=.35;controls.maxPolarAngle=Math.PI-.35;
+const key=new THREE.DirectionalLight(0xffffff,1.1);key.position.set(60,110,90);scene.add(key);
+const rim=new THREE.DirectionalLight(0xbfd9ff,.9);rim.position.set(-90,40,-70);scene.add(rim);
+
+/* ---------- cordon tressé : une texture de tresse répétée le long du tube ---------- */
+function braidTexture(){
+  const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');
+  x.fillStyle='#808080';x.fillRect(0,0,256,256);
+  /* deux familles de fils en diagonale ; chacun est un petit dégradé (clair au centre, sombre aux bords) */
+  const n=8,w=256/n;
+  const strand=(x0,y0,dir)=>{x.save();x.translate(x0,y0);x.rotate(dir*Math.PI/4.4);
+    const g=x.createLinearGradient(0,-w*.5,0,w*.5);g.addColorStop(0,'#3a3a3a');g.addColorStop(.5,'#f2f2f2');g.addColorStop(1,'#3a3a3a');
+    x.fillStyle=g;x.beginPath();x.roundRect(-w*.95,-w*.46,w*1.9,w*.92,w*.46);x.fill();x.restore();};
+  for(let r=-1;r<=n;r++)for(let k=-1;k<=n;k++){
+    const px=k*w+(r%2?w/2:0),py=r*w;
+    if((r+k)%2===0)strand(px+w/2,py+w/2,1);}
+  for(let r=-1;r<=n;r++)for(let k=-1;k<=n;k++){
+    const px=k*w+(r%2?w/2:0),py=r*w;
+    if((r+k)%2!==0)strand(px+w/2,py+w/2,-1);}
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=8;t.colorSpace=THREE.NoColorSpace;return t;}
+const BRAID=braidTexture();
+
+const CORDS={sauge:'#7DB08F',noir:'#232627',ivoire:'#E9E4D6',bleu:'#6F86C9'};
+const cordMat=new THREE.MeshPhysicalMaterial({color:CORDS[Q.get('cord')]||CORDS.sauge,roughness:.78,metalness:0,
+  map:BRAID,bumpMap:BRAID,bumpScale:2.2,sheen:1,sheenRoughness:.55,sheenColor:new THREE.Color('#d8efe0')});
+
+/* ---------- le bracelet (unités : millimètres) ---------- */
+const D=5.2,R=33,TA=.73,CAPL=44,CAPW=12.6,CAPT=9.6;
+const bracelet=new THREE.Group();scene.add(bracelet);
+function ringCurve(y){
+  const pts=[],ex=3.5,a0=TA,a1=Math.PI*2-TA,N=90;
+  const e0=new THREE.Vector3(R*Math.cos(a0),y,R*Math.sin(a0)),t0=new THREE.Vector3(-Math.sin(a0),0,Math.cos(a0));
+  const e1=new THREE.Vector3(R*Math.cos(a1),y,R*Math.sin(a1)),t1=new THREE.Vector3(-Math.sin(a1),0,Math.cos(a1));
+  pts.push(e0.clone().addScaledVector(t0,-ex));
+  for(let i=0;i<=N;i++){const a=a0+(a1-a0)*i/N;pts.push(new THREE.Vector3(R*Math.cos(a),y,R*Math.sin(a)));}
+  pts.push(e1.clone().addScaledVector(t1,ex));
+  return new THREE.CatmullRomCurve3(pts,false,'centripetal');}
+[-D/2,D/2].forEach(y=>{const c=ringCurve(y),len=c.getLength();
+  const tex=BRAID.clone();tex.needsUpdate=true;tex.repeat.set(len/3.2,3);
+  const m=cordMat.clone();m.map=tex;m.bumpMap=tex;
+  const g=new THREE.TubeGeometry(c,520,D/2,28,false);bracelet.add(new THREE.Mesh(g,m));});
+
+/* la capsule : aluminium brossé */
+const alu=new THREE.MeshPhysicalMaterial({color:'#b4b8bc',metalness:1,roughness:.3,clearcoat:.1,clearcoatRoughness:.45});
+const capX=R*Math.cos(TA)+.5;
+const cap=new THREE.Group();cap.position.set(capX,0,0);bracelet.add(cap);
+cap.add(new THREE.Mesh(new RoundedBoxGeometry(CAPT,CAPW,CAPL,8,3.4),alu));
+/* la fenêtre des capteurs : verre sombre teinté vert, trois ouvertures */
+const glass=new THREE.MeshPhysicalMaterial({color:'#0d2420',metalness:.2,roughness:.1,clearcoat:1,clearcoatRoughness:.05});
+const win=new THREE.Mesh(new RoundedBoxGeometry(.5,7.8,31,4,.24),glass);win.position.set(CAPT/2+.02,0,0);cap.add(win);
+const lensMat=new THREE.MeshPhysicalMaterial({color:'#17324a',metalness:.4,roughness:.12,clearcoat:1});
+const ringMat=new THREE.MeshStandardMaterial({color:'#9aa0a4',metalness:1,roughness:.3});
+[-9.6,9.6].forEach(z=>{
+  const r=new THREE.Mesh(new THREE.TorusGeometry(2.25,.34,16,40),ringMat);r.rotation.y=Math.PI/2;r.position.set(CAPT/2+.3,0,z);cap.add(r);
+  const l=new THREE.Mesh(new THREE.CircleGeometry(2.05,40),lensMat);l.rotation.y=Math.PI/2;l.position.set(CAPT/2+.34,0,z);cap.add(l);
+  const hl=new THREE.Mesh(new THREE.CircleGeometry(.55,20),new THREE.MeshBasicMaterial({color:'#9fc7ff',transparent:true,opacity:.7}));hl.rotation.y=Math.PI/2;hl.position.set(CAPT/2+.36,.7,z+.6);cap.add(hl);});
+/* la diode centrale : le vert Vertane, elle bat doucement */
+const ledMat=new THREE.MeshBasicMaterial({color:'#6fe3a0',toneMapped:false});
+const led=new THREE.Mesh(new THREE.CircleGeometry(2.3,40),ledMat);led.rotation.y=Math.PI/2;led.position.set(CAPT/2+.34,0,0);cap.add(led);
+function glowTex(){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');const g=x.createRadialGradient(64,64,0,64,64,64);
+  g.addColorStop(0,'rgba(166,230,191,1)');g.addColorStop(.25,'rgba(120,214,160,.45)');g.addColorStop(1,'rgba(120,214,160,0)');x.fillStyle=g;x.fillRect(0,0,128,128);return new THREE.CanvasTexture(c);}
+const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex(),transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.8}));
+glow.scale.set(14,14,1);glow.position.set(CAPT/2+1.2,0,0);cap.add(glow);
+/* petits manchons d’alu aux deux entrées de la capsule */
+[-1,1].forEach(s=>{const f=new THREE.Mesh(new RoundedBoxGeometry(CAPT-1.6,CAPW-1.4,3.2,5,1.2),alu);f.position.set(0,0,s*(CAPL/2+1.4));cap.add(f);});
+
+/* la bague coulissante, à l’opposé, avec le nom gravé */
+const bead=new THREE.Group();bead.position.set(-R,0,0);bracelet.add(bead);bead.rotation.y=Math.PI;
+bead.add(new THREE.Mesh(new RoundedBoxGeometry(7.2,CAPW-.2,10,6,1.6),alu));
+function textTex(){const c=document.createElement('canvas');c.width=512;c.height=128;const x=c.getContext('2d');
+  x.clearRect(0,0,512,128);x.fillStyle='#3d4144';x.font='500 66px Sora, "Helvetica Neue", Arial, sans-serif';x.textAlign='center';x.textBaseline='middle';
+  x.fillText('vertane',256,66);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
+const txt=new THREE.Mesh(new THREE.PlaneGeometry(8.6,2.15),new THREE.MeshBasicMaterial({map:textTex(),transparent:true,opacity:.9}));
+txt.rotation.y=Math.PI/2;txt.rotation.z=0;txt.position.set(3.62,0,0);bead.add(txt);
+
+/* le bracelet est incliné comme porté à plat sur une table puis relevé : on voit le dessus et la capsule */
+bracelet.rotation.set(.2,0,-.1);
+bracelet.position.y=-2;
+
+/* ---------- taille, boucle ---------- */
+function resize(){const w=innerWidth||800,h=innerHeight||600;renderer.setSize(w,h,false);camera.aspect=w/h;
+  const k=Math.min(1,w/h/1.0);camera.position.setLength(200/Math.min(1.25,Math.max(.7,k)));camera.updateProjectionMatrix();}
+addEventListener('resize',resize);resize();
+let t0=performance.now(),pulseT=-9,running=true;
+function frame(now){if(!running)return;const t=(now-t0)/1000;
+  const b=.5+.5*Math.sin(t*2.1),p=Math.max(0,1-(t-pulseT)/1.1);
+  ledMat.color.setRGB(.28+.2*b+.4*p,.78+.2*b+.2*p,.5+.2*b+.3*p);glow.material.opacity=.45+.35*b+.5*p;glow.scale.setScalar(12+3*b+14*p);
+  bracelet.position.y=-2+Math.sin(t*.8)*1.4;
+  controls.update();renderer.render(scene,camera);requestAnimationFrame(frame);}
+requestAnimationFrame(frame);
+
+/* ---------- pilotage par la présentation ---------- */
+addEventListener('message',e=>{const d=e.data;if(!d||d.src!=='bracelet')return;
+  if(d.t==='cord'&&CORDS[d.v]){cordMat.color.set(CORDS[d.v]);bracelet.traverse(o=>{if(o.isMesh&&o.material.map&&o.material.bumpMap)o.material.color.set(CORDS[d.v]);});}
+  if(d.t==='run'){if(d.on&&!running){running=true;requestAnimationFrame(frame);}else if(!d.on)running=false;}
+  if(d.t==='pulse')pulseT=(performance.now()-t0)/1000;
+  if(d.t==='spin')controls.autoRotate=!!d.on;
+  if(d.t==='speed')controls.autoRotateSpeed=d.v;});
+if(Q.get('cord'))bracelet.traverse(o=>{if(o.isMesh&&o.material.map&&o.material.bumpMap)o.material.color.set(CORDS[Q.get('cord')]||CORDS.sauge);});
+post({t:'ready'});
+window.BRACELET={scene,bracelet,camera,renderer,controls};
+</script>
+</body>
+</html>

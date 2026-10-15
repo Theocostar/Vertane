@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vertane P1 — Le pliant qui se répare</title>
+<meta name="description" content="Vertane P1 : le téléphone pliant dont chaque module se change. Écran intérieur 8,0″, écran extérieur 5,6″, charnière double axe qui se remplace, batterie dans toute une moitié.">
+<meta name="theme-color" content="#F3F1EA">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vertane.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
+<style>
+.hero{position:relative;padding:128px 0 0;text-align:center;overflow:hidden}
+.hero .eyebrow{font-size:17px}
+.hero .lead{max-width:34ch;margin:22px auto 30px;color:var(--noir)}
+.hero-price{margin:18px 0 0;font-size:15px;color:var(--pierre)}
+.hero-im{display:block;width:min(1060px,96vw);height:auto;margin:clamp(20px,3vw,40px) auto 0;filter:drop-shadow(0 30px 40px rgba(22,24,26,.12))}
+
+.spin{background:var(--blanc);border-radius:var(--r-l);overflow:hidden}
+.spin-stage{position:relative;height:clamp(360px,54vw,660px)}
+.spin-stage .ph{position:absolute;inset:6% 10%;width:80%;height:88%;object-fit:contain;transition:opacity .5s var(--ease)}
+.spin-stage .gl{position:absolute;inset:0;opacity:0;transition:opacity .6s var(--ease)}
+.spin.ready .gl{opacity:1}.spin.ready .ph{opacity:0}
+.spin-hint{position:absolute;left:24px;top:20px;margin:0;font-size:13.5px;color:var(--pierre);pointer-events:none}
+.spin-ui{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 28px;padding:18px clamp(18px,3vw,32px) 24px;border-top:1px solid var(--lin-2)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:0;padding:9px 15px;border-radius:999px;background:var(--ivoire);font-size:14px;color:var(--noir);transition:background .2s,color .2s}
+.seg button[aria-pressed="true"]{background:var(--noir);color:var(--ivoire)}
+.spin-ui .swatches{gap:8px}
+.spin-ui .sw{width:32px;height:32px}.spin-ui .sw span{inset:4px}
+.exr{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--pierre)}
+.exr input{width:130px;accent-color:var(--vert)}
+
+.halves{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(28px,5vw,64px);align-items:center}
+.halves img{width:100%;height:auto;filter:drop-shadow(0 30px 40px rgba(22,24,26,.12))}
+.halves .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
+.halves .two div{background:var(--blanc);border-radius:var(--r-m);padding:20px 20px 22px}
+.halves .two b{display:block;font:500 18px/1.25 var(--display);letter-spacing:-.015em;margin-bottom:10px}
+.halves .two ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:14.5px;color:var(--pierre)}
+.halves .two li::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--vert);margin:0 9px 2px 0}
+@media (max-width:900px){.halves{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:520px){.halves .two{grid-template-columns:1fr}}
+
+.hinge{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,5vw,64px);align-items:center}
+.hinge figure{margin:0;display:grid;gap:16px}
+.hinge figure img{width:100%;height:auto;border-radius:var(--r-l);background:#0f1113}
+.hinge figcaption{font-size:14px;color:rgba(243,241,234,.7)}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+.facts div{border-radius:var(--r-m);background:rgba(243,241,234,.06);padding:18px 18px 20px}
+.facts b{display:block;font:500 clamp(22px,2.1vw,30px)/1 var(--display);letter-spacing:-.03em;color:var(--sauge);margin-bottom:8px;white-space:nowrap}
+.facts span{font-size:14px;color:#B9BBB2}
+@media (max-width:900px){.hinge{grid-template-columns:minmax(0,1fr)}}
+
+.cams{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.cams figure{margin:0;background:var(--blanc);border-radius:var(--r-l);padding:24px 22px 26px;display:flex;flex-direction:column;gap:14px}
+.cams img{width:100%;height:clamp(220px,26vw,320px);object-fit:contain}
+.cams b{font:500 20px/1.2 var(--display);letter-spacing:-.015em}
+.cams figcaption{font-size:14.5px;color:var(--pierre)}
+@media (max-width:833px){.cams{grid-template-columns:1fr}}
+
+.dims{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.dims div{background:var(--blanc);border-radius:var(--r-m);padding:22px 18px}
+.dims b{display:block;font:500 clamp(22px,2.2vw,28px)/1.1 var(--display);letter-spacing:-.03em;margin-bottom:6px}
+.dims span{font-size:13.5px;color:var(--pierre)}
+@media (max-width:980px){.dims{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.open{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:clamp(28px,5vw,72px);align-items:center}
+.open img{width:100%;height:auto;filter:drop-shadow(0 30px 40px rgba(22,24,26,.12))}
+.open ol{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:18px;counter-reset:s}
+.open li{display:grid;grid-template-columns:40px 1fr;gap:4px 14px;font-size:15.5px;color:var(--pierre)}
+.open li::before{counter-increment:s;content:counter(s);grid-row:1/3;width:40px;height:40px;border-radius:50%;background:var(--blanc);display:grid;place-items:center;font:500 16px var(--display);color:var(--vert)}
+.open li b{color:var(--noir);font-weight:600}
+@media (max-width:833px){.open{grid-template-columns:minmax(0,1fr)}}
+
+.fix{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.fix div{background:var(--blanc);border-radius:var(--r-m);padding:18px 18px 20px;display:flex;flex-direction:column;gap:6px}
+.fix img{width:100%;height:120px;object-fit:contain;margin-bottom:6px}
+.fix b{font:500 17px/1.25 var(--display);letter-spacing:-.015em}
+.fix span{font-size:14px;color:var(--pierre)}
+.fix .t{margin-top:auto;padding-top:8px;font:600 13px/1.2 var(--text);color:var(--vert);text-transform:uppercase;letter-spacing:.04em}
+
+.lineup{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.lc{background:var(--blanc);border-radius:var(--r-l);padding:24px 20px 26px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.lc.dark{background:var(--noir);color:var(--ivoire)}
+.lc img{width:100%;height:230px;object-fit:contain;margin-bottom:14px}
+.lc .tag{font:600 12px/1 var(--text);letter-spacing:.06em;text-transform:uppercase;color:var(--vert);min-height:12px;margin:0 0 8px}
+.lc.dark .tag{color:var(--sauge)}
+.lc h3{font:500 24px/1.15 var(--display);letter-spacing:-.02em;margin:0}
+.lc p{margin:8px 0 0;font-size:14.5px;color:var(--pierre)}
+.lc.dark p{color:#B9BBB2}
+.lc .pr{color:var(--noir);margin:14px 0 18px}
+.lc.dark .pr{color:var(--ivoire)}
+.lc.dark .btn{background:var(--sauge);color:var(--noir)}
+.lc .ctas{margin-top:auto}
+@media (max-width:1060px){.lineup,.fix{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.lineup,.fix{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page="p1" data-local='{"title":"Vertane P1","after":".hero","links":[["#tourner","En 3D"],["#moities","Deux moitiés"],["#charniere","Charnière"],["#photo","Photo"],["#reparer","Réparer"],["#modeles","Modèles"]],"cta":["acheter-pliant.html","Acheter"]}'>
+<script src="assets/site.js"></script>
+<main id="main">
+
+<section class="hero" id="top">
+  <div class="shell">
+    <p class="eyebrow rv">Nouveau · Pliant</p>
+    <h1 class="h-hero rv d1">Vertane P1</h1>
+    <p class="lead rv d2">Le pliant qui se répare. Deux écrans, une batterie dans toute une moitié, une charnière qui se change.</p>
+    <div class="ctas rv d3"><a class="btn btn-lg" href="acheter-pliant.html">Acheter</a><a class="link" href="#charniere">Voir la charnière</a></div>
+    <p class="hero-price rv d4" id="heroPrice"></p>
+  </div>
+  <img class="hero-im rv d2" src="assets/img/p1-hero.webp" alt="Vertane P1 Ultra entrouvert, titane naturel : l’écran intérieur de 8,0 pouces se plie au milieu" width="1600" height="1100" fetchpriority="high">
+</section>
+
+<section class="sec" id="tourner" aria-labelledby="t-t">
+  <div class="shell">
+    <div class="sec-head rv"><p class="eyebrow">En 3D</p><h2 class="h2" id="t-t">Plie-le. Déplie-le.</h2><p class="lead">Choisis un modèle et une couleur, ouvre-le à l’angle que tu veux, puis démonte-le.</p></div>
+    <div class="spin rv" id="spin">
+      <div class="spin-stage" id="stage">
+        <img class="ph" id="ph" src="assets/img/p1-p1-noir-dos.webp" alt="" width="760" height="900">
+        <div class="gl" id="gl"></div>
+        <p class="spin-hint" id="hint"></p>
+      </div>
+      <div class="spin-ui">
+        <div class="seg" role="group" aria-label="Modèle" id="mSeg"></div>
+        <div class="swatches" role="radiogroup" aria-label="Couleur" id="cSw"></div>
+        <label class="exr"><span>Plié</span><input id="fold3" type="range" min="0" max="100" value="42" aria-label="Ouverture du téléphone"><span>Déplié</span></label>
+        <label class="exr"><span>Assemblé</span><input id="ex3" type="range" min="0" max="100" value="0" aria-label="Démonter le téléphone"><span>Éclaté</span></label>
+        <div class="seg" role="group" aria-label="Vue" id="vSeg"><button data-v="flex" aria-pressed="true">Trois-quarts</button><button data-v="face" aria-pressed="false">Face</button><button data-v="closedBack" aria-pressed="false">Dos</button><button data-v="hinge" aria-pressed="false">Charnière</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="moities" aria-labelledby="m2-t" style="padding-top:0">
+  <div class="shell halves">
+    <img class="rv" src="assets/img/p1-moities.webp" alt="Vertane P1 éclaté, vu de dos : à gauche la coque, le module photo, la carte mère, le stockage, le port et les haut-parleurs ; à droite l’écran extérieur et la grande batterie ; au milieu la charnière" loading="lazy" width="1600" height="1100">
+    <div class="rv d1">
+      <p class="eyebrow">Architecture</p>
+      <h2 class="h1" id="m2-t">Deux moitiés.<br>Deux rôles.</h2>
+      <p class="lead" style="margin-top:18px">Tout ce qui calcule est d’un côté. Toute l’énergie est de l’autre. La moitié droite ne porte que la batterie : il reste la place d’un écran sur chaque face.</p>
+      <div class="two">
+        <div><b>À gauche</b><ul><li>Carte mère</li><li>Stockage</li><li>Port de charge USB-C</li><li>Deux haut-parleurs stéréo</li><li>La caméra du dos</li><li>Recharge sans fil</li><li>L’écran intérieur, seulement</li></ul></div>
+        <div><b>À droite</b><ul><li>La batterie seule, sur toute la moitié</li><li>L’écran intérieur</li><li>L’écran extérieur de 5,6″</li><li>Sa caméra selfie et l’écouteur</li></ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-dark" id="charniere" aria-labelledby="h-t" data-nav="dark">
+  <div class="shell hinge">
+    <div class="rv">
+      <p class="eyebrow">La charnière</p>
+      <h2 class="h1" id="h-t">Elle aussi<br>se change.</h2>
+      <p class="lead" style="margin-top:18px">Chaque moitié tourne autour de son propre axe. Des engrenages les synchronisent, des ressorts les tiennent à l’angle que tu choisis. En se fermant, l’écran se plie en goutte à l’intérieur du dos arrondi : pas de pli marqué, pas d’espace entre les deux moitiés. Et comme sur le M1, c’est un module : s’il prend du jeu, tu le changes.</p>
+      <div class="facts">
+        <div><b>200 000</b><span>pliages testés, soit plus de 100 par jour pendant 5 ans</span></div>
+        <div><b>2 axes</b><span>synchronisés par engrenages, en acier et titane</span></div>
+        <div><b>15 min</b><span>pour la changer, 8 vis imperdables, tournevis fourni</span></div>
+        <div><b>0 mm</b><span>d’écart entre les moitiés une fois plié</span></div>
+      </div>
+    </div>
+    <figure class="rv d1">
+      <img src="assets/img/p1-charniere.webp" alt="La charnière du P1 seule : deux axes, les engrenages qui les synchronisent, les ressorts et le dos arrondi" loading="lazy" width="1400" height="900">
+      <img src="assets/img/p1-charniere-dos.webp" alt="Le P1 entrouvert vu de dos : le dos de la charnière s’arrondit en se pliant" loading="lazy" width="1400" height="900">
+      <figcaption>En haut, le module seul : deux axes, quatre engrenages, les ressorts et les nappes qui relient les moitiés. En bas, le dos de la charnière, qui s’arrondit en se pliant.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="sec" id="photo" aria-labelledby="p-t">
+  <div class="shell">
+    <div class="sec-head rv"><p class="eyebrow">Photo</p><h2 class="h2" id="p-t">Trois caméras. Une par face.</h2><p class="lead">Une seule caméra au dos, mais un grand capteur : jusqu’à 1″ sur le P1 Ultra. Une caméra selfie sur l’écran extérieur, une autre sur l’écran intérieur pour les appels vidéo en grand.</p></div>
+    <div class="cams">
+      <figure class="rv"><img src="assets/img/p1-ultra-naturel-dos.webp" alt="Le dos du P1 Ultra plié : le plateau photo sur toute la largeur du haut, l’objectif à gauche, le flash à droite" loading="lazy" width="760" height="900"><b>Au dos</b><figcaption>Une caméra dans un plateau sur toute la largeur, de 48 Mpx 1/2″ à 50 Mpx 1″ stabilisé selon le modèle. Le module photo se change en une minute.</figcaption></figure>
+      <figure class="rv d1"><img src="assets/img/p1-p1-noir-face.webp" alt="Le P1 plié côté écran extérieur, avec sa caméra selfie en haut" loading="lazy" width="760" height="900"><b>Sur l’écran extérieur</b><figcaption>Pour les selfies et les appels téléphone fermé. Elle fait partie du bloc écran extérieur.</figcaption></figure>
+      <figure class="rv d2"><img src="assets/img/p1-ouvert.webp" alt="Le P1 déplié : la caméra intérieure est en haut de la moitié gauche" loading="lazy" width="1400" height="1000"><b>À l’intérieur</b><figcaption>En haut de la moitié gauche, pour les visios sur 8,0″. Elle fait partie du bloc écran intérieur.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-white" id="format" aria-labelledby="f-t">
+  <div class="shell">
+    <div class="sec-head left rv"><p class="eyebrow">Format</p><h2 class="h2" id="f-t">Un passeport fermé.<br><span class="muted">Une tablette ouvert.</span></h2>
+      <p class="lead">Le format large des pliants en livre, un peu plus grand. Fermé, il tient dans une poche comme un téléphone ; ouvert, il a presque la surface d’une petite tablette. Des modules qui se changent demandent un peu d’épaisseur : 11,5 mm plié, c’est le prix d’un pliant qu’on répare soi-même.</p></div>
+    <div class="dims rv">
+      <div><b>126 × 86</b><span>mm plié, 11,5 mm d’épaisseur</span></div>
+      <div><b>126 × 167,6</b><span>mm déplié, 5,6 mm d’épaisseur</span></div>
+      <div><b>8,0″</b><span>écran intérieur pliable, jusqu’à 144 Hz</span></div>
+      <div><b>5,6″</b><span>écran extérieur, jusqu’à 120 Hz</span></div>
+      <div><b id="massLow"></b><span>selon les modules</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="ouvrir" aria-labelledby="o-t">
+  <div class="shell open">
+    <img class="rv" src="assets/img/p1-eclate.webp" alt="Vertane P1 en vue éclatée : écran intérieur, cadres, charnière, carte mère, stockage, port, haut-parleurs, module photo, recharge sans fil, coque, batterie et écran extérieur" loading="lazy" width="1600" height="1100">
+    <div class="rv d1">
+      <p class="eyebrow">Modularité</p>
+      <h2 class="h1" id="o-t">Ouvre-le.<br>Tout est là.</h2>
+      <ol>
+        <li><b>Plie-le et retourne-le.</b><span>La coque arrière est côté caméra.</span></li>
+        <li><b>Fais glisser le verrou noir.</b><span>La coque se soulève : carte mère, stockage, port, haut-parleurs et module photo sont devant toi.</span></li>
+        <li><b>Pour la batterie, retourne-le.</b><span>Le verrou sous l’écran extérieur libère le bloc : la batterie est dessous, clipsée, jamais collée.</span></li>
+        <li><b>La charnière et l’écran intérieur.</b><span>8 vis imperdables, tournevis fourni. Tout le reste se fait à la main.</span></li>
+      </ol>
+      <div class="ctas left" style="margin-top:30px"><a class="btn" href="configurateur-p1.html">Voir chaque changement en 3D</a><a class="link" href="#tourner">Faire tourner le P1</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-white" id="reparer" aria-labelledby="r-t">
+  <div class="shell">
+    <div class="sec-head left rv"><p class="eyebrow">Pensé pour durer</p><h2 class="h2" id="r-t">Tu changes un module.<br><span class="muted">Pas tout le téléphone.</span></h2>
+      <p class="lead">Le port, le stockage, les haut-parleurs et la recharge sans fil reprennent la technologie des modules du M1, redessinés à la taille du P1. Chaque module reste disponible à l’unité.</p></div>
+    <div class="fix" id="fix"></div>
+    <div class="ctas left rv" style="margin-top:28px"><a class="btn" href="modules.html?p=telephone&amp;v=p1">Voir les modules du P1</a></div>
+  </div>
+</section>
+
+<section class="sec" id="modeles" aria-labelledby="mo-t">
+  <div class="shell">
+    <div class="sec-head rv"><p class="eyebrow">La gamme</p><h2 class="h2" id="mo-t">Quatre pliants.<br>La même charnière.</h2><p class="lead">Choisis ton modèle, ta couleur et ton stockage. Ou compose le tien, module par module.</p></div>
+    <div class="lineup" id="lineup"></div>
+    <div class="ctas rv" style="margin-top:32px"><a class="btn btn-lg" href="acheter-pliant.html?m=mesure">Composer mon P1 sur mesure</a><a class="link" href="configurateur-p1.html">Configurateur 3D avancé</a><a class="link" href="telephones.html#comparer-p1">Comparer les modèles</a></div>
+  </div>
+</section>
+</main>
+
+<template id="foot-notes">
+  <ol>
+    <li>Paiement en 12 fois sans frais, sous réserve d’acceptation. Montants arrondis au centime supérieur. Prix TTC.</li>
+    <li>Temps de remplacement mesurés sur prototype, par une personne qui suit le guide pas à pas. Estimations de prototype.</li>
+  </ol>
+</template>
+
+<script src="assets/p1-data.js"></script>
+<script>
+(function(){
+"use strict";
+const P=window.P1,V=window.V,$=s=>document.querySelector(s),esc=V.esc,money=V.money;
+const low=Math.min(...P.MODELS.map(P.from));$('#heroPrice').textContent='À partir de '+money(low)+' ou '+V.monthly(low)+'/mois sur 12 mois¹';
+$('#massLow').textContent=Math.min(...P.MODELS.map(m=>P.mass(P.cfgOf(m))))+' g';
+
+/* ce qui se change */
+$('#fix').innerHTML=P.MODS.map((f,i)=>'<div class="rv d'+(i%4)+'"><img src="'+P.modImg(f.k)+'" alt="" loading="lazy"><b>'+esc(f.t)+'</b><span>'+esc(f.d)+'</span><span class="t">'+esc(f.time)+'²</span></div>').join('');
+
+/* gamme */
+$('#lineup').innerHTML=P.MODELS.map((m,i)=>{const p=P.from(m);return '<article class="lc rv d'+i+(m.k==='ultra'?' dark':'')+'"><img src="'+P.img(m,m.fins[0][0])+'" alt="Vertane '+esc(m.name)+', '+esc(m.fins[0][1])+'" loading="lazy"><p class="tag">'+esc(m.tag)+'</p><h3>'+esc(m.name)+'</h3><p>'+esc(m.blurb)+'</p>'+
+  '<p class="pr">À partir de '+money(p)+'</p><div class="ctas"><a class="btn btn-sm" href="acheter-pliant.html?m='+m.k+'">Acheter</a></div></article>';}).join('');
+
+/* 3D : modèle, couleur, ouverture, vue */
+const FOLD={flex:.42,face:1,closedBack:0,hinge:0};
+let mk='p1',fk='fume',vk='flex';
+function ui(){const m=P.byK(mk);if(!m.fins.some(f=>f[0]===fk))fk=m.fins[0][0];
+  $('#mSeg').innerHTML=P.MODELS.map(x=>'<button data-m="'+x.k+'" aria-pressed="'+(x.k===mk)+'">'+esc(x.name)+'</button>').join('');
+  $('#cSw').innerHTML=m.fins.map(f=>'<label class="sw'+(f[0]===fk?' on':'')+'" title="'+esc(f[1])+'"><input type="radio" name="c3" value="'+f[0]+'"'+(f[0]===fk?' checked':'')+' aria-label="'+esc(f[1])+'"><span style="--c:'+P.hex(m,f[0])+'"></span></label>').join('');
+  $('#vSeg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===vk));
+  $('#ph').src=P.img(m,fk);$('#ph').alt='Vertane '+m.name+', '+P.finOf(m,fk)[1];
+  if(window.P3D)window.P3D.set(P.d3(P.cfgOf(m,fk)));}
+$('#mSeg').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(!b)return;mk=b.dataset.m;ui();});
+$('#cSw').addEventListener('change',e=>{fk=e.target.value;ui();});
+$('#fold3').addEventListener('input',e=>{if(window.P3D)window.P3D.anim({open:e.target.value/100});});
+$('#ex3').addEventListener('input',e=>{if(window.P3D)window.P3D.anim({e:e.target.value/100});});
+$('#vSeg').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(!b)return;vk=b.dataset.v;$('#fold3').value=Math.round(FOLD[vk]*100);$('#ex3').value=0;
+  if(window.P3D){window.P3D.anim({open:FOLD[vk],e:0});window.P3D.view(vk,true);}ui();});
+window.addEventListener('p1-3d',()=>{$('#spin').classList.add('ready');$('#hint').textContent=window.P3D.touch?'':'Fais glisser pour tourner.';ui();window.P3D.anim({open:.42,instant:true});window.P3D.view('flex');});
+ui();
+})();
+</script>
+<script src="assets/walls.js"></script>
+<script src="assets/p1-3d.js"></script>
+<script>
+(function(){const el=document.getElementById('gl'),touch=matchMedia('(pointer:coarse)').matches;
+/* la 3D ne se charge que quand la section approche de l’écran */
+let started=false;
+async function go(){if(started)return;started=true;io.disconnect();
+  try{const v=await window.mountP1(el,{interactive:!touch,noZoom:true,reduce:window.V.reduce});v.touch=touch;window.P3D=v;window.dispatchEvent(new Event('p1-3d'));}catch(e){console.warn('3D indisponible',e);}}
+const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting))go();},{rootMargin:'400px'});
+io.observe(el);
+addEventListener('load',()=>setTimeout(go,4000));
+})();
+</script>
+</body>
+</html>

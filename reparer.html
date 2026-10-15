@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Réparer et assistance — Vertane M1</title>
+<meta name="description" content="Change un module de ton Vertane M1 sans outil. Temps de remplacement, reprise, questions fréquentes.">
+<meta name="theme-color" content="#16181A">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vertane.css">
+<style>
+.r-hero{padding:150px 0 0;overflow:hidden;text-align:center}
+.r-hero .lead{max-width:34ch;margin:22px auto 32px}
+.r-hero-img{position:relative;margin:clamp(40px,6vw,72px) auto 0;height:clamp(300px,40vw,520px);max-width:900px}
+.r-hero-img img{position:absolute;left:50%;top:0;height:125%;width:auto;max-width:none;transform:translateX(-50%)}
+.r-hero-img::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40%;background:linear-gradient(rgba(22,24,26,0),var(--noir))}
+.howto{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:s;list-style:none;margin:0;padding:0}
+.howto li{background:var(--blanc);border-radius:var(--r-l);padding:28px 24px 30px;display:flex;flex-direction:column;min-height:300px}
+.howto .n{font:500 44px/1 var(--display);color:var(--vert);letter-spacing:-.04em;margin-bottom:auto}
+.howto h3{font:500 19px/1.3 var(--display);margin:28px 0 8px;letter-spacing:-.01em}
+.howto p{margin:0;color:var(--pierre);font-size:15px}
+@media (max-width:900px){.howto{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.howto{grid-template-columns:1fr}.howto li{min-height:0}.howto h3{margin-top:16px}}
+.times{width:100%;border-collapse:collapse;font-size:16px}
+.times th,.times td{text-align:left;padding:16px 8px;border-top:1px solid var(--lin)}
+.times thead th{border-top:0;font:600 13px/1.3 var(--text);color:var(--pierre);text-transform:uppercase;letter-spacing:.05em}
+.times td:nth-child(2){font:500 18px/1 var(--display);letter-spacing:-.02em;white-space:nowrap}
+.times td:last-child{text-align:right}
+.times .bar{display:inline-block;height:6px;border-radius:6px;background:var(--vert);vertical-align:middle;margin-left:10px;opacity:.85}
+@media (max-width:600px){.times .bar{display:none}.times td:nth-child(3){display:none}.times th:nth-child(3){display:none}}
+.trade{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.trade h3{font:500 20px/1.3 var(--display);margin:14px 0 8px}
+.trade p{margin:0;color:rgba(243,241,234,.86);font-size:15px}
+.trade .n{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--ivoire);color:var(--vert);font:500 16px/1 var(--display)}
+@media (max-width:760px){.trade{grid-template-columns:1fr}}
+.faq{max-width:860px;margin:0 auto}
+.faq details{border-top:1px solid var(--lin)}
+.faq details:last-child{border-bottom:1px solid var(--lin)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;font:500 18px/1.35 var(--display);letter-spacing:-.01em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary i{position:relative;width:18px;height:18px;flex:0 0 auto}
+.faq summary i::before,.faq summary i::after{content:"";position:absolute;left:0;top:8px;width:18px;height:2px;border-radius:2px;background:var(--vert);transition:transform .35s var(--ease)}
+.faq summary i::after{transform:rotate(90deg)}
+.faq details[open] summary i::after{transform:rotate(0)}
+.faq .a{padding:0 40px 24px 0;color:var(--pierre);font-size:16px}
+.faq .a p{margin:0 0 10px}
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:clamp(28px,5vw,72px);align-items:start}
+.contact form{background:var(--blanc);border-radius:var(--r-l);padding:clamp(24px,4vw,40px)}
+.contact .perks{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:16px}
+.contact .perks li{display:flex;gap:12px;font-size:15px;color:var(--pierre)}
+.contact .perks svg{width:22px;height:22px;color:var(--vert);flex:0 0 auto}
+.contact .perks b{color:var(--noir);display:block}
+.sent{text-align:center;padding:30px 10px}
+.sent .ok{width:56px;height:56px;border-radius:50%;background:var(--vert);color:var(--ivoire);display:grid;place-items:center;margin:0 auto 18px}
+.sent .ok svg{width:26px;height:26px}
+@media (max-width:860px){.contact{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page="reparer">
+<script src="assets/site.js"></script>
+<main id="main">
+  <section class="sec-dark r-hero" data-nav="dark" id="top">
+    <div class="shell">
+      <p class="eyebrow rv">Réparer</p>
+      <h1 class="h-hero rv d1">Sans outil.<br>Sans rendez-vous.</h1>
+      <p class="lead rv d2">Chaque module du Vertane M1 se change à la main, en quelques secondes. Tu répares toi-même, chez toi.</p>
+      <div class="ctas rv d3"><a class="btn btn-lg" href="modules.html">Commander un module</a><a class="link" href="vue-eclatee-m1.html">Voir la vue éclatée</a></div>
+    </div>
+    <div class="r-hero-img rv" aria-hidden="true"><img src="assets/img/exploded.webp" alt="" width="1270" height="1604"></div>
+  </section>
+
+  <section class="sec" id="etapes" aria-labelledby="e-t">
+    <div class="shell">
+      <div class="sec-head left rv"><p class="eyebrow">Changer un module</p><h2 class="h2" id="e-t">Quatre gestes.<br><span class="muted">C’est tout.</span></h2></div>
+      <ol class="howto">
+        <li class="rv"><span class="n">01</span><h3>Éteins ton M1</h3><p>Maintiens le bouton latéral, puis touche « Éteindre ». Pas besoin de le débrancher du reste.</p></li>
+        <li class="rv d1"><span class="n">02</span><h3>Fais glisser le verrou</h3><p>Le verrou noir fumé en bas du dos coulisse vers la droite. La coque se soulève d’un geste.</p></li>
+        <li class="rv d2"><span class="n">03</span><h3>Change le module</h3><p>Soulève-le par sa languette, pose le nouveau : il ne rentre que dans le bon sens et se clipse tout seul.</p></li>
+        <li class="rv d3"><span class="n">04</span><h3>Referme</h3><p>Repose la coque, verrouille, rallume. Le M1 reconnaît le nouveau module au démarrage.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec sec-white" id="temps" aria-labelledby="t-t">
+    <div class="shell">
+      <div class="sec-head left rv"><p class="eyebrow">Temps de remplacement</p><h2 class="h2" id="t-t">Du plus rapide<br>au plus long.</h2></div>
+      <table class="times rv" id="times"><thead><tr><th>Module</th><th>Temps</th><th>Quand le changer</th><th><span class="sr">Acheter</span></th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <section class="sec sec-green" id="reprise" aria-labelledby="rp-t">
+    <div class="shell">
+      <div class="sec-head left rv" style="max-width:860px"><p class="eyebrow" style="color:var(--ivoire);opacity:.8">Reprise et recyclage</p><h2 class="h1" id="rp-t">Rien ne part à la poubelle.</h2></div>
+      <div class="trade">
+        <div class="rv"><span class="n">1</span><h3>Garde l’emballage</h3><p>Chaque module neuf arrive avec une étiquette de retour prépayée.</p></div>
+        <div class="rv d1"><span class="n">2</span><h3>Renvoie l’ancien</h3><p>Glisse le module remplacé dans la même boîte et dépose-la en point relais.</p></div>
+        <div class="rv d2"><span class="n">3</span><h3>On lui trouve une suite</h3><p>Il est testé, reconditionné et revendu, ou démonté pour en récupérer les matériaux.</p></div>
+      </div>
+      <p class="rv" style="margin:40px 0 0;font-size:16px;color:rgba(243,241,234,.86)">Tu achètes un M1 ? Fais aussi reprendre ton ancien téléphone : jusqu’à 220 € déduits de ta commande. <a href="acheter.html#etape-reprise" style="text-decoration:underline">Estimer ma reprise</a></p>
+    </div>
+  </section>
+
+  <section class="sec" id="aide" aria-labelledby="a-t">
+    <div class="shell">
+      <div class="sec-head rv"><p class="eyebrow">Assistance</p><h2 class="h2" id="a-t">Questions fréquentes.</h2></div>
+      <div class="faq rv">
+        <details><summary>Est-ce que je perds la garantie si j’ouvre mon M1 ?<i></i></summary><div class="a"><p>Non. Le M1 est fait pour être ouvert. Changer un module toi-même ne touche pas à ta garantie.</p></div></details>
+        <details><summary>Quels sont les délais et frais de livraison ?<i></i></summary><div class="a"><p>La livraison standard est gratuite en France métropolitaine, expédiée sous 3 à 5 jours ouvrés. La livraison express coûte 9,90 € et arrive en 2 jours ouvrés.</p></div></details>
+        <details><summary>Puis-je retourner mon achat ?<i></i></summary><div class="a"><p>Oui, pendant 30 jours après réception, gratuitement. Le téléphone ou le module doit être complet et en bon état.</p></div></details>
+        <details><summary>Comment fonctionne le paiement en 12 fois ?<i></i></summary><div class="a"><p>Dès 150 € d’achat, tu peux payer en 12 mensualités sans frais, sous réserve d’acceptation. Le montant mensuel est affiché sur chaque page produit et au paiement.</p></div></details>
+        <details><summary>Mes données restent-elles sur le module de stockage ?<i></i></summary><div class="a"><p>Oui. Android reste sur la carte mère, tes photos et fichiers restent sur le module. Tu peux le déplacer vers un autre M1 et les retrouver tout de suite.</p></div></details>
+        <details><summary>Une batterie plus grande rentre-t-elle dans ma coque ?<i></i></summary><div class="a"><p>Les batteries Grande et Endurance demandent la coque épaisse, de 0,8 ou 1,6 mm de plus. Le cadre et les autres modules ne changent pas.</p></div></details>
+        <details><summary>Combien de temps les pièces restent-elles disponibles ?<i></i></summary><div class="a"><p>Chaque module du M1 reste disponible à l’unité pendant au moins 7 ans après la sortie du téléphone.</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-white" id="contact" aria-labelledby="c-t">
+    <div class="shell contact">
+      <div class="rv">
+        <p class="eyebrow">Nous écrire</p><h2 class="h2" id="c-t">Une question ?<br><span class="muted">Un humain te répond.</span></h2>
+        <ul class="perks">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span><b>Réponse sous 24 h</b>Du lundi au samedi.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 6.5a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3l7.5-7.5"/></svg><span><b>Diagnostic à distance</b>On t’aide à trouver le module à changer.</span></li>
+        </ul>
+      </div>
+      <form id="cform" class="rv d1" novalidate>
+        <div class="form-grid">
+          <div class="field"><input id="c-nom" name="nom" placeholder=" " autocomplete="name"><label for="c-nom">Nom</label><p class="msg">Indique ton nom.</p></div>
+          <div class="field"><input id="c-mail" name="mail" type="email" placeholder=" " autocomplete="email"><label for="c-mail">E-mail</label><p class="msg">Adresse e-mail invalide.</p></div>
+          <div class="field full"><select id="c-sujet" name="sujet"><option>Choisir un module</option><option>Commande et livraison</option><option>Batterie</option><option>Écran</option><option>Module photo</option><option>Autre question</option></select><label for="c-sujet">Sujet</label></div>
+          <div class="field full"><textarea id="c-msg" name="msg" placeholder=" "></textarea><label for="c-msg">Ton message</label><p class="msg">Écris ton message.</p></div>
+        </div>
+        <p class="fine" style="margin:12px 0 0">Démonstration : le message n’est pas envoyé.</p>
+        <button class="btn btn-lg" style="margin-top:18px">Envoyer</button>
+      </form>
+    </div>
+  </section>
+</main>
+<template id="foot-notes"><p>Temps de remplacement indicatifs, mesurés sur prototype, téléphone éteint.</p></template>
+<script src="assets/m1-data.js"></script>
+<script src="assets/catalogue.js"></script>
+<script>
+(function(){
+"use strict";
+const V=window.V,C=window.CAT,$=s=>document.querySelector(s);
+const WHEN={batt:'Quand l’autonomie baisse nettement',coque:'Pour changer de style ou de taille de batterie',cover:'Pour changer de couleur',qi:'Pour passer à la recharge rapide',sto:'Quand tu manques de place',photo:'Pour plus de capteurs ou un LiDAR',spk:'Son grésillant ou trop faible',port:'Câble qui tient mal, charge instable',screen:'Écran fissuré ou envie du pliable',board:'Pour plus de puissance',frame:'Cadre abîmé ou nouvelle matière'};
+const sec=t=>{const m=/(\d+)\s*(s|min)/.exec(t);return m?(+m[1])*(m[2]==='min'?60:1):0;};
+const rows=C.MODS.slice().sort((a,b)=>sec(a.time)-sec(b.time)),max=Math.max(...rows.map(m=>sec(m.time)));
+$('#times tbody').innerHTML=rows.map(m=>'<tr><td>'+m.t+'</td><td>'+m.time+'<span class="bar" style="width:'+Math.max(6,Math.round(sec(m.time)/max*120))+'px"></span></td><td class="muted">'+WHEN[m.k]+'</td><td><a class="link" href="modules.html#'+m.k+'" style="font-size:15px">Acheter</a></td></tr>').join('');
+const f=$('#cform');
+f.addEventListener('submit',e=>{e.preventDefault();let ok=true;
+  const t=(id,cond)=>{const el=$(id);el.parentNode.classList.toggle('err',!cond);if(!cond&&ok){el.focus();ok=false;}};
+  t('#c-nom',$('#c-nom').value.trim());t('#c-mail',/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('#c-mail').value.trim()));t('#c-msg',$('#c-msg').value.trim().length>3);
+  if(!ok)return;f.innerHTML='<div class="sent"><div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h3 class="h3">Merci, c’est noté.</h3><p class="muted">Sur le site final, ce message partirait vers l’équipe Vertane.</p></div>';});
+})();
+</script>
+</body>
+</html>

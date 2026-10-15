@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Acheter un Vertane B1</title>
+<meta name="description" content="Achète ton Vertane B1 SE, B1, B1 Pro ou B1 Ultra, ou compose un B1 sur mesure : couleur, stockage et ports au choix.">
+<meta name="theme-color" content="#F3F1EA">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vertane.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
+<style>
+.buy-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;padding-top:112px;padding-bottom:28px}
+.buy-head .eyebrow{margin-bottom:8px}
+.buy-head p.muted{margin:10px 0 0;font-size:15px}
+.head-links{display:flex;flex-wrap:wrap;gap:8px 24px}
+.head-links .link{font-size:15px}
+
+.buy-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,56px);align-items:start}
+.viewer-col{position:sticky;top:84px}
+.viewer{position:relative;height:calc(100vh - 190px);height:calc(100svh - 190px);min-height:440px;max-height:860px;border-radius:var(--r-l);background:var(--blanc);overflow:hidden}
+.viewer img{position:absolute;left:0;right:0;top:9%;margin:0 auto;height:74%;width:auto;max-width:none;opacity:0;transform:scale(.97);transition:opacity .55s var(--ease),transform .9s var(--ease-out);filter:drop-shadow(0 26px 34px rgba(22,24,26,.15))}
+.viewer img.on{opacity:1;transform:none}
+.v-cap{position:absolute;left:24px;top:22px;right:24px;margin:0;font-size:14px;color:var(--pierre);pointer-events:none;z-index:2}
+.v-cap b{display:block;font:500 17px/1.3 var(--display);color:var(--noir);letter-spacing:-.01em;margin-bottom:2px}
+.v-ctrl{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:4px;padding:6px;border-radius:999px;background:rgba(243,241,234,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 0 0 1px rgba(201,196,184,.6);z-index:2}
+.v-ctrl button{border:0;background:transparent;padding:8px 16px;border-radius:999px;font-size:13.5px;color:var(--noir);transition:background .2s,color .2s}
+.v-ctrl button:hover{background:rgba(22,24,26,.06)}
+.v-ctrl button[aria-pressed="true"]{background:var(--noir);color:var(--ivoire)}
+
+.step{padding:0 0 52px;margin-bottom:52px;border-bottom:1px solid var(--lin);scroll-margin-top:96px;transition:opacity .5s var(--ease)}
+.step:last-child{border-bottom:0}
+.step.locked{opacity:.34;pointer-events:none;user-select:none}
+.step h2{font:500 clamp(24px,2.4vw,30px)/1.2 var(--display);letter-spacing:-.02em;margin:0 0 22px}
+.step h2 span{color:var(--pierre)}
+.step .help{display:inline-flex;align-items:center;gap:8px;border:0;background:none;padding:0;margin-top:16px;color:var(--vert);font-size:15px}
+.step .help svg{width:20px;height:20px}
+.step .help:hover{text-decoration:underline;text-underline-offset:.18em}
+.step-note{margin:14px 0 0;font-size:14px;color:var(--pierre)}
+.col-name{font:600 15px/1.3 var(--text);margin:0 0 14px}
+.col-name span{font-weight:400;color:var(--pierre)}
+.step .swatches{gap:14px}
+.step .sw{width:44px;height:44px}
+.step .sw span{inset:5px}
+.inc{margin-top:22px;border-radius:var(--r-m);background:var(--blanc);padding:4px 20px}
+.inc summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;cursor:pointer;list-style:none;font-size:15px;font-weight:600}
+.inc summary::-webkit-details-marker{display:none}
+.inc summary svg{width:18px;height:18px;transition:transform .3s var(--ease)}
+.inc[open] summary svg{transform:rotate(180deg)}
+.inc ul{list-style:none;margin:0 0 14px;padding:0;border-top:1px solid var(--lin-2)}
+.inc li{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid var(--lin-2);font-size:14px}
+.inc li:last-child{border-bottom:0}
+.inc li span:first-child{color:var(--pierre)}
+.inc li span:last-child{text-align:right}
+.to-custom{display:flex;gap:14px;align-items:flex-start;margin-top:14px;padding:16px 20px;border-radius:var(--r-m);box-shadow:inset 0 0 0 1px var(--lin);font-size:14px;color:var(--pierre)}
+.to-custom svg{width:24px;height:24px;flex:0 0 auto;color:var(--vert)}
+.to-custom b{display:block;color:var(--noir);font-weight:600;margin-bottom:2px}
+.to-custom button{border:0;background:none;padding:0;text-align:left;color:var(--vert);font-size:14px;margin-top:4px}
+.to-custom button:hover{text-decoration:underline}
+.trade-extra{display:grid;gap:14px;margin-top:18px}
+.trade-val{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:16px 20px;border-radius:var(--r-s);background:rgba(47,122,85,.08);color:var(--vert);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips .choice{flex:1 1 90px;align-items:center;text-align:center;padding:14px 10px}
+
+.recap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,72px);align-items:center;background:var(--blanc);border-radius:var(--r-l);padding:clamp(28px,5vw,64px);margin:24px 0 120px}
+.recap-img{display:flex;justify-content:center}
+.recap-img img{height:min(460px,60vw);width:auto;max-width:100%;object-fit:contain}
+.recap ul{list-style:none;margin:22px 0;padding:0;border-top:1px solid var(--lin-2)}
+.recap li{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--lin-2);font-size:14.5px}
+.recap li b{display:block;font-weight:600}
+.recap li small{color:var(--pierre)}
+.recap li span:last-child{white-space:nowrap}
+.recap .tot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:6px 0 4px}
+.recap .tot b{font:500 30px/1.1 var(--display);letter-spacing:-.03em}
+.recap .ship{display:flex;gap:10px;align-items:flex-start;margin:18px 0 24px;font-size:14px;color:var(--pierre)}
+.recap .ship svg{width:22px;height:22px;flex:0 0 auto;color:var(--noir)}
+.recap .ship b{color:var(--noir);font-weight:600}
+
+.buybar{position:fixed;left:0;right:0;bottom:0;z-index:90;background:rgba(255,255,255,.9);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 -1px 0 rgba(201,196,184,.7);transform:translateY(110%);transition:transform .5s var(--ease-out)}
+.buybar.on{transform:none}
+.buybar .shell{display:flex;align-items:center;gap:16px 28px;min-height:76px;padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+.bb-price{display:flex;flex-direction:column}
+.bb-price b{font:500 22px/1.15 var(--display);letter-spacing:-.02em}
+.bb-price span{font-size:13px;color:var(--pierre)}
+.bb-ship{margin-left:auto;font-size:13px;color:var(--pierre);text-align:right}
+.bb-ship b{display:block;color:var(--noir);font-weight:600}
+
+@media (max-width:980px){
+  .buy-head{padding-top:96px}
+  .buy-grid{grid-template-columns:1fr}
+  .viewer-col{top:76px;z-index:5;margin:0 calc(-1*var(--gut));padding:0 var(--gut) 10px;background:linear-gradient(var(--ivoire) 88%,rgba(243,241,234,0));box-shadow:0 -90px 0 var(--ivoire)}
+  .viewer{height:34svh;min-height:240px;border-radius:var(--r-m)}
+  .viewer img{top:6%;height:80%}
+  .v-cap{display:none}
+  .v-ctrl{bottom:8px;padding:4px}.v-ctrl button{padding:6px 12px;font-size:12px}
+  .step{scroll-margin-top:calc(76px + 34svh + 24px)}
+  .recap{grid-template-columns:1fr}
+  .bb-ship{display:none}
+  .buybar .btn{margin-left:auto}
+}
+
+/* ordinateur : vue de face (image) ou vue des ports (SVG en ligne) */
+.viewer img{top:14%;height:auto;width:88%;max-height:72%;object-fit:contain}
+.viewer .v-3d{position:absolute;inset:0;opacity:0;transition:opacity .6s var(--ease)}
+.viewer.ready .v-3d{opacity:1}.viewer.ready #vFront{opacity:0}
+.v-hint{position:absolute;right:24px;top:22px;margin:0;font-size:13px;color:var(--pierre);pointer-events:none;z-index:2}
+.bay-plan{margin:18px 0 4px;padding:14px 16px;border-radius:var(--r-m);background:var(--blanc)}
+.bay-plan svg{width:100%;height:auto;display:block}
+.grp{margin-bottom:26px}
+.grp:last-child{margin-bottom:0}
+.bay-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.bay-list .field select{padding-top:22px}
+.bay-side{grid-column:1/-1;font:600 13px/1.3 var(--text);color:var(--pierre);margin:8px 0 -2px}
+.bay-err{margin:12px 0 0;padding:12px 16px;border-radius:var(--r-s);background:rgba(180,70,40,.08);color:#9A3A1E;font-size:14px}
+.recap-img img{height:auto;width:100%;max-height:none}
+@media (max-width:980px){.viewer img{top:10%;width:92%;max-height:80%}.v-hint{display:none}}
+@media (max-width:600px){.bay-list{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page="ordinateur">
+<script src="assets/site.js"></script>
+<main id="main">
+  <header class="shell buy-head">
+    <div><p class="eyebrow">Acheter</p><h1 class="h1" id="title">Vertane B1</h1><p class="muted" id="fromPrice"></p></div>
+    <div class="head-links"><a class="link" href="ordinateurs.html#comparer">Comparer les modèles</a><a class="link" href="acheter-ordinateur.html?m=mesure" id="toMesure">B1 sur mesure</a><a class="link" href="configurateur-b1.html" id="to3d">Configurateur 3D</a></div>
+  </header>
+  <div class="shell buy-grid">
+    <div class="viewer-col">
+      <div class="viewer" id="viewer" aria-live="polite">
+        <p class="v-cap" id="vcap"></p>
+        <img id="vFront" alt="" class="on" width="1084" height="850">
+        <div class="v-3d" id="v3d"></div>
+        <p class="v-hint" id="vHint"></p>
+        <div class="v-ctrl" role="group" aria-label="Vue"><button data-v="front" aria-pressed="true">Face</button><button data-v="left" aria-pressed="false">Gauche</button><button data-v="right" aria-pressed="false">Droite</button></div>
+      </div>
+    </div>
+    <div class="steps" id="steps"></div>
+  </div>
+  <div class="shell"><section class="recap" id="recap" hidden aria-labelledby="recap-t"></section></div>
+</main>
+
+<div class="buybar" id="buybar" aria-label="Prix et ajout au panier">
+  <div class="shell">
+    <div class="bb-price"><b id="bbPrice"></b><span id="bbMonthly"></span></div>
+    <div class="bb-ship" id="bbShip"></div>
+    <button class="btn" id="bbBtn">Continuer</button>
+  </div>
+</div>
+
+<template id="foot-notes">
+  <ol>
+    <li>Paiement en 12 fois sans frais, sous réserve d’acceptation. Montants arrondis au centime supérieur. Prix TTC, livraison offerte en France métropolitaine.</li>
+    <li>Valeur de reprise estimée, confirmée après inspection de l’appareil. Elle est déduite du total de la commande.</li>
+    <li>Autonomie estimée en usage bureautique, luminosité à 50 %. Estimations de prototype.</li>
+  </ol>
+</template>
+
+<script src="assets/laptop.js"></script>
+<script>
+(function(){
+"use strict";
+const B=window.LAPTOP,V=window.V,$=s=>document.querySelector(s),esc=V.esc,money=V.money;
+const DEV=[['mac-recent','MacBook de 2020 ou plus récent',350],['mac-old','MacBook plus ancien',110],['pc-recent','PC portable de moins de 4 ans',180],['pc-old','PC portable plus ancien',50],['vertane','Ordinateur Vertane',300],['autre','Autre appareil (recyclage gratuit)',0]];
+const STATE=[['ok','Fonctionne parfaitement',1],['ecran','Écran fissuré ou clavier abîmé',.5],['hs','Ne s’allume plus',.15]];
+const CARE={name:'Vertane Care, 2 ans',price:129};
+const ALL=B.MODELS.concat(B.MESURE);
+const KBS=[['azerty','AZERTY','France, Belgique'],['qwerty','QWERTY','International (US)'],['qwertz','QWERTZ','Suisse, Allemagne'],['bepo','BÉPO','Disposition ergonomique française']];
+const kbL=k=>(KBS.find(x=>x[0]===k)||KBS[0])[1];
+const PRESETS=[['modele','Celle du modèle'],['deux','Le minimum'],['trois','Le quotidien'],['complet','Toutes les baies']];
+
+/* état ; entrée par ?m=&c=&s=&edit= */
+const qp=new URLSearchParams(location.search);
+let m=B.byK(qp.get('m')),fin=null,sto=null,ports=null,comp=null,trade={on:null,dev:'',state:''},care=null,view='front',bayErr='',kb='azerty';
+const done={modele:!!m};
+if(!m)m=B.byK('b1');
+const editId=qp.get('edit'),edited=editId&&V.Bag.items().find(x=>x.id===editId&&x.type==='laptop');
+if(edited){m=B.byK(edited.model)||m;done.modele=true;fin=edited.fin;sto=edited.cap;ports=edited.cfg.ports.slice();done.couleur=done.stockage=done.ports=done.composants=true;
+  if(m.k==='mesure')comp={size:edited.cfg.size,screen:edited.cfg.screen,board:edited.cfg.board,ram:edited.cfg.ram};
+  kb=edited.kb||'azerty';care=!!edited.care;if(edited.trade){trade={on:true,dev:edited.trade.dev||'',state:edited.trade.state||''};if(!trade.dev)trade.on=false;}else trade.on=false;}
+if(!edited&&qp.get('c')&&m.fins.indexOf(qp.get('c'))>=0){fin=qp.get('c');done.couleur=true;}
+if(!edited&&qp.get('s')&&m.caps.indexOf(+qp.get('s'))>=0){sto=+qp.get('s');done.stockage=true;}
+/* arrivée depuis le configurateur 3D : on reprend toute la configuration */
+if(!edited&&qp.get('from')==='config'&&m.k==='mesure')try{const s=JSON.parse(localStorage.getItem('b1-config-v2')||'null');
+  if(s){comp={size:s.size,screen:s.screen,board:s.board,ram:s.ram};if(B.COL[s.col]){fin=s.col;done.couleur=true;}if(B.byV(B.STOS,s.sto)){sto=s.sto;done.stockage=true;}
+    if(Array.isArray(s.ports)){ports=s.ports.slice();done.ports=true;}if(s.kb)kb=s.kb;done.composants=true;}}catch(e){}
+if(m.k==='mesure'&&!comp)comp=Object.assign({},B.MESURE.cfg);
+
+const steps=()=>[{k:'modele',t:'Modèle.',s:'Lequel est fait pour toi ?'}].concat(m.k==='mesure'?[{k:'composants',t:'Composants.',s:'Choisis chaque pièce.'}]:[],
+  [{k:'couleur',t:'Couleur.',s:'Choisis ta finition.'},{k:'stockage',t:'Stockage.',s:'Quelle place pour tes fichiers ?'},{k:'ports',t:'Ports.',s:'Choisis-les baie par baie.'},{k:'clavier',t:'Clavier.',s:'Quelle disposition ?'},
+   {k:'reprise',t:'Reprise.',s:'As-tu un ordinateur à faire reprendre ?'},{k:'care',t:'Vertane Care.',s:'Protège ton ordinateur.'}]);
+const curFin=()=>fin||m.fins[0],curSto=()=>sto||m.caps[0];
+const cfg=()=>B.cfgOf(m,curFin(),curSto(),ports,m.k==='mesure'?comp:null);
+function presetPorts(k){const h=B.sizeOf(cfg()).bays/2;
+  if(k==='modele')return B.cfgOf(m,curFin(),curSto(),null,m.k==='mesure'?comp:null).ports;
+  return B.preset(k,h);}
+const same=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]);
+const curPreset=()=>{const p=cfg().ports;return (PRESETS.find(x=>same(presetPorts(x[0]),p))||['perso'])[0];};
+
+function isDone(s){if(s.k==='clavier')return true;if(s.k==='reprise')return trade.on===false||(trade.on===true&&!!trade.dev&&!!trade.state);if(s.k==='care')return care!==null;return !!done[s.k];}
+const unlockedIdx=()=>{const S=steps();let i=0;while(i<S.length&&isDone(S[i]))i++;return i;};
+const allDone=()=>steps().every(isDone);
+function tradeVal(){if(!trade.on||!trade.dev||!trade.state)return 0;const d=DEV.find(x=>x[0]===trade.dev),s=STATE.find(x=>x[0]===trade.state);return Math.round(d[2]*s[2]);}
+const price=()=>B.price(cfg()),total=()=>price()+(care?CARE.price:0)-tradeVal();
+
+/* ---------- aperçu ---------- */
+function gallery(){const c=cfg(),fn=B.COL[c.col][0];
+  const f=$('#vFront'),src=B.photo(m,c.col);if(f.getAttribute('src')!==src)f.src=src;f.alt='Vertane '+m.name+', '+fn;
+  if(window.B3D){const k=JSON.stringify(B.d3(c,kb));if(k!==lastK){lastK=k;window.B3D.set(B.d3(c,kb));}}
+  $('#viewer').querySelectorAll('[data-v]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===view));
+  $('#vcap').innerHTML='<b>Vertane '+esc(m.name)+'</b>'+esc(B.sizeOf(c).t+' · '+fn+(done.stockage?' · '+B.capL(c.sto):''));}
+let lastK='';
+function setView(v){view=v;if(window.B3D)window.B3D.view(v,true);gallery();}
+window.addEventListener('b1-3d',()=>{$('#viewer').classList.add('ready');$('#vHint').textContent=window.B3D.touch?'':'Fais glisser pour tourner';lastK='';window.B3D.view(view);gallery();});
+$('#viewer').querySelectorAll('[data-v]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.v)));
+
+/* ---------- étapes ---------- */
+const radio=(name,v,on)=>'<input type="radio" name="'+name+'" value="'+v+'"'+(on?' checked':'')+'>';
+const CHEV='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+function opts(name,list,cur,base,avail){return '<div class="choices" role="radiogroup">'+list.filter(o=>!avail||avail(o)).map(o=>{const on=o.v===cur,d=o.p-base;
+  return '<label class="choice'+(on?' on':'')+'">'+radio(name,o.v,on)+'<span class="c-row"><span class="c-t">'+esc(o.t)+(o.d?'<small>'+esc(o.d)+'</small>':'')+'</span><span class="c-p">'+(d>0?'+ '+money(d):d<0?'− '+money(-d):'')+'</span></span></label>';}).join('')+'</div>';}
+function stepHTML(s,i,ul){const locked=i>ul,id='etape-'+s.k,c=cfg();let b='';
+  if(s.k==='modele'){b='<div class="choices" role="radiogroup" aria-label="Modèle">'+ALL.map(x=>{const on=done.modele&&x.k===m.k;
+      return '<label class="choice'+(on?' on':'')+'">'+radio('model',x.k,on)+(x.tag?'<span class="c-tag">'+esc(x.tag)+'</span>':'')+'<span class="c-row"><span class="c-t">Vertane '+esc(x.name)+'<small>'+esc(x.pitch)+'</small></span><span class="c-p"><small>À partir de</small>'+money(x.k==='mesure'?B.price(B.fix({size:13,screen:'ips',board:'e',ram:16,sto:512,col:'argent',ports:['usbc','cache','cache','cache']})):B.from(x))+'</span></span><span class="c-d">'+esc(x.blurb)+'</span></label>';}).join('')+'</div>'+
+    (m.k==='mesure'?'':'<details class="inc"><summary>Ce qui est inclus dans le '+esc(m.name)+CHEV+'</summary><ul>'+B.specs(c).filter(r=>r[0]!=='Stockage'&&r[0]!=='Ports').map(r=>'<li><span>'+esc(r[0])+'</span><span>'+esc(r[1])+'</span></li>').join('')+
+      '<li><span>Clavier</span><span>Rétroéclairé, disposition au choix, se change avec le dessus en 5 minutes</span></li></ul></details>'+
+      '<div class="to-custom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span><b>Envie de changer un composant ?</b>Sur ce modèle, tu choisis la couleur, le stockage et les ports. Pour le reste, pars de ce modèle en sur mesure.<br><button type="button" id="toCustom">Personnaliser le '+esc(m.name)+' pièce par pièce</button></span></div>');}
+  else if(s.k==='composants'){const sz=B.sizeOf(c);
+    b='<div class="grp"><p class="col-name">Taille</p>'+opts('size',B.SIZES.map(x=>Object.assign({},x,{t:x.t})),c.size,B.SIZES[0].p)+'</div>'+
+      '<div class="grp"><p class="col-name">Écran</p>'+opts('screen',B.SCREENS,c.screen,Math.min(...B.SCREENS.filter(x=>x.sizes.indexOf(sz.v)>=0).map(x=>x.p)),o=>o.sizes.indexOf(sz.v)>=0)+'</div>'+
+      '<div class="grp"><p class="col-name">Puce <span>soudée à la carte mère, qui se change entière</span></p>'+opts('board',B.BOARDS,c.board,B.BOARDS[0].p,o=>o.sizes.indexOf(sz.v)>=0)+'</div>'+
+      '<div class="grp"><p class="col-name">Mémoire <span>module LPCAMM2</span></p><div class="chips" role="radiogroup">'+B.RAMS.map(o=>'<label class="choice'+(o.v===c.ram?' on':'')+'">'+radio('ram',o.v,o.v===c.ram)+'<span class="c-t">'+o.t+'</span><span class="c-p">'+(o.p>B.RAMS[0].p?'+ '+money(o.p-B.RAMS[0].p):'&nbsp;')+'</span></label>').join('')+'</div></div>'+
+      (done.composants?'':'<button class="btn" type="button" id="compOk" style="margin-top:6px">Valider les composants</button>')+
+      '<p class="step-note">La puce 16 cœurs + graphique dédiée demande le châssis 16 pouces, pour la refroidir sans bruit.</p>';}
+  else if(s.k==='couleur'){b='<p class="col-name">Couleur <span>'+esc(done.couleur?B.COL[curFin()][0]:'À choisir')+'</span></p><div class="swatches" role="radiogroup" aria-label="Couleur">'+m.fins.map(f=>{const on=done.couleur&&f===curFin();
+      return '<label class="sw'+(on?' on':'')+'" title="'+esc(B.COL[f][0])+'"><input type="radio" name="fin" value="'+f+'"'+(on?' checked':'')+' aria-label="'+esc(B.COL[f][0])+'"><span style="--c:'+B.COL[f][1]+'"></span></label>';}).join('')+'</div>'+
+    '<p class="step-note">'+esc(m.k==='ultra'?'Capot en biocomposite lin, base en aluminium recyclé. Les cartes de ports et les caches sont assortis.':'Châssis en aluminium recyclé anodisé. Les cartes de ports et les caches sont assortis.')+'</p>';}
+  else if(s.k==='stockage'){const caps=m.caps,base=B.byV(B.STOS,caps[0]).p;b='<div class="choices" role="radiogroup" aria-label="Capacité">'+caps.map(v=>{const on=done.stockage&&v===curSto(),d=B.byV(B.STOS,v).p-base;
+      return '<label class="choice'+(on?' on':'')+'">'+radio('sto',v,on)+'<span class="c-row"><span class="c-t">'+B.capL(v)+'<small>'+esc(v<=512?'Documents, cours et un peu de photo':v<=1024?'Photo, musique et quelques jeux':v<=2048?'Vidéo 4K et bibliothèques photo':'Montage vidéo, tout garder sur toi')+'</small></span><span class="c-p">'+(d?'+ '+money(d):'')+'</span></span></label>';}).join('')+'</div>'+
+    '<p class="step-note">SSD M.2 standard : tu peux le remplacer par un plus grand quand tu veux, en 5 minutes.</p>';}
+  else if(s.k==='ports'){const h=c.ports.length/2,pr=done.ports?curPreset():'';
+    b='<div class="chips" role="radiogroup" aria-label="Configuration des ports">'+PRESETS.map(x=>{const pp=presetPorts(x[0]),n=pp.filter(p=>p!=='cache'&&p!=='spk').length,on=pr===x[0];
+        return '<label class="choice'+(on?' on':'')+'">'+radio('preset',x[0],on)+'<span class="c-t" style="font-size:14px">'+esc(x[1])+'</span><span class="c-p">'+n+' port'+(n>1?'s':'')+'</span></label>';}).join('')+'</div>'+
+      '<div class="bay-plan">'+B.sides(c,{label:'Plan des baies : '+B.portsSum(c)})+'</div><div class="bay-list">'+c.ports.map((p,i)=>(i===0?'<p class="bay-side">Côté gauche</p>':i===h?'<p class="bay-side">Côté droit</p>':'')+
+        '<div class="field"><select id="bay'+i+'" name="bay" data-i="'+i+'"'+(i===0?' disabled':'')+'>'+(i===0?'<option value="usbc" selected>USB-C de charge · '+money(B.byV(B.PORTS,'usbc').p)+'</option>':B.PORTS.map(o=>'<option value="'+o.v+'"'+(o.v===p?' selected':'')+'>'+esc(o.t)+(o.p?' · '+money(o.p):' · inclus')+'</option>').join(''))+'</select><label for="bay'+i+'">Baie '+(i+1)+(i===0?' (arrière, charge)':i%h===0?' (arrière)':i%h===h-1?' (avant)':'')+'</label></div>').join('')+'</div>'+
+      '<p class="step-note">Son : '+esc(B.sound(c))+'. Les haut-parleurs sont des cartes de baie, grille sur le flanc : ils s’échangent avec les ports. La baie 1, à gauche, est toujours un USB-C : c’est là que le B1 se charge.</p>'+
+      (bayErr?'<p class="bay-err" role="alert">'+esc(bayErr)+'</p>':'')+
+      (done.ports?'':'<button class="btn" type="button" id="portsOk" style="margin-top:18px">Valider ces ports</button>')+
+      '<p class="step-note">Tu ne paies que les cartes que tu prends. Les caches sont inclus, et chaque carte se change en 5 secondes, sans outil.</p>';}
+  else if(s.k==='clavier'){b='<div class="chips" role="radiogroup" aria-label="Disposition du clavier">'+KBS.map(x=>'<label class="choice'+(x[0]===kb?' on':'')+'">'+radio('kb',x[0],x[0]===kb)+'<span class="c-t" style="font-size:15px">'+esc(x[1])+'</span><span class="c-p" style="font-size:12.5px">'+esc(x[2])+'</span></label>').join('')+'</div>'+
+    '<p class="step-note">Rétroéclairé, sans supplément. Clavier et pavé tactile forment le dessus, un seul module qui se change en 5 minutes si tu déménages ou changes d’avis.</p>';}
+  else if(s.k==='reprise'){b='<div class="choices two" role="radiogroup" aria-label="Reprise">'+
+      '<label class="choice'+(trade.on===true?' on':'')+'">'+radio('trade','1',trade.on===true)+'<span class="c-t">Oui<small>Jusqu’à '+money(350)+' de réduction²</small></span></label>'+
+      '<label class="choice'+(trade.on===false?' on':'')+'">'+radio('trade','0',trade.on===false)+'<span class="c-t">Non<small>Pas de reprise</small></span></label></div>';
+    if(trade.on)b+='<div class="trade-extra"><div class="field"><select id="tDev" name="tDev"><option value=""'+(trade.dev?'':' selected')+' disabled>Choisir</option>'+DEV.map(d=>'<option value="'+d[0]+'"'+(trade.dev===d[0]?' selected':'')+'>'+esc(d[1])+'</option>').join('')+'</select><label for="tDev">Ton ordinateur</label></div>'+
+      '<div><p class="col-name">Son état</p><div class="chips">'+STATE.map(x=>'<label class="choice'+(trade.state===x[0]?' on':'')+'">'+radio('tState',x[0],trade.state===x[0])+'<span class="c-t" style="font-size:14px">'+esc(x[1])+'</span></label>').join('')+'</div></div>'+
+      (trade.dev&&trade.state?'<div class="trade-val"><span>Reprise estimée</span><span>− '+money(tradeVal())+'</span></div>':'')+
+      '<p class="step-note">Tu reçois un carton d’envoi gratuit avec ton B1. Si l’appareil ne vaut rien, on le recycle gratuitement.</p></div>';}
+  else if(s.k==='care'){b='<div class="choices" role="radiogroup" aria-label="Vertane Care">'+
+      '<label class="choice'+(care===true?' on':'')+'">'+radio('care','1',care===true)+'<span class="c-row"><span class="c-t">Vertane Care, 2 ans</span><span class="c-p">'+money(CARE.price)+'</span></span><span class="c-d">Casse accidentelle et panne couvertes, pièce de remplacement expédiée en 24 h, batterie changée si elle descend sous 80 %.</span></label>'+
+      '<label class="choice'+(care===false?' on':'')+'">'+radio('care','0',care===false)+'<span class="c-t">Sans Vertane Care<small>Garantie légale de 2 ans incluse</small></span></label></div>';}
+  return '<section class="step'+(locked?' locked':'')+'" id="'+id+'" data-k="'+s.k+'" aria-labelledby="'+id+'-t"'+(locked?' aria-disabled="true"':'')+'><h2 id="'+id+'-t">'+s.t+' <span>'+s.s+'</span></h2>'+b+'</section>';}
+
+const stepsEl=$('#steps');
+function render(){const ul=unlockedIdx(),a=document.activeElement,fk=a&&a.name?[a.name,a.value,a.id]:null,inc=stepsEl.querySelector('.inc'),incOpen=inc&&inc.open;
+  stepsEl.innerHTML=steps().map((s,i)=>stepHTML(s,i,ul)).join('');
+  if(incOpen&&stepsEl.querySelector('.inc'))stepsEl.querySelector('.inc').open=true;
+  if(fk){const el=(fk[2]&&document.getElementById(fk[2]))||stepsEl.querySelector('[name="'+fk[0]+'"][value="'+fk[1]+'"]');if(el)el.focus({preventScroll:true});}
+  document.title='Acheter le Vertane '+m.name;$('#title').textContent='Vertane '+m.name;$('#toMesure').hidden=m.k==='mesure';$('#to3d').href='configurateur-b1.html'+(m.k!=='mesure'?'?m='+m.k+(fin?'&c='+fin:''):'');
+  const p=m.k==='mesure'?price():B.from(m);$('#fromPrice').textContent=(m.k==='mesure'?'Ta configuration : ':'À partir de ')+money(p)+' ou '+V.monthly(p)+'/mois sur 12 mois¹';
+  gallery();summary();recap();}
+
+function eta(){const d=new Date();let n=0;while(n<5){d.setDate(d.getDate()+1);if(d.getDay()%6)n++;}return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});}
+function summary(){const ok=allDone(),left=steps().filter(s=>!isDone(s)).length;
+  $('#bbPrice').textContent=money(ok?total():price());
+  $('#bbMonthly').textContent=ok?'ou '+V.monthly(total())+'/mois sur 12 mois¹':'Encore '+left+' étape'+(left>1?'s':'')+' à choisir';
+  $('#bbShip').innerHTML='<b>Livraison gratuite</b>Livré au plus tard le '+eta();
+  $('#bbBtn').textContent=ok?'Ajouter au panier':'Continuer';
+  $('#buybar').classList.toggle('on',!!done.modele);}
+function lines(){const c=cfg();return [['Couleur',B.COL[c.col][0]]].concat(B.specs(c).filter(r=>['Poids','Épaisseur','Charge'].indexOf(r[0])<0),[['Clavier',kbL(kb)+' rétroéclairé']]);}
+/* image fidèle à la configuration (3D), sinon le rendu du modèle */
+let shotK='',shotU='';
+function shot(){const c=cfg();if(!window.B3D)return B.photo(m,c.col);const k=JSON.stringify(B.d3(c,kb));if(k!==shotK){shotK=k;shotU=window.B3D.snapView('front',900,640,'image/webp',.86);}return shotU;}
+function recap(){const r=$('#recap');if(!allDone()){r.hidden=true;return;}r.hidden=false;const c=cfg();
+  const li='<li><span><b>Vertane '+esc(m.name)+'</b><small>'+esc(B.COL[c.col][0]+', '+B.capL(c.sto)+', '+B.portsSum(c)+', clavier '+kbL(kb))+'</small></span><span>'+money(price())+'</span></li>'+
+    (care?'<li><span><b>'+CARE.name+'</b></span><span>'+money(CARE.price)+'</span></li>':'')+
+    (tradeVal()?'<li><span><b>Reprise estimée²</b><small>'+esc(DEV.find(d=>d[0]===trade.dev)[1])+'</small></span><span>− '+money(tradeVal())+'</span></li>':'');
+  r.innerHTML='<div class="recap-img"><img src="'+shot()+'" alt="Ton Vertane '+esc(m.name)+'"></div><div><p class="eyebrow">Récapitulatif</p><h2 class="h2" id="recap-t">Ton Vertane '+esc(m.name)+' est prêt.</h2>'+
+    '<p class="muted" style="margin:10px 0 0;font-size:15px">Jusqu’à '+B.hours(c)+' h d’autonomie³ · '+B.kg(c)+' kg · '+esc(B.sizeOf(c).t)+'</p><ul>'+li+'</ul>'+
+    '<div class="tot"><span>Total</span><b>'+money(total())+'</b></div><p class="muted" style="margin:0;text-align:right;font-size:14px">ou '+V.monthly(total())+'/mois sur 12 mois¹</p>'+
+    '<div class="ship"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 6h12v10H2zM14 9h4l4 4v3h-8z"/><circle cx="6" cy="18" r="2" fill="#fff"/><circle cx="18" cy="18" r="2" fill="#fff"/></svg><span><b>Livraison gratuite.</b> Livré au plus tard le '+eta()+'. Retours gratuits pendant 30 jours.</span></div>'+
+    '<button class="btn btn-lg btn-block" id="addBag">'+(edited?'Mettre à jour le panier':'Ajouter au panier')+'</button></div>';}
+
+/* ---------- interactions ---------- */
+function url(){history.replaceState(null,'','?m='+m.k+(fin?'&c='+fin:'')+(sto?'&s='+sto:'')+(editId?'&edit='+editId:''));}
+stepsEl.addEventListener('change',e=>{const t=e.target,n=t.name;if(!n)return;
+  if(n==='model'){const nm=B.byK(t.value);if(!nm)return;const first=!done.modele;
+    if(nm.k==='mesure'&&m.k!=='mesure'){const c=cfg();comp={size:c.size,screen:c.screen,board:c.board,ram:c.ram};done.composants=false;}
+    m=nm;done.modele=true;ports=null;done.ports=false;
+    if(fin&&m.fins.indexOf(fin)<0){fin=null;done.couleur=false;}if(sto&&m.caps.indexOf(sto)<0){sto=null;done.stockage=false;}
+    url();render();if(first||!isDone(steps()[1]))next('modele');return;}
+  if(['size','screen','board','ram'].indexOf(n)>=0){comp[n]=n==='size'||n==='ram'?+t.value:t.value;const c=B.fix(Object.assign({},cfg(),comp));
+    comp={size:c.size,screen:c.screen,board:c.board,ram:c.ram};if(n==='size'&&ports)ports=c.ports;render();return;}
+  if(n==='fin'){const first=!done.couleur;fin=t.value;done.couleur=true;url();setView('front');render();if(first)next('couleur');return;}
+  if(n==='sto'){const first=!done.stockage;sto=+t.value;done.stockage=true;url();render();if(first)next('stockage');return;}
+  if(n==='preset'){ports=presetPorts(t.value);bayErr='';const first=!done.ports;done.ports=true;setView('left');render();if(first)next('ports');return;}
+  if(n==='bay'){const p=cfg().ports.slice(),i=+t.dataset.i;p[i]=t.value;
+    if(i===0)return;
+    bayErr='';ports=p;setView(i<p.length/2?'left':'right');render();return;}
+  if(n==='kb'){kb=t.value;render();return;}
+  if(n==='trade'){trade.on=t.value==='1';if(!trade.on){trade.dev='';trade.state='';}render();if(!trade.on)next('reprise');return;}
+  if(n==='tDev'){trade.dev=t.value;render();return;}
+  if(n==='tState'){trade.state=t.value;render();if(isDone(steps().find(s=>s.k==='reprise')))next('reprise');return;}
+  if(n==='care'){care=t.value==='1';render();return;}});
+function next(k){const S=steps(),i=S.findIndex(s=>s.k===k),n=S.slice(i+1).find(s=>!isDone(s));if(!n)return;setTimeout(()=>{const el=document.getElementById('etape-'+n.k);if(el&&el.getBoundingClientRect().top>innerHeight*.55)el.scrollIntoView({behavior:V.reduce?'auto':'smooth',block:'start'});},250);}
+function goStep(k){const el=document.getElementById('etape-'+k);if(el)el.scrollIntoView({behavior:V.reduce?'auto':'smooth',block:'start'});}
+stepsEl.addEventListener('click',e=>{
+  if(e.target.id==='toCustom'){const c=cfg();comp={size:c.size,screen:c.screen,board:c.board,ram:c.ram};const keep=m.fins.indexOf(curFin())>=0?curFin():null;
+    ports=c.ports;sto=c.sto;m=B.MESURE;fin=keep;done.composants=false;url();render();goStep('composants');}
+  if(e.target.id==='compOk'){done.composants=true;render();next('composants');}
+  if(e.target.id==='portsOk'){ports=cfg().ports;done.ports=true;render();next('ports');}});
+$('#bbBtn').addEventListener('click',()=>{if(allDone())add();else{const s=steps().find(x=>!isDone(x));goStep(s.k);if(s.k==='ports')setView('left');}});
+document.addEventListener('click',e=>{if(e.target.id==='addBag')add();});
+
+function add(){if(!allDone())return;const c=cfg(),fn=B.COL[c.col][0];
+  const item={type:'laptop',model:m.k,fin:c.col,cap:c.sto,sku:'B1-'+m.k.toUpperCase()+'-'+c.col.toUpperCase()+'-'+c.sto+'-'+c.ports.map(p=>p.slice(0,2).toUpperCase()).join('')+'-'+kb.toUpperCase(),name:'Vertane '+m.name,cfg:c,kb:kb,img:shot(),
+    lines:lines(),price:price(),care:care?{name:CARE.name,price:CARE.price}:null,
+    trade:tradeVal()?{label:DEV.find(d=>d[0]===trade.dev)[1]+', '+STATE.find(s=>s[0]===trade.state)[1].toLowerCase(),value:tradeVal(),dev:trade.dev,state:trade.state}:null,
+    specs:fn+' · '+B.capL(c.sto)+' · '+B.sizeOf(c).t+' · '+kbL(kb)};
+  if(edited){item.qty=edited.qty;V.Bag.remove(edited.id);}
+  const id=V.Bag.add(item);location.href='panier.html?ajout='+encodeURIComponent(id);}
+
+render();
+})();
+</script>
+<script src="assets/walls.js"></script>
+<script src="assets/b1-3d.js"></script>
+<script>
+(async function(){const touch=matchMedia('(pointer:coarse)').matches;
+try{const v=await window.mountB1(document.getElementById('v3d'),{interactive:!touch,reduce:window.V.reduce});v.touch=touch;window.B3D=v;window.dispatchEvent(new Event('b1-3d'));}
+catch(e){console.warn('3D indisponible, rendu fixe affiché',e);}})();
+</script>
+</body>
+</html>

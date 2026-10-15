@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Modules — Store Vertane</title>
+<meta name="description" content="Batterie, écran, module photo, coque : chaque pièce des produits Vertane s’achète à l’unité.">
+<meta name="theme-color" content="#F3F1EA">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vertane.css">
+<style>
+.mod-head{padding-top:132px;padding-bottom:20px}
+.mod-head .lead{max-width:640px;margin-top:18px}
+.gens-h{font:500 clamp(22px,2.4vw,28px)/1.2 var(--display);letter-spacing:-.02em;margin:clamp(24px,3vw,40px) 0 16px}
+.gens-h span{color:var(--pierre)}
+.gens{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px}
+.gen{display:flex;align-items:center;gap:14px;min-width:250px;border:0;background:var(--blanc);box-shadow:inset 0 0 0 1px var(--lin);border-radius:var(--r-m);padding:12px 20px 12px 12px;text-align:left;font:inherit;color:var(--noir);transition:box-shadow .2s}
+.gen:hover{box-shadow:inset 0 0 0 1px var(--pierre)}
+.gen[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--noir)}
+.gen .gi{flex:0 0 auto;width:48px;height:48px;border-radius:14px;background:var(--ivoire);display:grid;place-items:center}
+.gen .gi svg{width:34px;height:34px}
+.gen b{display:flex;align-items:center;gap:8px;font:500 16px/1.3 var(--display);letter-spacing:-.01em}
+.gen small{display:block;margin-top:3px;font-size:13px;color:var(--pierre)}
+.soon .fine{margin:12px 0 0}
+.soon .back{display:inline-flex;white-space:normal;margin-top:22px;font-size:15px;border:0;background:none;padding:0;cursor:pointer;text-align:left}
+@media (max-width:600px){.gen{flex:1 1 100%;min-width:0}}
+.filters{position:sticky;top:76px;z-index:20;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:10px var(--gut);margin:0 calc(-1*var(--gut)) 28px;background:linear-gradient(var(--ivoire) 80%,rgba(243,241,234,0))}
+.filters::-webkit-scrollbar{display:none}
+.filters button{flex:0 0 auto;border:0;padding:10px 18px;border-radius:999px;background:var(--blanc);box-shadow:inset 0 0 0 1px var(--lin);font-size:15px;transition:background .2s,color .2s,box-shadow .2s}
+.filters button:hover{box-shadow:inset 0 0 0 1px var(--pierre)}
+.filters button[aria-pressed="true"]{background:var(--noir);color:var(--ivoire);box-shadow:none}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.mcard{position:relative;display:flex;flex-direction:column;background:var(--blanc);border-radius:var(--r-l);padding:0 0 26px;border:0;text-align:left;overflow:hidden;transition:transform .45s var(--ease-out),box-shadow .45s var(--ease-out)}
+.mcard:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(22,24,26,.08)}
+.mcard .im{height:270px;display:grid;place-items:center;padding:28px;background:linear-gradient(180deg,#FAF9F5,var(--blanc))}
+.mcard .im img{max-height:214px;width:auto;max-width:100%;object-fit:contain;transition:transform .8s var(--ease-out)}
+.mcard:hover .im img{transform:scale(1.04)}
+.mcard .tx{padding:4px 26px 0}
+.mcard .time{display:inline-flex;align-items:center;gap:6px;font:600 11.5px/1 var(--text);letter-spacing:.04em;text-transform:uppercase;color:var(--vert);margin:0 0 10px}
+.mcard .time svg{width:14px;height:14px}
+.mcard h2{font:500 20px/1.25 var(--display);letter-spacing:-.015em;margin:0 0 6px}
+.mcard p{margin:0;font-size:14.5px;color:var(--pierre)}
+.mcard .pr{margin-top:14px;font-size:15px;color:var(--noir)}
+.mcard .go{position:absolute;right:20px;bottom:22px;width:36px;height:36px;border-radius:50%;background:var(--ivoire);display:grid;place-items:center;color:var(--vert);transition:background .2s,color .2s}
+.mcard:hover .go{background:var(--vert);color:var(--ivoire)}
+.mcard .go svg{width:16px;height:16px}
+.mcard.hide{display:none}
+.lap-note{margin:0 0 22px;font-size:15px;color:var(--pierre);max-width:760px}
+.lcard{cursor:default}
+.lcard:hover{transform:none;box-shadow:none}
+.lcard .im img{max-height:180px}
+.lcard .buy{display:flex;align-items:center;gap:10px;margin-top:16px}
+.lcard .buy select{flex:1 1 auto;min-width:0;height:44px;border-radius:12px;border:0;box-shadow:inset 0 0 0 1px var(--lin);background:var(--blanc);padding:0 12px;font:inherit;font-size:14px;color:var(--noir)}
+.lcard .buy .btn{flex:0 0 auto}
+@media (max-width:980px){.grid{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.grid{grid-template-columns:1fr}.mcard .im{height:230px}}
+
+.band{margin-top:clamp(56px,7vw,96px);display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center;background:var(--vert);color:var(--ivoire);border-radius:var(--r-l);padding:clamp(28px,5vw,56px)}
+.band p{margin:12px 0 0;color:rgba(243,241,234,.86)}
+.band .btn{background:var(--ivoire);color:var(--vert)}
+.band .ctas{justify-content:flex-end}
+@media (max-width:760px){.band{grid-template-columns:1fr}.band .ctas{justify-content:flex-start}}
+
+/* fiche produit (fenêtre) */
+.pd{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(24px,4vw,48px)}
+.pd-im{position:sticky;top:0;align-self:start;background:var(--ivoire);border-radius:var(--r-m);height:min(460px,60vh);display:grid;place-items:center;padding:28px}
+.pd-im img{max-height:100%;max-width:100%;width:auto;object-fit:contain}
+.pd h2{margin:0 0 8px}
+.pd .d{margin:0 0 22px;color:var(--pierre);font-size:15px}
+.pd .f{margin-bottom:20px}
+.pd .f .sub-t{font:600 14px/1.3 var(--text);margin:0 0 10px}
+.pd .f .sub-t span{font-weight:400;color:var(--pierre)}
+.pd .chips{display:flex;flex-wrap:wrap;gap:8px}
+.pd .chips .choice{flex:1 1 80px;padding:12px 10px;align-items:center;text-align:center}
+.pd .choice{padding:14px 16px}
+.pd .choice .c-t{font-size:15px}
+.pd .info{font-size:13px;color:var(--pierre);margin:8px 0 0}
+.pd-buy{border-top:1px solid var(--lin-2);padding-top:20px;margin-top:6px}
+.pd-buy .tot{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
+.pd-buy .tot b{font:500 26px/1.1 var(--display);letter-spacing:-.02em}
+.pd-perks{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:8px;font-size:13.5px;color:var(--pierre)}
+.pd-perks li{display:flex;gap:8px;align-items:flex-start}
+.pd-perks svg{width:18px;height:18px;flex:0 0 auto;color:var(--vert)}
+@media (max-width:760px){.pd{grid-template-columns:1fr}.pd-im{position:relative;height:260px}}
+</style>
+</head>
+<body data-page="modules">
+<script src="assets/site.js"></script>
+<main id="main">
+  <header class="shell mod-head">
+    <p class="eyebrow rv"><a href="store.html" style="color:inherit">Store</a></p>
+    <h1 class="h1 rv d1">Modules.</h1>
+    <p class="lead rv d2">Chaque pièce s’achète à l’unité. Change ce qui s’use, améliore ce que tu veux, garde le reste.</p>
+  </header>
+  <nav aria-label="Modules par produit"><ul class="cats rv d1" id="fam"></ul></nav>
+  <div class="shell">
+    <h2 class="gens-h" id="gensT"></h2>
+    <div class="gens" id="gens" role="group" aria-labelledby="gensT"></div>
+    <div id="liveBox">
+      <div class="filters" id="filters" role="group" aria-label="Filtrer par type de module"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+    <div id="p1Box" hidden>
+      <p class="lap-note">Modules du Vertane P1, le pliant. Le port, le stockage, les haut-parleurs et la recharge sans fil reprennent la technologie des modules du M1, redessinés à la taille du P1. La coque, la recharge sans fil, le module photo, le stockage, le port et les haut-parleurs se changent sans outil ; la charnière et l’écran intérieur avec le tournevis fourni.</p>
+      <div class="grid" id="p1Grid"></div>
+    </div>
+    <div id="lapBox" hidden>
+      <p class="lap-note">Cartes de ports : glisse-les dans n’importe quelle baie, sans outil. Composants internes : vis imperdables, tournevis fourni avec chaque B1.</p>
+      <div class="grid" id="lapGrid"></div>
+    </div>
+    <div id="devBox" hidden>
+      <p class="lap-note" id="devNote"></p>
+      <div class="grid" id="devGrid"></div>
+    </div>
+    <section class="soon" id="soonBox" aria-labelledby="soonT" hidden></section>
+    <section class="band rv" aria-labelledby="b-t">
+      <div><h2 class="h3" id="b-t">Ton ancien module a encore de la valeur.</h2><p>Renvoie-le dans l’emballage du neuf, l’étiquette est fournie. On le reconditionne ou on le recycle.</p></div>
+      <div class="ctas"><a class="btn" href="reparer.html#reprise">Comment ça marche</a></div>
+    </section>
+  </div>
+  <div style="height:clamp(64px,8vw,120px)"></div>
+</main>
+
+<template id="foot-notes"><p>Prix TTC. Livraison offerte en France métropolitaine. Chaque module Vertane M1 est compatible avec les quatre modèles (M1 SE, M1, M1 Pro et M1 Ultra), sauf mention contraire dans sa fiche. Les modules du P1 vont dans les quatre P1 (P1 SE, P1, P1 Pro et P1 Ultra). Les cartes de ports, la mémoire, le SSD et le clavier vont dans tous les Vertane B1 ; la batterie et l’écran dépendent de la taille. Les produits annoncés « Bientôt » sont en préparation : leurs modules, leurs prix et leur date de sortie ne sont pas encore fixés.</p></template>
+
+<script src="assets/m1-data.js"></script>
+<script src="assets/catalogue.js"></script>
+<script src="assets/laptop.js"></script>
+<script src="assets/p1-data.js"></script>
+<script src="assets/devices.js"></script>
+<script>
+(function(){
+"use strict";
+const M=window.M1,V=window.V,C=window.CAT,$=s=>document.querySelector(s),esc=V.esc,money=V.money;
+const CLOCK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6.2"/><path d="M8 4.5V8l2.4 1.6"/></svg>';
+const ARROW='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>';
+const imgOf=(m,s)=>m.k==='coque'?V.phoneImg(s||{cmat:'verre',ccol:'noir'}):m.k==='photo'&&s&&s.cams<4?'assets/img/mod-photo.webp':m.k==='batt'&&s&&s.batt<5200?'assets/img/mod-batt.webp':'assets/img/'+m.img+'.webp';
+
+/* ---------- produit et génération ---------- */
+const OK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.7 2.7L16 9.6"/></svg>';
+const SOON='<span class="pill-soon">Bientôt</span>';
+const qs=new URLSearchParams(location.search);
+let fam=V.CATS.some(c=>c.k===qs.get('p'))?qs.get('p'):'telephone';
+let gen=(V.GENS[fam]||[]).some(g=>g.k===qs.get('v'))?qs.get('v'):null;
+if(location.hash&&C.byK(location.hash.slice(1))){fam='telephone';gen='m1';}
+$('#fam').innerHTML=V.CATS.map(c=>'<li><button class="cat" type="button" data-f="'+c.k+'"><span class="ci">'+V.CI[c.k]+'</span>'+esc(c.s)+(c.live?'':'<small>Bientôt</small>')+'</button></li>').join('');
+function show(push){
+  const c=V.CATS.find(x=>x.k===fam),gs=V.GENS[fam]||[];
+  if(!gs.some(g=>g.k===gen))gen=gs.length?(gs.find(g=>g.live)||gs[0]).k:null;
+  const g=gs.find(x=>x.k===gen),live=!!(g&&g.live);
+  document.querySelectorAll('#fam .cat').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===fam));
+  $('#gensT').innerHTML=esc(c.t)+'. <span>'+(gs.length?'Choisis ta génération.':'Bientôt chez Vertane.')+'</span>';
+  $('#gens').innerHTML=gs.map(x=>'<button class="gen" type="button" data-g="'+x.k+'" aria-pressed="'+(x.k===gen)+'"><span class="gi">'+V.CI[fam]+'</span><span><b>'+esc(x.t)+(x.live?'':SOON)+'</b><small>'+esc(x.d)+'</small></span></button>').join('');
+  $('#gens').hidden=!gs.length;
+  $('#liveBox').hidden=!(live&&fam==='telephone'&&gen!=='p1');$('#p1Box').hidden=!(live&&fam==='telephone'&&gen==='p1');$('#lapBox').hidden=!(live&&fam==='ordinateur');const DF=window.DEV.fam(fam);$('#devBox').hidden=!(live&&DF);if(live&&DF)devMods(DF);
+  $('#soonBox').hidden=live;
+  if(!live)soon(c,g);
+  if(push!==false){const u=new URL(location.href);u.hash='';u.searchParams.set('p',fam);if(gen)u.searchParams.set('v',gen);else u.searchParams.delete('v');history.replaceState(null,'',u.pathname+u.search);}
+}
+function soon(c,g){
+  const key=g?g.k:c.k,name=g?'Modules '+g.t+'.':'Modules '+c.t.charAt(0).toLowerCase()+c.t.slice(1)+'.';
+  const d=g?'Le '+g.t+' est en préparation. Ses modules seront vendus ici, à l’unité, dès sa sortie.':c.d+' Ses modules seront vendus ici, à l’unité, dès sa sortie.';
+  const back=g?'<button class="link back" type="button" data-g="m1">Tu as un Vertane M1 ? Ses modules sont disponibles</button>':'<a class="link back" href="'+c.href+'">Découvrir le projet</a>';
+  $('#soonBox').innerHTML='<div class="soon-art" aria-hidden="true">'+V.CI[c.k]+'</div><div>'+SOON+'<h2 class="h1" id="soonT">'+esc(name)+'</h2><p class="lead">'+esc(d)+'</p>'+
+    '<form class="notify" id="notify" novalidate style="margin-top:28px"><div class="field" id="fEmail"><input id="email" name="email" type="email" placeholder=" " autocomplete="email" required><label for="email">Adresse e-mail</label><p class="msg">Saisis une adresse e-mail valide.</p></div><button class="btn" type="submit">Me prévenir</button></form>'+
+    '<p class="fine">Démonstration : aucune adresse n’est enregistrée ni envoyée.</p>'+back+'</div>';
+  if(V.store.get('vertane-notify',{})[key])done();
+  $('#notify')&&$('#notify').addEventListener('submit',e=>{e.preventDefault();const v=$('#email').value.trim(),ok=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    $('#fEmail').classList.toggle('err',!ok);if(!ok){$('#email').focus();return;}const s=V.store.get('vertane-notify',{});s[key]=true;V.store.set('vertane-notify',s);done();});
+}
+function done(){const f=$('#notify');if(f)f.outerHTML='<p class="notify-ok" role="status">'+OK+'C’est noté. On te prévient dès que ces modules arrivent.</p>';}
+$('#fam').addEventListener('click',e=>{const b=e.target.closest('.cat');if(!b||b.dataset.f===fam)return;fam=b.dataset.f;gen=null;show();});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b||!b.closest('main'))return;fam=b.closest('#soonBox')?'telephone':fam;gen=b.dataset.g;show();if(b.closest('#soonBox'))$('#gens').scrollIntoView({block:'start',behavior:V.reduce?'auto':'smooth'});});
+show(!!qs.get('p'));
+requestAnimationFrame(()=>{const a=$('#fam [aria-pressed="true"]'),u=$('#fam');if(!a)return;const r=a.getBoundingClientRect(),b=u.getBoundingClientRect();if(r.left<b.left||r.right>b.right)u.scrollLeft+=r.left-b.left-(b.width-r.width)/2;});
+
+/* ---------- modules de l’ordinateur B1 ---------- */
+const LB=window.LAPTOP,LMODS=LB.MODS;
+$('#lapGrid').innerHTML=LMODS.map((m,i)=>'<article class="mcard lcard" data-k="'+m.k+'"><div class="im"><img src="'+m.img+'" alt="" loading="lazy"></div><div class="tx">'+(m.time?'<p class="time">'+CLOCK+'Se change en '+m.time+'</p>':'<p class="time">Accessoire</p>')+'<h2>'+esc(m.t)+'</h2><p>'+esc(m.d)+'</p>'+
+  '<p class="pr">'+(m.vars.length>1?'À partir de '+money(Math.min(...m.vars.map(v=>v[1]))):money(m.vars[0][1]))+'</p><div class="buy">'+
+  (m.vars.length>1?'<label class="sr" for="v-'+m.k+'">Variante</label><select id="v-'+m.k+'">'+m.vars.map((v,j)=>'<option value="'+j+'">'+esc(v[0])+' · '+money(v[1])+'</option>').join('')+'</select>':'')+
+  '<button class="btn btn-sm" type="button" data-add="'+m.k+'">Ajouter</button></div></div></article>').join('');
+$('#lapGrid').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(!b)return;const m=LMODS.find(x=>x.k===b.dataset.add),sel=document.getElementById('v-'+m.k),j=sel?+sel.value:0,v=m.vars[j];
+  const name=m.t+(v[0]?' '+v[0]:'');V.Bag.add({type:'module',sku:'B1-'+m.k+'-'+j,name,img:m.img,price:v[1],lines:[[m.t,m.time?'Se change en '+m.time:'Accessoire']]});V.toast(name+' ajouté au panier.');});
+
+/* ---------- modules du P1, le pliant ---------- */
+const PP=window.P1;
+$('#p1Grid').innerHTML=PP.MODS.map(m=>'<article class="mcard lcard" data-k="'+m.k+'"><div class="im"><img src="'+PP.modImg(m.k)+'" alt="" loading="lazy"></div><div class="tx"><p class="time">'+CLOCK+'Se change en '+m.time+'</p><h2>'+esc(m.t)+'</h2><p>'+esc(m.d)+'</p>'+
+  '<p class="pr">'+(m.vars.length>1?'À partir de '+money(Math.min(...m.vars.map(v=>v[1]))):money(m.vars[0][1]))+'</p><div class="buy">'+
+  (m.vars.length>1?'<label class="sr" for="pv-'+m.k+'">Variante</label><select id="pv-'+m.k+'">'+m.vars.map((v,j)=>'<option value="'+j+'">'+esc(v[0])+' · '+money(v[1])+'</option>').join('')+'</select>':'')+
+  '<button class="btn btn-sm" type="button" data-padd="'+m.k+'">Ajouter</button></div></div></article>').join('');
+$('#p1Grid').addEventListener('click',e=>{const b=e.target.closest('[data-padd]');if(!b)return;const m=PP.MODS.find(x=>x.k===b.dataset.padd),sel=document.getElementById('pv-'+m.k),j=sel?+sel.value:0,v=m.vars[j];
+  const name=m.t+' P1'+(v[0]?', '+v[0]:'');V.Bag.add({type:'module',sku:'P1-'+m.k.toUpperCase()+'-'+j,name,img:PP.modImg(m.k),price:v[1],lines:[[m.t,'Vertane P1, se change en '+m.time]]});V.toast(name+' ajouté au panier.');});
+
+/* ---------- modules des autres appareils (tablette, enceinte, casque, écouteurs, boîtier TV, consoles) ---------- */
+function devMods(D){$('#devNote').textContent='Modules du '+D.full+'. Chacun se change '+(D.kind==='tablet'||D.kind==='handheld'?'sans outil ou avec le tournevis fourni':'à la main')+', et vaut pour tous les '+D.name+' ('+D.MODELS.map(m=>m.name).join(', ')+').';
+  $('#devGrid').innerHTML=D.MODS.map(m=>'<article class="mcard lcard" data-k="'+m.k+'"><div class="im"><img src="'+D.modImg(m.k)+'" alt="" loading="lazy"></div><div class="tx">'+(m.time?'<p class="time">'+CLOCK+'Se change en '+m.time+'</p>':'<p class="time">Accessoire</p>')+'<h2>'+esc(m.t)+'</h2><p>'+esc(m.d)+'</p>'+
+    '<p class="pr">'+(m.vars.length>1?'À partir de '+money(Math.min(...m.vars.map(v=>v[1]))):money(m.vars[0][1]))+'</p><div class="buy">'+
+    (m.vars.length>1?'<label class="sr" for="dv-'+m.k+'">Variante</label><select id="dv-'+m.k+'">'+m.vars.map((v,j)=>'<option value="'+j+'">'+esc(v[0])+' · '+money(v[1])+'</option>').join('')+'</select>':'')+
+    '<button class="btn btn-sm" type="button" data-dadd="'+m.k+'">Ajouter</button></div></div></article>').join('');
+  $('#devGrid').dataset.fam=D.k;}
+document.getElementById('devGrid').addEventListener('click',e=>{const b=e.target.closest('[data-dadd]');if(!b)return;const D=window.DEV.fam(e.currentTarget.dataset.fam),m=D.MODS.find(x=>x.k===b.dataset.dadd),sel=document.getElementById('dv-'+m.k),j=sel?+sel.value:0,v=m.vars[j];
+  const name=m.t+' '+D.name+(v[0]?', '+v[0]:'');V.Bag.add({type:'module',sku:D.gen.toUpperCase()+'-'+m.k.toUpperCase()+'-'+j,name,img:D.modImg(m.k),price:v[1],lines:[[m.t,D.full+(m.time?', se change en '+m.time:', accessoire')]]});V.toast(name+' ajouté au panier.');});
+let cat='tous';
+$('#filters').innerHTML=C.CATS.map(c=>'<button data-c="'+c[0]+'" aria-pressed="'+(c[0]===cat)+'">'+c[1]+'</button>').join('');
+$('#grid').innerHTML=C.MODS.map((m,i)=>'<button class="mcard rv d'+(i%3)+'" data-k="'+m.k+'" data-cat="'+m.cat+'" id="'+m.k+'" aria-haspopup="dialog"><div class="im"><img src="'+imgOf(m,m.k==='coque'?{cmat:'verre',ccol:'noir'}:null)+'" alt="" loading="lazy"></div>'+
+  '<div class="tx"><p class="time">'+CLOCK+'Se change en '+m.time+'</p><h2>'+m.t+'</h2><p>'+esc(m.d)+'</p><p class="pr">À partir de '+money(C.from(m))+'</p></div><span class="go" aria-hidden="true">'+ARROW+'</span></button>').join('');
+V.reveal($('#grid'));
+$('#filters').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cat=b.dataset.c;
+  document.querySelectorAll('#filters button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  document.querySelectorAll('.mcard').forEach(c=>c.classList.toggle('hide',cat!=='tous'&&c.dataset.cat!==cat));});
+$('#grid').addEventListener('click',e=>{const c=e.target.closest('.mcard');if(c)openMod(c.dataset.k);});
+
+/* ---------- fiche produit ---------- */
+let mod=null,sel=null,box=null;
+function fieldHTML(f,label){const opts=C.options(f,sel);if(!opts.length)return '';
+  if(f==='ccol'||f==='fcol'||f==='kcol'){const cur=opts.find(o=>o.v===sel[f])||opts[0];
+    return '<div class="f"><p class="sub-t">'+label+' <span>'+esc(cur.t)+'</span></p><div class="swatches">'+opts.map(o=>'<label class="sw'+(o.v===sel[f]?' on':'')+'" title="'+esc(o.t)+'"><input type="radio" name="'+f+'" value="'+o.v+'"'+(o.v===sel[f]?' checked':'')+' aria-label="'+esc(o.t)+'"><span style="--c:'+o.hex+'"></span></label>').join('')+'</div></div>';}
+  const chips=opts.length>4||['cap','cams','hz'].indexOf(f)>=0;let info='';
+  const base=Object.assign({},sel),mn=Math.min(...opts.map(o=>{const t=Object.assign({},base,{[f]:o.v});return mod.price(t);}));
+  const html=opts.map(o=>{const on=o.v===sel[f],n=C.note(f,o.v,sel),blk=n&&n.block&&!on,t=Object.assign({},base,{[f]:o.v}),d=mod.price(t)-mn;
+    if(on&&n&&n.info)info=n.info;const title=f==='cams'?o.v+' capteur'+(o.v>1?'s':''):o.t;
+    return chips?'<label class="choice'+(on?' on':'')+(blk?' dis':'')+'"'+(blk?' title="'+esc(n.block)+'"':'')+'><input type="radio" name="'+f+'" value="'+o.v+'"'+(on?' checked':'')+(blk?' disabled':'')+'><span class="c-t">'+esc(title)+'</span><span class="c-p">'+(d>0?'+ '+money(d):'&nbsp;')+'</span></label>'
+      :'<label class="choice'+(on?' on':'')+(blk?' dis':'')+'"><input type="radio" name="'+f+'" value="'+o.v+'"'+(on?' checked':'')+(blk?' disabled':'')+'><span class="c-row"><span class="c-t">'+esc(title)+'</span><span class="c-p">'+(d>0?'+ '+money(d):'')+'</span></span>'+(o.d?'<span class="c-d">'+esc(o.d)+'</span>':'')+(blk?'<span class="c-why">'+esc(n.block)+'</span>':'')+'</label>';}).join('');
+  return '<div class="f"><p class="sub-t">'+label+'</p><div class="'+(chips?'chips':'choices')+'">'+html+'</div>'+(info?'<p class="info">'+esc(info)+'</p>':'')+'</div>';}
+function body(){const p=mod.price(sel);
+  return '<div class="pd"><div class="pd-im"><img src="'+imgOf(mod,sel)+'" alt="'+esc(mod.t)+'"></div><div><p class="eyebrow">Module</p><h2 class="h2">'+mod.t+'</h2><p class="d">'+esc(mod.d)+'</p><div id="pdF">'+
+    mod.fields.map(([f,l])=>fieldHTML(f,l)).join('')+'</div><div class="pd-buy"><div class="tot"><span>'+esc(mod.label(sel))+'</span><b>'+money(p)+'</b></div><button class="btn btn-lg btn-block" id="pdAdd">Ajouter au panier</button>'+
+    '<ul class="pd-perks"><li>'+V.I.tool+'Se change en '+mod.time+', sans outil</li><li>'+V.I.box+'Livraison gratuite, étiquette de retour pour l’ancien module</li></ul></div></div></div>';}
+function openMod(k,pre){mod=C.byK(k);if(!mod)return;sel=C.fixSel(mod,Object.assign(C.defaults(mod),pre||{}));box=V.openModal(body(),mod.t);history.replaceState(null,'','#'+k);
+  box.addEventListener('change',e=>{const t=e.target;if(!t.name)return;const o=C.options(t.name,sel).find(x=>String(x.v)===t.value);if(!o)return;sel[t.name]=o.v;C.fixSel(mod,sel);refresh();});
+  box.addEventListener('click',e=>{if(e.target.id==='pdAdd')add();});
+  const mo=new MutationObserver(()=>{if(!document.body.contains(box)){history.replaceState(null,'',location.pathname);mo.disconnect();}});mo.observe(document.body,{childList:true});}
+function refresh(){const b=box.querySelector('.modal-box'),st=b.scrollTop,a=document.activeElement,fk=a&&a.name?[a.name,a.value]:null;
+  const cl=b.querySelector('.modal-close');b.innerHTML='';b.appendChild(cl);b.insertAdjacentHTML('beforeend',body());b.scrollTop=st;
+  if(fk){const el=b.querySelector('[name="'+fk[0]+'"][value="'+fk[1]+'"]');if(el)el.focus({preventScroll:true});}}
+function add(){V.Bag.add({type:'module',sku:C.sku(mod,sel),name:mod.label(sel),img:imgOf(mod,sel),price:mod.price(sel),lines:[[mod.t,'Se change en '+mod.time]]});
+  V.closeModal();V.toast(mod.label(sel)+' ajouté au panier.');}
+if(location.hash&&C.byK(location.hash.slice(1)))setTimeout(()=>{const el=document.getElementById(location.hash.slice(1));if(el)el.scrollIntoView({block:'center'});openMod(location.hash.slice(1),qs.get('conn')==='connect'?{conn:'connect'}:null);},200);
+})();
+</script>
+</body>
+</html>

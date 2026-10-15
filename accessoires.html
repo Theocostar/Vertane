@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Accessoires Connect — Store Vertane</title>
+<meta name="description" content="Vertane Connect : batterie, objectif, manette, béquille, cordon, caméra, micro et câble qui s’aimantent aux quatre connecteurs du dos Connect du M1.">
+<meta name="theme-color" content="#F3F1EA">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/vertane-favicon-16.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vertane.css">
+<style>
+/* en-tête : la photo de famille sur un fond chaud, comme un plateau de studio */
+.cx-hero{padding-top:118px}
+.cx-hero .top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 40px;margin-bottom:clamp(20px,3vw,32px)}
+.cx-hero .h-hero{font-size:clamp(44px,6.4vw,80px)}
+.cx-hero .h-hero span{color:var(--pierre)}
+.cx-hero .top p{max-width:420px;margin:0;color:var(--pierre);font-size:16px;line-height:1.5}
+.stage-cx{position:relative;border-radius:var(--r-l);overflow:hidden;background:radial-gradient(120% 90% at 30% 20%,#EFE7DA 0%,#D9C8B2 55%,#B79C80 100%);padding:clamp(24px,4vw,56px) clamp(12px,3vw,40px) clamp(30px,4vw,60px)}
+.stage-cx img{display:block;width:100%;height:auto;filter:drop-shadow(10px 22px 18px rgba(74,52,32,.28)) drop-shadow(2px 5px 4px rgba(74,52,32,.22))}
+.stage-cx .tagline{position:absolute;left:0;right:0;bottom:clamp(14px,2.2vw,26px);text-align:center;margin:0;font:400 clamp(14px,1.5vw,18px)/1.3 var(--text);color:rgba(255,255,255,.92);letter-spacing:.01em;text-shadow:0 1px 8px rgba(74,52,32,.35)}
+.hero-ctas{margin-top:clamp(22px,3vw,34px)}
+
+/* le principe */
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.how .card{background:var(--blanc);border-radius:var(--r-l);overflow:hidden;display:flex;flex-direction:column}
+.how .im{height:300px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#F7F5F0,#ECE8DF);overflow:hidden}
+.how .im img{max-height:100%;max-width:100%;width:auto;object-fit:contain;filter:drop-shadow(0 16px 20px rgba(22,24,26,.16))}
+.how .im.crop img{max-height:none;width:112%;max-width:none;transform:translateY(8%)}
+.how .tx{padding:24px 26px 28px}
+.how h3{font:500 21px/1.2 var(--display);letter-spacing:-.02em;margin:0 0 8px}
+.how p{margin:0;color:var(--pierre);font-size:15px;line-height:1.5}
+@media (max-width:900px){.how{grid-template-columns:1fr}.how .im{height:260px}}
+
+/* la gamme */
+.grid-cx{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.acard{background:var(--blanc);border-radius:var(--r-l);padding:22px 20px 24px;display:flex;flex-direction:column;text-align:center;position:relative}
+.acard .a-im{position:relative;height:210px;margin-bottom:16px;cursor:zoom-in}
+.acard .a-im img{position:absolute;inset:0;margin:auto;max-width:100%;max-height:100%;width:auto;height:auto;opacity:0;transform:scale(.97);transition:opacity .45s var(--ease),transform .7s var(--ease-out);filter:drop-shadow(0 14px 16px rgba(22,24,26,.16))}
+.acard .a-im img.on{opacity:1;transform:none}
+.acard .a-tag{font:600 12px/1 var(--text);letter-spacing:.06em;text-transform:uppercase;color:var(--vert);margin:0 0 8px}
+.acard h3{font:500 20px/1.2 var(--display);letter-spacing:-.02em;margin:0}
+.acard .a-p{margin:6px 0 0;color:var(--pierre);font-size:14.5px;line-height:1.4;min-height:2.8em}
+.acard .a-conn{margin:10px 0 0;font-size:12.5px;color:var(--pierre)}
+.acard .swatches{justify-content:center;gap:6px;margin:14px 0 4px}
+.acard .sw{width:28px;height:28px}.acard .sw span{inset:3px}
+.acard .a-col{font-size:12.5px;color:var(--pierre);margin:0 0 12px;min-height:16px}
+.acard .a-price{font:500 17px/1.2 var(--display);margin:0 0 14px}
+.acard .ctas{gap:10px 16px;margin-top:auto}
+@media (max-width:1060px){.grid-cx{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.grid-cx{grid-template-columns:1fr}}
+
+/* fiche détaillée (fenêtre) */
+.ad{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(20px,3vw,40px);align-items:start}
+.ad-im{background:linear-gradient(180deg,#F7F5F0,#ECE8DF);border-radius:var(--r-m);height:440px;display:flex;align-items:center;justify-content:center;padding:18px;position:relative}
+.ad-im img{max-height:100%;max-width:100%;width:auto;object-fit:contain;filter:drop-shadow(0 16px 20px rgba(22,24,26,.18))}
+.ad-seg{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:4px;background:rgba(255,255,255,.85);border-radius:999px;padding:4px}
+.ad-seg button{border:0;background:transparent;border-radius:999px;padding:7px 14px;font:500 13px/1 var(--text);cursor:pointer;color:var(--noir)}
+.ad-seg button[aria-pressed="true"]{background:var(--noir);color:var(--ivoire)}
+.ad .d{color:var(--pierre);margin:12px 0 18px;line-height:1.55}
+.ad table{width:100%;border-collapse:collapse;font-size:14.5px;margin:0 0 20px}
+.ad th,.ad td{text-align:left;padding:9px 0;border-top:1px solid var(--lin-2);vertical-align:top}
+.ad th{font-weight:600;color:var(--pierre);width:42%;font-size:13.5px}
+.ad .buy{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px}
+.ad .buy b{font:500 22px/1 var(--display)}
+@media (max-width:760px){.ad{grid-template-columns:1fr}.ad-im{height:320px}}
+
+/* essayer en 3D */
+.try{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(20px,3vw,40px);align-items:center}
+.viewer3d{position:relative;height:clamp(420px,56vw,640px);border-radius:var(--r-l);background:radial-gradient(90% 80% at 50% 35%,#2A2E31,#16181A);overflow:hidden}
+.viewer3d iframe{position:absolute;inset:0;width:100%;height:100%;border:0;opacity:0;transition:opacity .6s var(--ease)}
+.viewer3d.live iframe{opacity:1}
+.viewer3d .fb{position:absolute;inset:0;margin:auto;max-height:86%;max-width:80%;object-fit:contain;transition:opacity .6s var(--ease)}
+.viewer3d.live .fb{opacity:0}
+.viewer3d .v-hint{position:absolute;left:18px;bottom:16px;font-size:13px;color:#A9ABA3}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0}
+.chip{border:0;border-radius:999px;padding:9px 15px;font:500 14px/1 var(--text);background:rgba(243,241,234,.1);color:var(--ivoire);cursor:pointer;transition:background .2s}
+.chip:hover{background:rgba(243,241,234,.18)}
+.chip[aria-pressed="true"]{background:var(--sauge);color:var(--noir)}
+.try .row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-top:8px}
+.try .row .lbl{font-size:13px;color:#A9ABA3;min-width:74px}
+@media (max-width:900px){.try{grid-template-columns:1fr}}
+
+/* il faut un dos Connect */
+.need{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:clamp(24px,4vw,56px);align-items:center;background:var(--blanc);border-radius:var(--r-l);padding:clamp(28px,4vw,56px);overflow:hidden}
+.need-im{display:flex;justify-content:center;gap:10px;margin:-6% 0 -22%}
+.need-im img{height:clamp(260px,32vw,420px);width:auto;filter:drop-shadow(0 20px 26px rgba(22,24,26,.16))}
+.need-im img+img{margin-top:18%}
+.need ul{list-style:none;margin:22px 0 26px;padding:0;display:grid;gap:10px}
+.need li{padding-left:26px;position:relative;color:var(--pierre)}
+.need li::before{content:"";position:absolute;left:0;top:.55em;width:12px;height:4px;border-radius:2px;background:#D9B878}
+@media (max-width:833px){.need{grid-template-columns:1fr}.need-im{margin:0 0 -18%}}
+</style>
+</head>
+<body data-page="accessoires" data-local='{"title":"Accessoires Connect","after":".cx-hero","links":[["#principe","Le principe"],["#gamme","Les accessoires"],["#essayer","En 3D"],["#dos","Dos Connect"]],"cta":["#gamme","Acheter"]}'>
+<script src="assets/site.js"></script>
+<main id="main">
+  <header class="shell cx-hero" id="top">
+    <div class="top">
+      <h1 class="h-hero rv"><a href="store.html" style="color:inherit">Store</a>. <span>Accessoires Connect.</span></h1>
+      <p class="rv d1">Huit accessoires qui s’aimantent aux quatre connecteurs dorés du dos Connect. Ils se posent, se reconnaissent et se rechargent au dos du M1.</p>
+    </div>
+    <div class="stage-cx rv d1">
+      <img src="assets/img/cx-famille.webp" alt="Un Vertane M1 orange cosmique à dos Connect entouré de ses huit accessoires : batterie, objectif, micro, manette, béquille, câble, cordon et caméra" width="2200" height="1460" fetchpriority="high">
+      <p class="tagline">Des connecteurs aimantés. Un téléphone qui grandit à la demande.</p>
+    </div>
+    <div class="ctas hero-ctas rv"><a class="btn btn-lg" href="#gamme">Voir les accessoires</a><a class="link" href="#dos">Il faut un dos Connect</a></div>
+  </header>
+
+  <section class="sec-tight" id="principe" aria-labelledby="how-t">
+    <div class="shell">
+      <div class="shelf-h"><h2 id="how-t">Le principe. <span>Poser, c’est brancher.</span></h2></div>
+      <div class="how">
+        <article class="card rv"><div class="im crop"><img src="assets/img/connect-detail-orange.webp" alt="Deux connecteurs dorés du dos Connect, sous le plateau photo" loading="lazy" width="1001" height="921"></div>
+          <div class="tx"><h3>Quatre connecteurs.</h3><p>Deux sous le plateau photo, deux en bas. Chacun a 4 contacts dorés affleurants : alimentation jusqu’à 15 W dans les deux sens, masse et une liaison USB 2.0.</p></div></article>
+        <article class="card rv d1"><div class="im"><img src="assets/img/cx-dessous.webp" alt="Le dessous de la Caméra Connect : quatre broches dorées à ressort dans un cadre noir" loading="lazy"></div>
+          <div class="tx"><h3>Des broches à ressort.</h3><p>Sous chaque accessoire, des broches dorées viennent se poser sur les contacts. Elles encaissent les chocs et l’usure : prévues pour 20 000 poses.</p></div></article>
+        <article class="card rv d2"><div class="im"><img src="assets/img/cx-aimant.webp" alt="La Batterie Connect se détache du dos d’un M1 orange" loading="lazy"></div>
+          <div class="tx"><h3>Des aimants qui guident.</h3><p>Deux aimants par connecteur centrent l’accessoire au millimètre. Il est reconnu dès qu’il touche le dos, et se retire d’un geste.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec-tight" id="gamme" aria-labelledby="gamme-t" style="padding-top:0">
+    <div class="shell">
+      <div class="shelf-h"><h2 id="gamme-t">Les accessoires. <span>En noir sidéral ou argent.</span></h2><a class="link" href="#essayer">Les essayer en 3D</a></div>
+      <div class="grid-cx" id="grid"></div>
+    </div>
+  </section>
+
+  <section class="sec sec-dark" id="essayer" aria-labelledby="try-t">
+    <div class="shell try">
+      <div class="viewer3d" id="viewer"><img class="fb" id="fb" src="assets/img/cx-batt-on.webp" alt="" loading="lazy"><span class="v-hint">Glisse pour tourner</span></div>
+      <div>
+        <p class="eyebrow">En 3D</p>
+        <h2 class="h2" id="try-t">Essaie-les sur ton M1.</h2>
+        <p class="lead" style="margin-top:14px">Choisis un accessoire, sa finition et la couleur du téléphone. Détache-le pour voir les broches et les connecteurs.</p>
+        <div class="chips" id="chips" role="group" aria-label="Accessoire"></div>
+        <div class="row"><span class="lbl">Finition</span><div class="chips" id="finChips" role="group" aria-label="Finition" style="margin:0"></div></div>
+        <div class="row"><span class="lbl">Téléphone</span><div class="swatches" id="phoneSw" role="radiogroup" aria-label="Couleur du téléphone"></div></div>
+        <div class="row" style="margin-top:18px"><button class="btn" id="liftBtn" aria-pressed="false">Détacher</button><button class="btn btn-ghost" id="spinBtn" aria-pressed="false">Vue 360°</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec-tight" id="dos" aria-labelledby="need-t" style="padding-bottom:clamp(72px,9vw,120px)">
+    <div class="shell">
+      <div class="need rv">
+        <div class="need-im"><img src="assets/img/back-connect-alu-intense.webp" alt="Vertane M1 bleu intense à dos Connect" loading="lazy" width="550" height="1364"><img src="assets/img/back-connect-pla-sauge.webp" alt="Vertane M1 sauge à dos Connect" loading="lazy" width="550" height="1364"></div>
+        <div>
+          <p class="eyebrow">Compatibilité</p>
+          <h2 class="h2" id="need-t">Il faut un dos Connect.</h2>
+          <p class="lead" style="margin-top:14px">Les accessoires se fixent sur la coque Connect du M1. Elle existe dans les trois matières et toutes les couleurs, et se pose sur n’importe quel M1 en dix secondes.</p>
+          <ul>
+            <li>Sur un nouveau M1 sur mesure : choisis « Dos Connect » à l’étape Finition, <span id="cxDelta"></span>.</li>
+            <li>Sur ton M1 : remplace la coque, <span id="cxCoque"></span>.</li>
+            <li>Les batteries et accessoires Connect se superposent : la batterie reprend les quatre connecteurs sur le dessus.</li>
+          </ul>
+          <div class="ctas left"><a class="btn btn-lg" href="modules.html?conn=connect#coque">Acheter la coque Connect</a><a class="link" href="acheter.html?conn=connect">Configurer un M1 Connect</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<template id="foot-notes">
+  <ol>
+    <li>Prix TTC, livraison offerte en France métropolitaine. Caractéristiques de prototype.</li>
+  </ol>
+</template>
+
+<script src="assets/m1-data.js"></script>
+<script src="assets/catalogue.js"></script>
+<script src="assets/connect-data.js"></script>
+<script>
+(function(){
+"use strict";
+const X=window.CONNECT,M=window.M1,C=window.CAT,V=window.V,$=s=>document.querySelector(s),esc=V.esc,money=V.money;
+const fin={};X.ACC.forEach(a=>fin[a.k]='noir');
+
+/* prix de la coque Connect : le supplément, et la coque seule la moins chère */
+const cq=C.byK('coque'),cxP=M.byV('conn','connect').p;
+$('#cxDelta').textContent='+ '+money(cxP);
+$('#cxCoque').textContent='à partir de '+money(Math.min(...M.OPT.cmat.map(o=>cq.price({cmat:o.v,conn:'connect'}))));
+
+/* cartes */
+const sw=a=>'<div class="swatches" role="radiogroup" aria-label="Finition de '+esc(a.t)+'">'+Object.keys(X.FINS).map(f=>'<label class="sw'+(fin[a.k]===f?' on':'')+'" title="'+X.FINS[f][0]+'"><input type="radio" name="f-'+a.k+'" value="'+f+'"'+(fin[a.k]===f?' checked':'')+' aria-label="'+X.FINS[f][0]+'"><span style="--c:'+X.FINS[f][1]+'"></span></label>').join('')+'</div>';
+$('#grid').innerHTML=X.ACC.map((a,i)=>'<article class="acard rv d'+(i%4)+'" data-k="'+a.k+'" id="'+a.k+'"><div class="a-im" data-open="'+a.k+'" role="button" tabindex="0" aria-label="Voir la fiche de '+esc(a.t)+'">'+
+  Object.keys(X.FINS).map(f=>'<img src="'+X.img(a.k,f)+'" alt="'+esc(a.t)+', '+X.FINS[f][0].toLowerCase()+'" loading="lazy" data-f="'+f+'" class="'+(f===fin[a.k]?'on':'')+'">').join('')+'</div>'+
+  '<p class="a-tag">'+esc(a.tag)+'</p><h3>'+esc(a.t)+'</h3><p class="a-p">'+esc(a.pitch)+'</p><p class="a-conn">'+esc(X.where(a))+'</p>'+sw(a)+
+  '<p class="a-col">'+X.FINS[fin[a.k]][0]+'</p><p class="a-price">'+money(a.p)+'</p>'+
+  '<div class="ctas"><button class="btn btn-sm" data-add="'+a.k+'">Ajouter au panier</button><button class="link" data-open="'+a.k+'" style="background:none;border:0;cursor:pointer;font:inherit">Détails</button></div></article>').join('');
+$('#grid').addEventListener('change',e=>{const card=e.target.closest('.acard');if(!card)return;const k=card.dataset.k,f=e.target.value;fin[k]=f;
+  card.querySelectorAll('.sw').forEach(s=>s.classList.toggle('on',s.querySelector('input').value===f));
+  card.querySelectorAll('.a-im img').forEach(im=>im.classList.toggle('on',im.dataset.f===f));card.querySelector('.a-col').textContent=X.FINS[f][0];});
+function add(k,f){const a=X.byK(k);f=f||fin[k];V.Bag.add({type:'module',sku:X.sku(a,f),name:a.t+', '+X.FINS[f][0].toLowerCase(),img:X.img(k,f),price:a.p,lines:[[a.t,'Accessoire Vertane Connect, pour M1 à dos Connect']]});V.toast(a.t+' ajouté au panier.');}
+$('#grid').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b){add(b.dataset.add);return;}const o=e.target.closest('[data-open]');if(o)openAcc(o.dataset.open);});
+$('#grid').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.a-im')){e.preventDefault();openAcc(e.target.dataset.open);}});
+
+/* fiche : seul ou sur le téléphone, caractéristiques, ajout au panier */
+function openAcc(k){const a=X.byK(k);let f=fin[k],view='on';
+  const html=()=>'<div class="ad"><div class="ad-im"><img id="adImg" src="'+(view==='on'?X.onImg(k):X.img(k,f))+'" alt="'+esc(a.t)+'"><div class="ad-seg" role="group" aria-label="Vue"><button data-v="on" aria-pressed="'+(view==='on')+'">Sur le M1</button><button data-v="solo" aria-pressed="'+(view==='solo')+'">Seul</button></div></div>'+
+    '<div><p class="eyebrow">Vertane Connect · '+esc(a.tag)+'</p><h2 class="h2">'+esc(a.t)+'</h2><p class="d">'+esc(a.d)+'</p>'+
+    '<table><tbody>'+a.specs.map(r=>'<tr><th>'+esc(r[0])+'</th><td>'+esc(r[1])+'</td></tr>').join('')+'<tr><th>Connecteurs</th><td>'+esc(X.where(a))+'</td></tr><tr><th>Compatibilité</th><td>Vertane M1 avec dos Connect</td></tr></tbody></table>'+
+    '<p class="sub-t" style="margin:0 0 8px;font-size:14px">Finition <span class="muted">'+X.FINS[f][0]+'</span></p>'+
+    '<div class="swatches" role="radiogroup" aria-label="Finition" style="margin-bottom:20px">'+Object.keys(X.FINS).map(x=>'<label class="sw'+(x===f?' on':'')+'" title="'+X.FINS[x][0]+'"><input type="radio" name="adf" value="'+x+'"'+(x===f?' checked':'')+' aria-label="'+X.FINS[x][0]+'"><span style="--c:'+X.FINS[x][1]+'"></span></label>').join('')+'</div>'+
+    '<div class="buy"><b>'+money(a.p)+'</b><button class="btn" id="adAdd">Ajouter au panier</button></div></div></div>';
+  const box=V.openModal(html(),a.t),inner=()=>box.querySelector('.modal-box')||box;
+  const re=()=>{const b=inner(),st=b.scrollTop;const body=b.querySelector('.ad');if(body)body.outerHTML=html();b.scrollTop=st;};
+  box.addEventListener('click',e=>{const s=e.target.closest('[data-v]');if(s){view=s.dataset.v;re();return;}if(e.target.id==='adAdd'){fin[k]=f;add(k,f);}});
+  box.addEventListener('change',e=>{if(e.target.name==='adf'){f=e.target.value;if(view==='on')view='solo';re();}});}
+if(location.hash&&X.byK(location.hash.slice(1)))setTimeout(()=>openAcc(location.hash.slice(1)),300);
+
+/* aperçu 3D : le configurateur du M1 en mode intégré, piloté par messages */
+const PHONES=[['alu','orange'],['verre','blanc'],['alu','intense'],['pla','sauge'],['verre','noir'],['alu','argent']];
+const S={k:'batt',fin:'noir',ph:0,lift:false,spin:false};
+$('#chips').innerHTML=X.ACC.map(a=>'<button class="chip" data-k="'+a.k+'" aria-pressed="'+(a.k===S.k)+'">'+esc(a.s)+'</button>').join('');
+$('#finChips').innerHTML=Object.keys(X.FINS).map(f=>'<button class="chip" data-f="'+f+'" aria-pressed="'+(f===S.fin)+'">'+X.FINS[f][0]+'</button>').join('');
+$('#phoneSw').innerHTML=PHONES.map((p,i)=>'<label class="sw'+(i===S.ph?' on':'')+'" title="'+M.colName(p[0],p[1])+'"><input type="radio" name="ph" value="'+i+'"'+(i===S.ph?' checked':'')+' aria-label="'+M.colName(p[0],p[1])+'"><span style="--c:'+M.colHex(p[0],p[1])+'"></span></label>').join('');
+const viewer=$('#viewer');let frame=null,live=false;
+function post(m){if(live&&frame)frame.contentWindow.postMessage(Object.assign({src:'m1-shop'},m),'*');}
+function phoneCfg(){const p=PHONES[S.ph],c=Object.assign({},M.DEF,{cmat:p[0],ccol:p[1],conn:'connect',qi:p[0]==='alu'?'mag':'q15'});M.fix(c);return c;}
+function sync(){$('#fb').src=X.onImg(S.k);post({t:'cfg',cfg:phoneCfg()});post({t:'acc',k:S.k,fin:S.fin,mode:'on',opt:{open:52}});post({t:'lift',v:S.lift?1:0});
+  document.querySelectorAll('#chips .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===S.k));
+  document.querySelectorAll('#finChips .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===S.fin));
+  document.querySelectorAll('#phoneSw .sw').forEach((s,i)=>s.classList.toggle('on',i===S.ph));}
+function load3D(){if(frame)return;frame=document.createElement('iframe');frame.title='Aperçu 3D des accessoires Connect';frame.src='configurateur-m1.html?embed=1&ex=0';viewer.insertBefore(frame,viewer.firstChild);}
+window.addEventListener('message',e=>{const d=e.data;if(!d||d.src!=='m1-3d'||!frame||e.source!==frame.contentWindow)return;
+  if(d.t==='ready'){live=true;viewer.classList.add('live');sync();post({t:'view',v:'back'});}
+  else if(d.t==='fail'){frame.remove();frame=null;}});
+if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(x=>x.isIntersecting)){load3D();io.disconnect();}},{rootMargin:'300px'});io.observe(viewer);}else load3D();
+$('#chips').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;S.k=b.dataset.k;S.lift=false;$('#liftBtn').textContent='Détacher';$('#liftBtn').setAttribute('aria-pressed','false');sync();});
+$('#finChips').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;S.fin=b.dataset.f;sync();});
+$('#phoneSw').addEventListener('change',e=>{S.ph=+e.target.value;sync();});
+$('#liftBtn').addEventListener('click',()=>{S.lift=!S.lift;$('#liftBtn').textContent=S.lift?'Fixer':'Détacher';$('#liftBtn').setAttribute('aria-pressed',S.lift);post({t:'lift',v:S.lift?1:0});});
+$('#spinBtn').addEventListener('click',()=>{S.spin=!S.spin;$('#spinBtn').setAttribute('aria-pressed',S.spin);post({t:'spin',on:S.spin});});
+})();
+</script>
+</body>
+</html>

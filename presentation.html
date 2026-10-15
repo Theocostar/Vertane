@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertane — Présentation</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Unbounded:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>/* three.js : local quand la présentation est servie (marche sans réseau), sinon le CDN (ouverture depuis le disque) */
+(function(){var b=/^https?:$/.test(location.protocol)?'./assets/vendor/three/':'https://cdn.jsdelivr.net/npm/three@0.180.0/';window.VLIB=b;document.write('<script type="importmap">{"imports":{"three":"'+b+'build/three.module.js","three/addons/":"'+b+'examples/jsm/"}}<\/script>');})();</script>
+<style>
+:root{
+  --vert:#2F7A55;--noir:#1D1D1F;--ivoire:#F3F1EA;--sauge:#8DB89A;--pierre:#55584F;--lin:#C9C4B8;--blanc:#fff;
+  --display:"Unbounded","Arial Black","Arial",sans-serif;
+  --text:"Sora","Helvetica Neue","Helvetica","Arial",sans-serif;
+  --ease:cubic-bezier(.28,.11,.32,1);--out:cubic-bezier(.16,1,.3,1);--io:cubic-bezier(.65,0,.25,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#fff;overflow:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font:400 24px/1.5 var(--text);letter-spacing:-.01em;color:var(--noir)}
+body.idle,body.idle *{cursor:none!important}
+button{font:inherit;color:inherit;letter-spacing:inherit;cursor:pointer}
+img{display:block;max-width:100%}
+
+/* ---------- scène 1920 × 1080 : un blanc franc, comme une keynote en clair ---------- */
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:50% 50%;overflow:hidden;background:#fff;contain:strict}
+
+/* ---------- calques 3D (un par appareil, partagés entre les diapos) ---------- */
+/* masqué = transparent (pas visibility:hidden) : un cadre invisible suspendrait son rendu et ne serait jamais prêt */
+.dev{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:1;opacity:0;pointer-events:none;will-change:transform,opacity;
+  transition:opacity .7s var(--ease),transform 1.25s var(--io);transform-origin:50% 50%}
+.dev.on{opacity:1;transition:opacity .9s var(--ease) .12s,transform 1.25s var(--io)}
+.dev.on.entering{transition:opacity 1.3s var(--ease) .1s,transform 2.2s var(--out)}
+.dev.on.settle{transition:opacity .9s var(--ease),transform 2.6s cubic-bezier(.32,.72,0,1)}
+.dev.on.hold{opacity:0;transition:none}
+.dev.on.reveal{transition:opacity 2.2s var(--ease),transform 1.25s var(--io)}
+/* fondu à gauche : ce qui passe sous la colonne de texte s’efface doucement */
+.dev.mask{-webkit-mask-image:linear-gradient(90deg,transparent 470px,#000 730px);mask-image:linear-gradient(90deg,transparent 470px,#000 730px)}
+/* fondu en bas : l’appareil de la couverture sort du cadre en douceur */
+.dev.fadeb{-webkit-mask-image:linear-gradient(180deg,#000 50%,transparent 74%);mask-image:linear-gradient(180deg,#000 50%,transparent 74%)}
+.dev.live{pointer-events:auto;cursor:grab}
+.dev.live:active{cursor:grabbing}
+.dev iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent}
+.dev .fb{position:absolute;left:50%;top:50%;max-height:78%;width:auto;transform:translate(-50%,-50%);opacity:0;transition:opacity .6s}
+.dev.dead .fb{opacity:1}.dev.dead canvas,.dev.dead iframe{visibility:hidden}
+
+/* ---------- diapos ---------- */
+/* l’entrée et la sortie sont jouées par deck.js (Web Animations, transformations et opacité seulement) */
+.slide{position:absolute;inset:0;z-index:2;visibility:hidden;pointer-events:none;overflow:hidden;transform-origin:50% 50%;color:var(--fg);
+  --fg:#1D1D1F;--fg2:#6E6E73;--muted:#86868B;--acc:#2F7A55;--line:rgba(29,29,31,.12);--tile:#F4F3EF;--g1:#3A976A;--g2:#1C5A3C;--hi:#A6E6BF}
+.slide.on,.slide.leaving{visibility:visible}
+.slide[data-theme="dark"]{background:#0B0C0C;--fg:#F5F5F7;--fg2:rgba(245,245,247,.74);--muted:rgba(245,245,247,.52);--acc:#8DB89A;--line:rgba(245,245,247,.22);--g1:#B6E0C3;--g2:#5E9F7A;--hi:#fff}
+.slide[data-theme="green"]{background:var(--vert);--fg:var(--ivoire);--fg2:rgba(243,241,234,.84);--muted:rgba(243,241,234,.7);--acc:var(--ivoire);--line:rgba(243,241,234,.36);--g1:#16181A;--g2:#16181A;--hi:#6B8C79}
+.slide[data-theme="green"] em{color:var(--noir)}
+.slide[data-theme="black"]{background:#000}
+.slide .ui,.slide video,.slide a{pointer-events:auto}
+.slide.on .card,.slide.on .princ>div,.slide.on .cat,.slide.on .plan li{pointer-events:auto}
+.pad{position:absolute;inset:128px 128px 112px}
+
+/* typographie */
+.eyebrow{margin:0 0 28px;font:500 22px/1 var(--display);letter-spacing:.005em;color:var(--acc)}
+.h-xl,.h-l,.h-m,.h-s,.h-xs{font-family:var(--display);font-weight:500;margin:0;text-wrap:balance;color:var(--fg)}
+.h-xl{font-size:176px;line-height:.98;letter-spacing:-.05em}
+.h-l{font-size:112px;line-height:1.02;letter-spacing:-.045em}
+.h-m{font-size:84px;line-height:1.06;letter-spacing:-.04em}
+.h-s{font-size:60px;line-height:1.1;letter-spacing:-.035em}
+em{font-style:normal;color:var(--acc)}
+.lead{font:400 32px/1.42 var(--text);letter-spacing:-.018em;color:var(--fg2);margin:0;text-wrap:pretty}
+.stack{display:grid}.stack>*{grid-area:1/1}
+
+/* titres : les mots (ou les lettres) montent derrière un masque en se redressant — transformations et opacité seulement, pour rester fluide */
+.hl .w{display:inline-block;overflow:hidden;vertical-align:top;padding:.02em .02em .14em;margin:-.02em -.02em -.14em}
+.hl .w>i{display:inline-block;font-style:normal;transform:translateY(112%) rotate(4deg);transform-origin:0 100%;opacity:.001;
+  transition:transform 1.2s var(--out) calc(var(--i)*var(--st,52ms) + var(--h0,220ms)),opacity .7s var(--ease) calc(var(--i)*var(--st,52ms) + var(--h0,220ms))}
+.hl.chars .w>i{transform:translateY(105%) scale(.9);transform-origin:50% 100%}
+.slide.on .hl:not(.gated) .w>i,.slide.leaving .hl:not(.gated) .w>i,.in .hl .w>i,.hl.in .w>i{transform:none;opacity:1}
+/* les mots en couleur : un dégradé, traversé une fois par un reflet */
+.hl em .w>i{color:transparent;background:linear-gradient(100deg,var(--g1) 0%,var(--g2) 36%,var(--hi) 50%,var(--g1) 64%,var(--g2) 100%);background-size:280% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text}
+.slide.on .hl:not(.gated) em .w>i,.in .hl em .w>i,.hl.in em .w>i{animation:sheen 2.2s var(--ease) calc(var(--i)*var(--st,52ms) + var(--h0,220ms) + 950ms) both}
+@keyframes sheen{from{background-position:100% 0}to{background-position:0 0}}
+
+/* apparitions */
+.a{opacity:0;transform:translateY(28px);
+  transition:opacity .9s var(--ease) calc(var(--d,0)*1ms + var(--a0,300ms)),transform 1.2s var(--out) calc(var(--d,0)*1ms + var(--a0,300ms))}
+.slide.on .a,.slide.leaving .a{opacity:1;transform:none}
+/* étapes : [data-s] apparaît à l’étape n, [data-o] n’est visible qu’à l’étape n (ou n-m) */
+[data-s],[data-o]{opacity:0;transform:translateY(24px);transition:opacity .6s var(--ease),transform .9s var(--out)}
+[data-s].in,[data-o].in{opacity:1;transform:none;transition:opacity .75s var(--ease) calc(var(--d,0)*1ms + 60ms),transform 1s var(--out) calc(var(--d,0)*1ms + 60ms)}
+[data-o]:not(.in){transform:translateY(-16px);transition:opacity .35s var(--ease),transform .5s var(--ease)}
+
+/* ---------- navigation à la souris (apparaît au mouvement) ---------- */
+#nav{position:fixed;right:22px;bottom:22px;z-index:20;display:flex;gap:6px;padding:6px;border-radius:999px;background:rgba(29,29,31,.78);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 10px 30px rgba(0,0,0,.2),inset 0 0 0 1px rgba(255,255,255,.08);opacity:0;transform:translateY(10px);transition:opacity .35s,transform .35s;pointer-events:none;color:#EDEBE4}
+body.moved #nav{opacity:1;transform:none;pointer-events:auto}
+#nav button{width:40px;height:40px;border:0;border-radius:50%;background:transparent;color:#EDEBE4;display:grid;place-items:center;transition:background .2s}
+#nav button:hover{background:rgba(255,255,255,.12)}
+#nav svg{width:20px;height:20px}
+#nav .sep{width:1px;margin:8px 2px;background:rgba(255,255,255,.14)}
+#nav .pos{align-self:center;min-width:64px;padding:0 10px 0 6px;font:500 14px/1 var(--display);letter-spacing:.02em;color:#A5A7A0;text-align:center;font-variant-numeric:tabular-nums}
+
+/* ---------- couverture ---------- */
+.cover{position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.cover-logo{width:960px;height:auto;overflow:visible}
+.cover-logo path{opacity:0;transform:translateY(60px);transition:opacity 1.1s var(--ease),transform 1.5s var(--out);transform-box:fill-box}
+.slide.lit .cover-logo path{opacity:1;transform:none}
+.cover-logo .lv{fill:var(--vert)}.cover-logo .la{fill:var(--noir)}
+.cover-tag{margin:44px 0 0;font:400 44px/1.1 var(--display);letter-spacing:-.03em;color:var(--fg);--h0:700ms}
+/* aide et état des moteurs : pour le présentateur seulement, au mouvement de la souris, avant de commencer */
+.cover-keys{position:absolute;left:0;right:0;bottom:44px;display:flex;justify-content:center;gap:28px;font:400 16px/1 var(--text);color:#86868B;opacity:0;transition:opacity .5s}
+.cover-keys kbd{display:inline-grid;place-items:center;min-width:28px;height:28px;padding:0 8px;margin-right:8px;border-radius:7px;font:500 14px/1 var(--text);color:#1D1D1F;background:#F2F2F0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.status{position:absolute;left:64px;bottom:50px;display:flex;gap:18px;font:400 15px/1 var(--text);color:#86868B;opacity:0;transition:opacity .5s}
+body.moved:not(.started) .cover-keys,body.moved:not(.started) .status{opacity:1}
+.status span{display:inline-flex;align-items:center;gap:8px}
+.status span::before{content:"";width:7px;height:7px;border-radius:50%;background:#C8C8C4;transition:background .4s}
+.status span.ok::before{background:var(--vert)}
+.status span.ko::before{background:#C2683F}
+
+/* ---------- vidéos ---------- */
+.slide.video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;transform:scale(1.06);transition:transform 3.4s var(--out)}
+.slide.video.on video{transform:none}
+.vplay{position:absolute;left:50%;top:50%;width:132px;height:132px;margin:-66px 0 0 -66px;border:0;border-radius:50%;background:rgba(243,241,234,.14);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);color:var(--ivoire);display:grid;place-items:center;opacity:0;transform:scale(.9);transition:opacity .4s,transform .4s var(--out);pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.vplay svg{width:46px;height:46px;margin-left:8px}
+.slide.video.paused .vplay{opacity:1;transform:none;pointer-events:auto}
+.vhud{position:absolute;left:64px;right:340px;bottom:44px;display:flex;align-items:center;gap:22px;font:500 16px/1 var(--display);letter-spacing:.03em;color:rgba(243,241,234,.8);opacity:0;transition:opacity .4s}
+body.moved .slide.video .vhud,.slide.video.paused .vhud{opacity:1}
+.vhud .vbar{flex:1;height:4px;border-radius:4px;background:rgba(243,241,234,.18);overflow:hidden;position:relative}
+.vhud .vbar i{position:absolute;inset:0;background:var(--ivoire);transform-origin:0 50%;transform:scaleX(0)}
+
+/* ---------- contenu commun ---------- */
+.col{position:absolute;top:128px;bottom:112px;left:128px;width:700px;display:flex;flex-direction:column}
+.col.w8{width:800px}.col.w6{width:620px}
+.col.mid{justify-content:center;top:0;bottom:0}
+.spacer{flex:1}
+.specrow{display:flex;gap:56px;margin-top:64px}
+.specrow div{position:relative;padding-top:20px;min-width:150px}
+.specrow b{display:block;font:500 50px/1.05 var(--display);letter-spacing:-.04em;color:var(--fg);margin-bottom:10px;white-space:nowrap}
+.specrow.sm{gap:44px}.specrow.sm div{min-width:0}.specrow.sm b{font-size:44px}
+.specrow span{font-size:20px;line-height:1.35;color:var(--muted)}
+
+/* légendes d’étapes : une phrase courte à la fois, en grand, et une réglette */
+.caps{margin-top:64px;max-width:640px}
+.caps .stack{min-height:120px}
+.caps p{margin:0;font:500 46px/1.14 var(--display);letter-spacing:-.035em;color:var(--fg);text-wrap:balance}
+.caps .k{display:block;margin-bottom:22px;font:500 18px/1 var(--display);letter-spacing:.02em;color:var(--acc);font-variant-numeric:tabular-nums}
+.ticks{display:flex;gap:8px;margin-top:44px}
+.ticks i{height:3px;width:36px;border-radius:3px;background:var(--line);transition:background .5s var(--ease),width .7s var(--out)}
+.ticks i.past{background:rgba(47,122,85,.4)}
+.ticks i.on{background:var(--acc);width:72px}
+
+/* filets tracés de gauche à droite */
+.rule{position:relative}
+.rule::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line);transform:scaleX(0);transform-origin:0 50%;transition:transform 1.5s var(--out) calc(var(--d,0)*1ms + 300ms)}
+.slide.on .rule::before,.slide.leaving .rule::before,.rule.in::before{transform:none}
+[data-s].rule::before{transition-delay:.15s}
+[data-s].rule:not(.in)::before{transform:scaleX(0)}
+
+/* ---------- plan ---------- */
+.plan-head{position:absolute;left:128px;right:128px;top:128px}
+.plan{position:absolute;left:128px;right:128px;top:380px;list-style:none;margin:0;padding:0}
+.plan li{position:relative;display:grid;grid-template-columns:150px 1fr;align-items:baseline;padding:34px 0 35px}
+.plan li::before,.plan li:last-child::after{content:"";position:absolute;left:0;right:0;height:1px;background:var(--line);transform:scaleX(0);transform-origin:0 50%;transition:transform 1.4s var(--out) calc(var(--d,0)*1ms + 120ms)}
+.plan li::before{top:0}.plan li:last-child::after{bottom:0}
+.slide.on .plan li::before,.slide.on .plan li:last-child::after,.slide.leaving .plan li::before,.slide.leaving .plan li:last-child::after{transform:none}
+.plan .n{font:500 24px/1 var(--display);letter-spacing:.02em;color:var(--acc);font-variant-numeric:tabular-nums;transition:transform .5s var(--out)}
+.plan h3{margin:0;font:500 56px/1 var(--display);letter-spacing:-.04em;color:var(--fg);transition:transform .5s var(--out)}
+.plan li:hover .n,.plan li:hover h3{transform:translateX(10px)}
+
+/* ---------- ouverture de chapitre ---------- */
+.chap-in{position:absolute;left:128px;right:128px;top:0;bottom:170px;display:flex;flex-direction:column;justify-content:center}
+.chap-in .n{font:500 26px/1 var(--display);letter-spacing:.04em;color:var(--acc);margin-bottom:42px;font-variant-numeric:tabular-nums}
+.chap-in .lead{margin-top:40px;font-size:36px;color:var(--muted)}
+.rail{position:absolute;left:128px;right:128px;bottom:104px;display:grid;grid-template-columns:repeat(6,1fr);gap:28px;list-style:none;margin:0;padding:0}
+.rail li{position:relative;padding-top:20px;font:500 16px/1.3 var(--display);letter-spacing:-.005em;color:rgba(29,29,31,.28)}
+.rail li::before,.rail li::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;border-radius:2px;background:var(--line)}
+.rail li::after{background:var(--acc);transform:scaleX(0);transform-origin:0 50%}
+.rail li b{display:block;margin-bottom:8px;font-weight:500;font-variant-numeric:tabular-nums}
+.rail li.past{color:rgba(29,29,31,.46)}.rail li.past::after{transform:none;opacity:.35}
+.rail li.cur{color:var(--fg)}.rail li.cur b{color:var(--acc)}
+.slide.on .rail li.cur::after{transform:none;transition:transform 1.6s var(--out) .9s}
+
+/* ---------- constat ---------- */
+.trio{position:absolute;left:128px;right:128px;bottom:130px;display:grid;grid-template-columns:repeat(3,1fr);gap:64px}
+.trio>div{padding-top:36px}
+.trio h3{font:500 88px/1 var(--display);letter-spacing:-.05em;margin:0 0 24px;color:var(--acc)}
+.trio p{margin:0;font-size:27px;line-height:1.4;color:var(--fg2)}
+
+/* ---------- déchets électroniques : photos en plein écran ---------- */
+.photos{position:absolute;inset:0;background:#0B0C0C}
+.photos img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;opacity:0;transform:scale(1.12);will-change:transform,opacity;
+  transition:opacity 1.6s var(--ease),transform 9s linear}
+.photos img.on{opacity:1;transform:scale(1.02)}
+.photos::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,9,9,.86) 0%,rgba(8,9,9,.62) 42%,rgba(8,9,9,.18) 78%),linear-gradient(0deg,rgba(8,9,9,.78) 0%,rgba(8,9,9,0) 44%)}
+.big{display:flex;align-items:flex-end;gap:36px;margin-top:6px}
+.big .count{display:inline-block;width:1.44em;font:500 330px/.8 var(--display);letter-spacing:-.07em;color:var(--fg);font-variant-numeric:tabular-nums}
+.big .u{font:500 64px/1.02 var(--display);letter-spacing:-.04em;color:var(--acc);padding-bottom:6px}
+.ewaste{position:absolute;left:128px;right:128px;bottom:176px}
+.ew-bar{position:relative;height:12px;border-radius:12px;background:rgba(245,245,247,.16);overflow:hidden}
+.ew-bar i{position:absolute;left:0;top:0;bottom:0;width:22.3%;border-radius:12px;background:linear-gradient(90deg,#2F7A55,#8DB89A);transform:scaleX(0);transform-origin:0 50%;transition:transform 2s var(--out) .35s}
+.ewaste.in .ew-bar i{transform:none}
+.ew-l{display:flex;align-items:baseline;gap:30px;margin-top:30px}
+.ew-l b{flex:none;font:500 84px/1 var(--display);letter-spacing:-.05em;color:var(--acc)}
+.ew-l>span{font:500 40px/1.2 var(--display);letter-spacing:-.03em;color:var(--fg)}
+.ew-l b .count{font:inherit}
+.src{position:absolute;left:128px;bottom:62px;margin:0;font:400 15px/1.5 var(--text);color:var(--muted)}
+
+/* ---------- réponse ---------- */
+.princ{position:absolute;left:128px;right:128px;bottom:128px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px;perspective:1700px}
+.princ>div{position:relative;overflow:hidden;background:var(--tile);border-radius:34px;padding:48px 44px 50px;transform-origin:50% 100%}
+.princ svg{width:64px;height:64px;color:var(--vert);margin-bottom:40px}
+.princ h3{font:500 40px/1.12 var(--display);letter-spacing:-.03em;margin:0 0 14px;color:var(--fg)}
+.princ p{margin:0;font-size:24px;line-height:1.4;color:var(--fg2)}
+
+/* ---------- visite des modules ---------- */
+.tour .mc h2{margin:0}
+.tour .mc .lead{margin-top:28px;max-width:640px;font-size:32px;line-height:1.35}
+.facts{display:flex;gap:56px;margin-top:56px}
+.facts div{position:relative;padding-top:20px;min-width:180px}
+.facts div::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line)}
+.facts b{display:block;font:500 54px/1 var(--display);letter-spacing:-.04em;color:var(--fg);white-space:nowrap}
+.facts span{display:block;margin-top:12px;font-size:19px;line-height:1.35;color:var(--muted)}
+.tnav{display:flex;align-items:center;gap:30px;max-width:720px}
+.tnav .segs{flex:1;display:flex;gap:6px}
+.tnav button{position:relative;flex:1;height:30px;padding:0;border:0;background:none}
+.tnav button::before{content:"";position:absolute;left:0;right:0;top:13px;height:4px;border-radius:4px;background:var(--line);transition:background .5s var(--ease)}
+.tnav button.past::before{background:rgba(47,122,85,.35)}
+.tnav button.cur::before{background:var(--acc)}
+.tnav button:hover::before{background:rgba(29,29,31,.35)}
+.tnav button.cur:hover::before{background:var(--acc)}
+.tnav button::after{content:attr(data-t);position:absolute;left:50%;bottom:36px;transform:translate(-50%,6px);padding:9px 14px;border-radius:12px;white-space:nowrap;font:500 15px/1 var(--text);color:#F5F5F7;background:rgba(29,29,31,.92);box-shadow:0 10px 30px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .2s,transform .25s var(--out)}
+.tnav button:hover::after{opacity:1;transform:translate(-50%,0)}
+.tnav .cnt{flex:none;min-width:84px;text-align:right;font:500 18px/1 var(--display);letter-spacing:.02em;color:var(--muted);font-variant-numeric:tabular-nums;transition:opacity .4s}
+.tnav .cnt b{font-weight:500;color:var(--fg)}
+.tnav .cnt.off{opacity:0}
+/* compteur à rouleaux */
+.odo{display:inline-flex;vertical-align:top;height:1em;overflow:hidden;line-height:1}
+.odo span{display:block;height:1em;overflow:hidden}
+.odo span i{display:flex;flex-direction:column;font-style:normal;transition:transform .8s var(--out)}
+.odo span i b{display:block;height:1em;font-weight:500}
+
+/* ---------- chiffres ---------- */
+.nums{position:absolute;left:128px;right:128px;bottom:110px;display:grid;grid-template-columns:repeat(3,1fr);gap:56px 64px}
+.nums>div{padding-top:28px}
+.nums b{display:block;font:500 112px/1 var(--display);letter-spacing:-.05em;color:var(--fg);white-space:nowrap}
+.nums b small{font-size:.42em;letter-spacing:-.02em;margin-left:.14em}
+.nums>div>span{display:block;margin-top:16px;font-size:24px;line-height:1.35;color:var(--fg2)}
+
+/* ---------- gammes ---------- */
+.head2{position:absolute;left:128px;right:128px;top:128px}
+.range{position:absolute;left:128px;right:128px;top:330px;bottom:100px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;perspective:1700px}
+.card{position:relative;border-radius:34px;background:var(--tile);padding:34px 28px 40px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;overflow:hidden}
+.card.dark{background:#1D1D1F;color:#F5F5F7}
+.card .img{flex:1;min-height:0;width:100%;display:grid;place-items:center;margin-bottom:26px}
+.card .img img{max-height:330px;max-width:100%;width:auto;object-fit:contain;filter:drop-shadow(0 18px 22px rgba(22,24,26,.16));transition:transform .8s var(--out)}
+.card:hover .img img{transform:translateY(-8px) scale(1.03)}
+.card .tag{position:absolute;top:26px;left:26px;font:600 13px/1 var(--text);letter-spacing:.08em;text-transform:uppercase;color:var(--sauge)}
+.card h3{font:500 40px/1.1 var(--display);letter-spacing:-.035em;margin:0 0 10px}
+.card .pitch{font-size:21px;line-height:1.35;color:var(--fg2);margin:0 0 20px}
+.card.dark .pitch{color:#A1A1A6}
+.range.b1 .card .img img{max-height:300px}
+
+/* ---------- sur mesure ---------- */
+/* M1 sur mesure : le configurateur dans une fenêtre, un curseur le règle tout seul, la caméra suit le curseur */
+.mes{justify-content:center}
+.mes-h{position:relative}
+.mes-h .eyebrow{width:fit-content}
+.mes-caps{opacity:0;transition:opacity .6s var(--ease)}
+.slide.go .mes-caps{opacity:1;transition:opacity .8s var(--ease) .9s}
+.mes-caps p{opacity:0;transform:translateY(24px);transition:opacity .35s var(--ease),transform .5s var(--ease)}
+.mes-caps p.in{opacity:1;transform:none;transition:opacity .75s var(--ease) .1s,transform 1s var(--out) .1s}
+.mes-caps p.out{transform:translateY(-16px)}
+.mwin{position:absolute;left:780px;top:195px;width:1040px;border-radius:20px;background:#fff;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.07),0 50px 100px -30px rgba(22,24,26,.32),0 18px 36px -18px rgba(22,24,26,.18);
+  opacity:0;transform:perspective(2200px) translate3d(0,190px,0) rotateX(26deg);transform-origin:50% 100%;
+  transition:opacity .5s var(--ease),transform .9s var(--io)}
+.slide.go .mwin{opacity:1;transform:none;transition:opacity 1s var(--ease) .15s,transform 1.9s cubic-bezier(.2,.9,.25,1) .15s}
+.mwin-bar{position:relative;height:40px;display:flex;align-items:center;gap:8px;padding:0 16px;background:#F5F5F7;border-bottom:1px solid #E4E4E7}
+.mwin-bar i{width:12px;height:12px;border-radius:50%;background:#D9D9DE}
+.mwin-bar span{position:absolute;left:0;right:0;text-align:center;font:500 14px/1 var(--text);color:#86868B;letter-spacing:0}
+.mwin-vp{position:relative;width:1040px;height:650px;overflow:hidden;background:#F3F1EA}
+.mwin-zoom{position:absolute;left:0;top:0;width:1280px;height:800px;transform-origin:0 0;transform:scale(.8125);transition:transform 1.3s cubic-bezier(.65,0,.25,1)}
+.mwin-zoom iframe{position:absolute;inset:0;width:1280px;height:800px;border:0;background:#F3F1EA;transition:opacity .6s var(--ease)}
+.mwin.veil iframe{opacity:0}
+.mcur{position:absolute;left:0;top:0;z-index:2;opacity:0;transition:opacity .45s var(--ease),transform var(--dur,900ms) cubic-bezier(.45,0,.2,1)}
+.mcur.on{opacity:1}
+.mcur-y{position:relative;transition:transform var(--dur,900ms) cubic-bezier(.62,0,.25,1)}
+.mcur svg{position:absolute;left:-3px;top:-3px;width:28px;height:40px;filter:drop-shadow(0 3px 5px rgba(0,0,0,.28));transform-origin:3px 3px}
+.mcur .ring{position:absolute;left:-26px;top:-26px;width:52px;height:52px;border-radius:50%;background:rgba(47,122,85,.28);border:2px solid rgba(47,122,85,.7);opacity:0;transform:scale(.2)}
+.mcur.press svg{animation:mpress .38s var(--io)}
+.mcur.press .ring{animation:mring .7s var(--out)}
+@keyframes mpress{40%{transform:scale(.8)}}
+@keyframes mring{0%{opacity:1;transform:scale(.2)}100%{opacity:0;transform:scale(1.25)}}
+/* un titre seul (étape 0) se tient au centre, puis remonte à sa place quand le propos arrive */
+[data-solo]{transform-origin:0 0;transition:transform 1.5s cubic-bezier(.65,0,.2,1)}
+.slide.s0:not(.go) [data-solo]{transform:translate(var(--sx,0px),var(--sy,0px)) scale(var(--sz,1))}
+.slide.snap [data-solo],.slide.snap .mwin,.slide.snap .mes-caps{transition:none!important}
+.slide.lift [data-s].in{transition-delay:.45s!important}
+
+/* ---------- B1 : cartes de baie ---------- */
+.cards9{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:48px;max-width:640px}
+.cards9 div{display:flex;align-items:center;gap:10px;height:58px;padding:0 12px 0 6px;border-radius:16px;background:var(--tile);font-size:17px;line-height:1.15;color:var(--fg)}
+.cards9 img{width:54px;height:46px;object-fit:contain;flex:none}
+.cards9 div.spk{box-shadow:inset 0 0 0 1.5px var(--acc)}
+
+/* ---------- Vertane OS ---------- */
+.osdev{position:absolute;left:1180px;top:92px}
+.phone{position:relative;width:calc(393px + 24px);height:calc(873px + 24px);border-radius:66px;padding:12px;background:#0b0c0d;
+  box-shadow:0 0 0 3px #3A3F43,0 0 0 4px #1d2022,0 50px 100px -30px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.06)}
+.phone iframe{width:393px;height:873px;border:0;border-radius:54px;background:#000;display:block}
+.phone .btn-r{position:absolute;right:-7px;width:4px;border-radius:0 3px 3px 0;background:#3A3F43}
+.oslist{list-style:none;margin:60px 0 0;padding:0;display:grid;gap:30px}
+.oslist li{position:relative;display:grid;grid-template-columns:48px 1fr;gap:24px;align-items:center;font-size:23px;line-height:1.4;color:var(--muted);transition:opacity .6s var(--ease),transform .8s var(--out)}
+.oslist li b{display:block;color:var(--fg);font:500 30px/1.2 var(--display);letter-spacing:-.02em;margin-bottom:4px}
+.oslist svg{width:44px;height:44px;color:var(--vert)}
+/* démo en cours : la ligne montrée à l’écran ressort, les autres s’effacent */
+.oslist.demo li{opacity:.32}
+.oslist.demo li.cur{opacity:1;transform:translateX(12px)}
+.oslist li::before{content:"";position:absolute;left:-28px;top:10%;bottom:10%;width:3px;border-radius:3px;background:var(--acc);transform:scaleY(0);transition:transform .6s var(--out)}
+.oslist.demo li.cur::before{transform:none}
+
+/* ---------- la suite ---------- */
+.cats{position:absolute;left:128px;right:128px;top:330px;bottom:100px;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:18px;perspective:1700px}
+.cat{position:relative;display:flex;align-items:center;gap:26px;padding:0 34px;border-radius:28px;background:var(--tile);overflow:hidden}
+.cat svg{width:62px;height:62px;flex:none;color:var(--vert)}
+.cat h3{flex:1;font:500 30px/1.15 var(--display);letter-spacing:-.025em;margin:0;color:var(--fg)}
+.cat .st{flex:none;font:600 12px/1 var(--text);letter-spacing:.08em;text-transform:uppercase;padding:9px 12px;border-radius:999px;background:rgba(29,29,31,.07);color:var(--fg2)}
+.cat.live{background:#1D1D1F}
+.cat.live h3{color:#F5F5F7}.cat.live svg{color:var(--sauge)}
+.cat.live .st{background:var(--sauge);color:#1D1D1F}
+
+/* ---------- fin ---------- */
+.end-top{position:absolute;left:0;right:0;top:112px;text-align:center}
+.end-top .lead{margin-top:30px;font-size:36px}
+.end-logo{position:absolute;left:50%;bottom:64px;width:230px;transform:translateX(-50%)}
+.end-logo .lv{fill:var(--vert)}.end-logo .la{fill:var(--noir)}
+
+/* ---------- cartes en relief : entrée en bascule, puis elles suivent la souris avec un reflet ---------- */
+.slide .card.a,.slide .cat.a{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));translate:0 140px;rotate:x 34deg;transform-origin:50% 100%;
+  transition:opacity .9s var(--ease) calc(var(--d,0)*1ms + 300ms),translate 1.6s var(--out) calc(var(--d,0)*1ms + 300ms),rotate 1.6s var(--out) calc(var(--d,0)*1ms + 300ms),transform .6s var(--out)}
+.slide.on .card.a,.slide.on .cat.a,.slide.leaving .card.a,.slide.leaving .cat.a{translate:0 0;rotate:x 0deg;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.princ>div[data-s]{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));translate:0 110px;rotate:x 32deg;
+  transition:opacity .6s var(--ease),translate .9s var(--out),rotate .9s var(--out),transform .6s var(--out)}
+.princ>div[data-s].in{translate:0 0;rotate:x 0deg;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transition:opacity .8s var(--ease) 60ms,translate 1.4s var(--out) 60ms,rotate 1.4s var(--out) 60ms,transform .6s var(--out)}
+.card::after,.princ>div::after,.cat::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(560px circle at var(--gx,50%) var(--gy,0%),rgba(255,255,255,.7),rgba(255,255,255,0) 46%);opacity:var(--go,0);mix-blend-mode:soft-light;transition:opacity .45s var(--ease)}
+
+/* icônes au trait : elles se dessinent */
+.draw path,.draw rect,.draw circle,.draw line,.draw ellipse,.draw polyline{stroke-dasharray:1 2;stroke-dashoffset:1;transition:stroke-dashoffset 1.9s var(--out) calc(var(--dd,0s) + var(--d,0)*1ms + 600ms)}
+.slide.on .draw *,.slide.leaving .draw *{stroke-dashoffset:0}
+.slide .princ>div:not(.in) .draw *{stroke-dashoffset:1;transition:none}
+
+/* reflet sur les logos */
+.sheen{transform:translateX(0)}
+.slide.lit .sheen,.slide.on .end-logo .sheen{animation:sweep 2.4s var(--io) 1.6s both}
+@keyframes sweep{to{transform:translateX(9200px)}}
+
+/* ---------- vue d’ensemble, aide, noir ---------- */
+.ov{position:fixed;inset:0;z-index:30;background:rgba(10,11,12,.9);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);overflow:auto;padding:70px 6vw 80px;opacity:0;visibility:hidden;transition:opacity .35s,visibility 0s .35s}
+.ov.on{opacity:1;visibility:visible;transition:opacity .35s}
+.ov h2{font:500 30px/1 var(--display);letter-spacing:-.02em;margin:0 0 34px;color:var(--ivoire)}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.ov-grid button{border:0;padding:0;text-align:left;background:none;color:var(--ivoire)}
+.ov-grid .th{aspect-ratio:16/9;border-radius:14px;overflow:hidden;display:grid;place-items:center;background:#111;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);transition:box-shadow .2s,transform .2s}
+.ov-grid .th.light{background:#fff}.ov-grid .th.green{background:#2F7A55}.ov-grid .th.black{background:#000}
+.ov-grid .th img{max-width:78%;max-height:80%;object-fit:contain}
+.ov-grid .th .tt{font:500 20px/1.2 var(--display);letter-spacing:-.02em;color:var(--ivoire);text-align:center}.ov-grid .th .tt b{display:block;margin-bottom:6px;font-size:13px;font-weight:500;color:var(--sauge)}
+.ov-grid .th img.full{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:cover}
+.ov-grid button:hover .th,.ov-grid button.cur .th{box-shadow:inset 0 0 0 3px var(--sauge);transform:translateY(-2px)}
+.ov-grid .lb{display:flex;gap:10px;margin-top:10px;font-size:15px;line-height:1.3;color:#C9CBC3}
+.ov-grid .lb b{font:500 14px/1.3 var(--display);color:var(--sauge)}
+.ov-grid .ch{display:block;font-size:12px;color:#7D8079;margin-top:2px}
+.help-l{display:grid;grid-template-columns:repeat(2,minmax(0,420px));gap:14px 60px;font-size:18px;color:#C9CBC3}
+.help-l div{display:flex;gap:16px;align-items:center}
+.help-l kbd{display:inline-grid;place-items:center;min-width:34px;height:32px;padding:0 10px;border-radius:8px;font:500 15px/1 var(--text);color:var(--ivoire);background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+#black{position:fixed;inset:0;z-index:40;background:#000;opacity:0;visibility:hidden;transition:opacity .5s,visibility 0s .5s}
+#black.on{opacity:1;visibility:visible;transition:opacity .5s}
+#goto{position:fixed;left:50%;top:40px;z-index:45;transform:translateX(-50%);padding:14px 22px;border-radius:14px;background:rgba(22,24,26,.9);color:var(--ivoire);font:500 22px/1 var(--display);opacity:0;transition:opacity .2s;pointer-events:none}
+#goto.on{opacity:1}
+
+/* ---------- vue présentateur ---------- */
+body.speaker{overflow:auto;background:#101213}
+.sp{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:32px;min-height:100vh;padding:34px 40px;color:#E6E4DC}
+.sp-k{font:500 14px/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:#7D8079;margin-bottom:12px}
+.sp-cur h1{font:500 40px/1.1 var(--display);letter-spacing:-.03em;margin:0 0 6px}
+.sp-chap{font-size:17px;color:var(--sauge)}
+.sp-notes{margin-top:26px;font-size:24px;line-height:1.55;color:#E6E4DC;white-space:pre-line}
+.sp-notes b{color:#fff}
+.sp-step{display:inline-flex;gap:8px;margin-top:18px}
+.sp-step i{width:30px;height:6px;border-radius:6px;background:#2F3336}.sp-step i.on{background:var(--sauge)}
+.sp-side{display:flex;flex-direction:column;gap:22px}
+.sp-box{background:#1A1D1F;border-radius:20px;padding:24px 26px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.sp-time{font:500 72px/1 var(--display);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.sp-clock{font:500 28px/1 var(--display);color:#9FA29A;margin-top:10px;font-variant-numeric:tabular-nums}
+.sp-next h2{font:500 26px/1.2 var(--display);letter-spacing:-.02em;margin:0}
+.sp-next p{margin:6px 0 0;font-size:16px;color:#9FA29A}
+.sp-btns{display:flex;gap:12px}
+.sp-btns button{flex:1;height:64px;border:0;border-radius:16px;background:#2A2E31;color:#fff;font:500 18px/1 var(--display)}
+.sp-btns button.pri{background:var(--vert)}
+.sp-btns button:active{transform:scale(.98)}
+.sp-video{font:500 20px/1.3 var(--display);color:var(--sauge)}
+.sp-small{font-size:14px;color:#7D8079;line-height:1.5}
+
+@media (prefers-reduced-motion:reduce){.hl .w>i,.a,[data-s],[data-o]{transition-duration:.01s!important;transition-delay:0s!important}}
+
+/* ---------- 05 · L’ÉCOSYSTÈME ---------- */
+.eco-ic{width:56px;height:56px;color:var(--fg)}
+/* le bracelet en 3D, à droite */
+.ebr{position:absolute;left:850px;top:0;width:1070px;height:1080px}
+.ebr::before{content:"";position:absolute;inset:0;background:radial-gradient(54% 50% at 54% 50%,rgba(141,184,154,.22),rgba(141,184,154,0) 70%)}
+.ebr iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent}
+.eco-line{margin:40px 0 0;max-width:640px}
+
+/* la carte : tout est lié */
+.emap{position:absolute;left:830px;top:110px;width:1000px;height:840px}
+.emap>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.emap svg .ln{stroke:var(--line);stroke-width:2;fill:none}
+.emap svg .fl{stroke:var(--acc);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:3 22;animation:eflow 1.4s linear infinite}
+.emap svg .fl.rev{animation-direction:reverse}
+@keyframes eflow{to{stroke-dashoffset:-50}}
+.emap svg [data-s]{transform:none}
+.emap svg [data-s]:not(.in){opacity:0}
+.emap svg [data-s].in{opacity:1;transition:opacity .9s var(--ease) .25s}
+.nd{position:absolute;left:calc(var(--x) - 75px);top:calc(var(--y) - 75px);width:150px;height:150px;border-radius:42px;background:var(--tile);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;box-shadow:0 0 0 1px rgba(29,29,31,.04);transition:box-shadow .7s var(--ease)}
+.nd .t{display:grid;place-items:center}
+.nd .t svg{width:54px;height:54px;color:var(--vert)}
+.nd b{font:500 22px/1.1 var(--display);letter-spacing:-.02em;color:var(--fg)}
+.nd.hub{left:calc(var(--x) - 120px);top:calc(var(--y) - 120px);width:240px;height:240px;border-radius:68px;background:#1D1D1F;box-shadow:0 40px 80px -30px rgba(29,29,31,.5);gap:14px}
+.nd.hub .t svg{width:86px;height:86px;color:#F3F1EA}
+.nd.hub b{font-size:25px;color:#F5F5F7}
+.nd.hub small{font:400 18px/1.2 var(--text);color:rgba(245,245,247,.6);margin-top:-6px}
+.nd.key{background:var(--vert)}.nd.key b{color:#F3F1EA}
+.nd.key .t svg{color:#F3F1EA}
+.nd[data-s]:not(.in){opacity:0;transform:translateY(24px) scale(.92)}
+.nd[data-s].in{opacity:1;transform:none}
+.emap.on-all .nd{box-shadow:0 0 0 3px rgba(47,122,85,.5)}
+.eprofile{position:absolute;left:10px;bottom:8px;display:flex;align-items:center;gap:14px;padding:16px 28px 16px 20px;border-radius:999px;background:#1D1D1F;color:#F5F5F7;font:500 26px/1 var(--display);letter-spacing:-.02em;white-space:nowrap}
+.eprofile i{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#A6E6BF,#2F7A55);box-shadow:0 0 0 6px rgba(166,230,191,.2)}
+.eprofile[data-s]:not(.in){transform:translateY(24px)}.eprofile[data-s].in{transform:none}
+
+/* proximité : le plan de la maison et le bracelet qui s’approche */
+.escene{position:absolute;left:820px;top:130px;width:1000px;height:800px}
+.escene>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.escene .gnd{fill:rgba(255,255,255,.045);stroke:rgba(245,245,247,.08);stroke-width:2}
+.escene .wall{fill:rgba(255,255,255,.04);stroke:rgba(245,245,247,.62);stroke-width:4}
+.escene .wl{stroke:rgba(245,245,247,.4);stroke-width:3;fill:none}
+.escene .fence{stroke:rgba(245,245,247,.5);stroke-width:5;stroke-linecap:round}
+.escene .path{stroke:rgba(245,245,247,.2);stroke-width:3;stroke-dasharray:2 12;stroke-linecap:round;fill:none}
+.escene .rl{font:500 15px/1 var(--text);letter-spacing:.14em;text-transform:uppercase;fill:rgba(245,245,247,.55)}
+.escene .gl{opacity:0;transition:opacity 1.1s var(--ease)}
+.escene[data-st="2"] .g-e{opacity:1}
+.escene[data-st="3"] .g-e{opacity:.45}.escene[data-st="3"] .g-s{opacity:1}.escene[data-st="3"] .g-c{opacity:.55}
+.escene .leaf{transition:transform 1.3s cubic-bezier(.6,0,.2,1);fill:#8DB89A}
+.escene[data-st="1"] .leaf.l1,.escene[data-st="2"] .leaf.l1,.escene[data-st="3"] .leaf.l1{transform:rotate(-86deg)}
+.escene[data-st="1"] .leaf.l2,.escene[data-st="2"] .leaf.l2,.escene[data-st="3"] .leaf.l2{transform:rotate(86deg)}
+.escene .bdot{transition:transform 2.2s cubic-bezier(.55,0,.2,1);transform:translate(40px,520px)}
+.escene[data-st="1"] .bdot{transform:translate(122px,520px)}
+.escene[data-st="2"] .bdot{transform:translate(330px,520px)}
+.escene[data-st="3"] .bdot{transform:translate(600px,270px)}
+.escene[data-st="4"] .bdot{transform:translate(40px,520px)}
+.escene .bring{fill:rgba(166,230,191,.08);stroke:rgba(166,230,191,.55);stroke-width:2;stroke-dasharray:8 10;animation:ering 6s linear infinite;transform-origin:0 0}
+@keyframes ering{to{stroke-dashoffset:-72}}
+.escene .bp{fill:none;stroke:#A6E6BF;stroke-width:3;opacity:0;transform-origin:0 0;animation:epulse 2.6s var(--out) infinite}
+@keyframes epulse{0%{opacity:.8;transform:scale(.3)}100%{opacity:0;transform:scale(2.4)}}
+.escene .dotc{fill:#A6E6BF}
+.escene .tvs{fill:#0c0f0e;stroke:rgba(245,245,247,.6);stroke-width:2.5;transition:fill .8s var(--ease),stroke .8s var(--ease)}
+.escene[data-st="3"] .tvs{fill:#2f7a55;stroke:#A6E6BF}
+.escene .tvp{opacity:0;transition:opacity .8s var(--ease) .5s}.escene[data-st="3"] .tvp{opacity:1}
+.escene .led{fill:rgba(245,245,247,.25);transition:fill .6s}.escene[data-st="3"] .led.on3{fill:#A6E6BF}
+.escene .alm-r{fill:#E5594D}.escene .alm-g{fill:#A6E6BF}
+.escene .alm-r,.escene .alm-g{transition:opacity .5s}
+.escene .alm-g{opacity:0}
+.escene[data-st="2"] .alm-g,.escene[data-st="3"] .alm-g{opacity:1}
+.escene[data-st="2"] .alm-r,.escene[data-st="3"] .alm-r{opacity:0}
+.escene .lkc{stroke:#E5594D;stroke-width:5;stroke-linecap:round;transition:stroke .6s}
+.escene[data-st="2"] .lkc,.escene[data-st="3"] .lkc{stroke:#A6E6BF}
+.echips{position:absolute;left:176px;top:8px;display:flex;gap:10px;width:744px}
+.ec{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:13px 14px;border-radius:16px;background:rgba(245,245,247,.08);font:400 15px/1 var(--text);color:rgba(245,245,247,.62);transition:background .6s var(--ease)}
+.ec b{font:500 16px/1 var(--display);letter-spacing:-.02em;color:#F5F5F7;transition:color .6s;white-space:nowrap}
+.ec.ok{background:rgba(166,230,191,.14)}.ec.ok b{color:#A6E6BF}
+.ec.alert b{color:#F0897E}
+
+/* santé et connexion */
+.hs{position:absolute;left:830px;top:150px;width:990px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.ht{position:relative;height:740px;border-radius:44px;background:var(--tile);padding:52px 48px 48px;display:flex;flex-direction:column;overflow:hidden}
+.ht.dk{background:#1D1D1F;color:#F5F5F7}
+.ht h3{margin:0;font:500 46px/1.06 var(--display);letter-spacing:-.04em;color:var(--fg)}
+.ht.dk h3{color:#F5F5F7}
+.ht p{margin:18px 0 0;font:400 25px/1.4 var(--text);color:var(--fg2);letter-spacing:-.012em}
+.ht.dk p{color:rgba(245,245,247,.66)}
+.ht .k{font:500 20px/1 var(--display);letter-spacing:.01em;color:var(--acc);margin-bottom:24px}
+.ht.dk .k{color:#8DB89A}
+.hv{margin-top:auto}
+.ecg{width:100%;height:150px;overflow:visible}
+.ecg path{fill:none;stroke:var(--vert);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1200;stroke-dashoffset:1200}
+.ecg path.bg{stroke:rgba(29,29,31,.1);stroke-dashoffset:0;stroke-dasharray:none}
+.ht.in .ecg path:not(.bg),.slide.on .ht:not([data-s]) .ecg path:not(.bg){animation:ecgline 3.4s linear infinite}
+@keyframes ecgline{0%{stroke-dashoffset:1200}70%,100%{stroke-dashoffset:0}}
+.hrow{display:flex;gap:34px;margin-top:38px;padding-top:26px;border-top:1px solid var(--line)}
+.hrow div b{display:block;font:500 54px/1 var(--display);letter-spacing:-.045em;color:var(--fg)}
+.hrow div b small{font-size:.38em;letter-spacing:0;margin-left:.2em;color:var(--muted)}
+.hrow div span{display:block;margin-top:10px;font:400 19px/1.25 var(--text);color:var(--muted)}
+.sig{display:flex;align-items:flex-end;gap:14px;height:150px}
+.sig i{flex:1;border-radius:10px;background:rgba(245,245,247,.16);transform-origin:50% 100%;animation:sigup 2.8s var(--ease) infinite}
+.sig i:nth-child(1){height:30%;animation-delay:0s}.sig i:nth-child(2){height:48%;animation-delay:.12s}.sig i:nth-child(3){height:66%;animation-delay:.24s}.sig i:nth-child(4){height:84%;animation-delay:.36s}.sig i:nth-child(5){height:100%;animation-delay:.48s}
+@keyframes sigup{0%,12%{background:rgba(245,245,247,.16)}30%,80%{background:#A6E6BF}100%{background:rgba(245,245,247,.16)}}
+.net{display:flex;gap:12px;margin-top:38px;flex-wrap:wrap}
+.net span{padding:12px 20px;border-radius:999px;background:rgba(245,245,247,.1);font:500 22px/1 var(--display);letter-spacing:-.01em;color:#F5F5F7}
+.net span.on{background:#A6E6BF;color:#16181A}
+.ht[data-s]:not(.in){transform:translateY(40px) scale(.97)}.ht[data-s].in{transform:none}
+
+/* IA Vertane : on lui parle */
+.ia{position:absolute;left:880px;top:110px;width:900px;height:860px;border-radius:56px;background:#141616;box-shadow:inset 0 0 0 1px rgba(245,245,247,.08),0 60px 120px -40px rgba(0,0,0,.7);padding:46px 52px;display:flex;flex-direction:column;overflow:hidden}
+.ia-top{display:flex;align-items:center;gap:22px;height:72px}
+.ia-orb{width:64px;height:64px;border-radius:50%;background:conic-gradient(from 210deg,#8DB89A,#2F9E73,#3F7FE8,#9C7BF2,#F08A63,#8DB89A);position:relative;animation:eorb 9s linear infinite;flex:none}
+.ia-orb::after{content:"";position:absolute;inset:14px;border-radius:50%;background:#141616}
+@keyframes eorb{to{transform:rotate(360deg)}}
+.ia-top b{font:500 30px/1 var(--display);letter-spacing:-.025em;color:#F5F5F7}
+.ia-top span{display:block;margin-top:8px;font:400 20px/1 var(--text);color:rgba(245,245,247,.5)}
+.ia-wave{margin-left:auto;display:flex;align-items:center;gap:6px;height:40px}
+.ia-wave i{width:6px;border-radius:6px;background:#8DB89A;height:10px;animation:ewave 1.1s var(--ease) infinite}
+.ia-wave i:nth-child(2){animation-delay:.1s}.ia-wave i:nth-child(3){animation-delay:.2s}.ia-wave i:nth-child(4){animation-delay:.3s}.ia-wave i:nth-child(5){animation-delay:.4s}.ia-wave i:nth-child(6){animation-delay:.15s}.ia-wave i:nth-child(7){animation-delay:.25s}
+@keyframes ewave{0%,100%{height:10px;opacity:.5}50%{height:38px;opacity:1}}
+.ia-feed{margin-top:26px;display:flex;flex-direction:column;gap:16px;flex:1}
+.ia-hint{font:400 30px/1.35 var(--text);letter-spacing:-.02em;color:rgba(245,245,247,.42);text-align:center;margin-top:250px;transition:opacity .5s var(--ease),transform .7s var(--out)}
+.ia-hint em{color:#8DB89A}
+.ia-feed.run .ia-hint{opacity:0;transform:translateY(-14px);height:0;margin:0;overflow:hidden}
+.ib{max-width:78%;padding:17px 28px;border-radius:28px;font:400 29px/1.3 var(--text);letter-spacing:-.02em}
+.ib.me{align-self:flex-end;background:#2F7A55;color:#fff;border-bottom-right-radius:10px}
+.ia-do{align-self:flex-start;display:flex;align-items:center;gap:22px;padding:14px 30px 14px 14px;border-radius:28px;background:#1f2323;border-bottom-left-radius:10px;min-width:480px}
+.ia-do .ic{width:64px;height:64px;border-radius:20px;background:rgba(166,230,191,.14);display:grid;place-items:center;flex:none;transition:background .9s var(--ease)}
+.ia-do .ic svg{width:36px;height:36px;color:#A6E6BF;transition:color .9s}
+.ia-do b{display:block;font:500 28px/1.1 var(--display);letter-spacing:-.025em;color:#F5F5F7}
+.ia-do span{display:block;margin-top:7px;font:400 21px/1.2 var(--text);color:rgba(245,245,247,.55)}
+.ia-do .ok{margin-left:auto;width:34px;height:34px;color:#A6E6BF}
+.lampcard .ic{background:rgba(255,190,90,.16)}.lampcard .ic svg{color:#FFC066}
+.lampcard.blue .ic{background:rgba(111,150,255,.2)}.lampcard.blue .ic svg{color:#7FA2FF}
+.lampcard .sw{margin-left:auto;display:flex;gap:10px}
+.lampcard .sw i{width:34px;height:34px;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(255,255,255,.18);opacity:.5;transition:opacity .5s,transform .5s var(--out)}
+.lampcard .sw i.cur{opacity:1;transform:scale(1.22);box-shadow:inset 0 0 0 2px #fff}
+.ia-feed [data-s]:not(.in){transform:translateY(26px) scale(.97)}.ia-feed [data-s].in{transform:none}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- calques 3D -->
+  <div class="dev" id="d-m1"><img class="fb" src="assets/img/m1-back-noir.webp" alt=""></div>
+  <div class="dev" id="d-b1"><img class="fb" src="assets/img/b1-hero.webp" alt=""></div>
+
+  <!-- ============ OUVERTURE ============ -->
+  <section class="slide" data-id="cover" data-theme="light" data-title="Couverture" data-thumb="assets/logo/vertane-logo-ivoire.svg">
+    <div class="cover">
+      <svg class="cover-logo" viewBox="0 0 6447 790" aria-label="Vertane">
+        <path class="lv" style="transition-delay:.05s" d="M511 695H436L742 20H922L566 770H375L20 20H202Z"/>
+        <path class="lv" style="transition-delay:.12s" d="M1703 330V460H1166V330ZM1280 395 1230 713 1156 629H1734V770H1059L1117 395L1059 20H1729V161H1156L1230 77Z"/>
+        <path class="lv" style="transition-delay:.19s" d="M2061 353H2350Q2407 353 2440.5 326.5Q2474 300 2474 253Q2474 206 2440.5 180.0Q2407 154 2350 154H2036L2113 67V770H1943V20H2370Q2452 20 2514.0 49.5Q2576 79 2611.0 131.0Q2646 183 2646 253Q2646 322 2611.0 374.0Q2576 426 2514.0 455.5Q2452 485 2370 485H2061ZM2191 419H2385L2668 770H2469Z"/>
+        <path class="lv" style="transition-delay:.26s" d="M3092 96H3261V770H3092ZM2793 20H3559V170H2793Z"/>
+        <path class="la" style="transition-delay:.33s" d="M3857 612V474H4377V612ZM4230 20 4581 770H4400L4093 89H4149L3842 770H3661L4012 20Z"/>
+        <path class="la" style="transition-delay:.40s" d="M5437 658 5378 667V20H5543V770H5328L4848 123L4906 114V770H4742V20H4962Z"/>
+        <path class="la" style="transition-delay:.47s" d="M6396 330V460H5859V330ZM5973 395 5923 713 5849 629H6427V770H5752L5810 395L5752 20H6422V161H5849L5923 77Z"/>
+      </svg>
+      <p class="cover-tag hl chars gated" style="--st:30ms">Construit pour durer.</p>
+    </div>
+    <div class="cover-keys"><span><kbd>→</kbd>avancer</span><span><kbd>S</kbd>notes</span><span><kbd>F</kbd>plein écran</span><span><kbd>?</kbd>aide</span></div>
+    <div class="status" id="status"><span data-k="m1">M1</span><span data-k="b1">B1</span></div>
+  </section>
+
+  <section class="slide video" data-id="film-marque" data-theme="black" data-title="Film · Vertane" data-thumb="assets/presentation/vertane-m1-film.jpg">
+    <video src="video-vertane/out/vertane-m1-film.mp4" preload="metadata" playsinline></video>
+    <button class="vplay ui" aria-label="Lire"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+    <div class="vhud"><span class="vt">0:00</span><div class="vbar"><i></i></div><span class="vd">2:10</span></div>
+  </section>
+
+  <section class="slide" data-id="plan" data-theme="light" data-title="Au programme">
+    <div class="plan-head"><h2 class="h-m hl">Au programme.</h2></div>
+    <ol class="plan" id="plan"></ol>
+  </section>
+
+  <!-- ============ 01 · POURQUOI VERTANE ============ -->
+  <section class="slide" data-id="constat" data-theme="light" data-ch="1" data-title="Le constat" data-steps="3">
+    <div class="pad" data-solo="y">
+      <p class="eyebrow a">Le constat</p>
+      <h2 class="h-l hl" style="max-width:1500px">Aujourd’hui, un téléphone est fait pour <em>être remplacé.</em></h2>
+    </div>
+    <div class="trio">
+      <div class="rule" data-s="1"><h3 class="hl chars" style="--st:40ms">Collé.</h3><p>Batterie, écran, dos&nbsp;: tout tient à la colle.</p></div>
+      <div class="rule" data-s="2"><h3 class="hl chars" style="--st:40ms">Fermé.</h3><p>Vis spéciales, chaleur, atelier agréé.</p></div>
+      <div class="rule" data-s="3"><h3 class="hl chars" style="--st:40ms">Jeté.</h3><p>Une pièce s’use, tout l’appareil part.</p></div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="dechets" data-theme="dark" data-ch="1" data-title="Les déchets électroniques" data-steps="1" data-thumb="assets/presentation/photos/ew-feu.jpg">
+    <div class="photos" id="ewPhotos"><img src="assets/presentation/photos/ew-large.jpg" alt=""><img src="assets/presentation/photos/ew-feu.jpg" alt=""><img src="assets/presentation/photos/ew-tas.jpg" alt=""></div>
+    <div class="pad">
+      <p class="eyebrow a">Chaque année</p>
+      <div class="big a" style="--d:120"><span class="count" data-to="62" data-dur="2600">62</span><span class="u">millions<br>de tonnes</span></div>
+      <p class="lead a" style="--d:520;margin-top:36px">de déchets électroniques dans le monde.</p>
+    </div>
+    <div class="ewaste" data-s="1">
+      <div class="ew-bar"><i></i></div>
+      <div class="ew-l"><b><span class="count" data-to="22" data-dur="1800">22</span>&nbsp;%</b><span>seulement sont recyclés.</span></div>
+    </div>
+    <p class="src a" style="--d:900">Source&nbsp;: Global E-waste Monitor 2024, Nations unies (chiffres 2022).<br>Photos&nbsp;: Muntaka Chasant, décharge d’Agbogbloshie (Ghana), CC&nbsp;BY-SA&nbsp;4.0.</p>
+  </section>
+
+  <section class="slide" data-id="reponse" data-theme="light" data-ch="1" data-title="Notre réponse" data-steps="3">
+    <div class="pad" data-solo="y">
+      <p class="eyebrow a">Notre réponse</p>
+      <h2 class="h-l hl">Des appareils <em>qu’on ouvre.</em></h2>
+    </div>
+    <div class="princ">
+      <div data-s="1">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="15" width="34" height="18" rx="9"/><circle cx="32" cy="24" r="5.5"/><path d="M13 24h7"/></svg>
+        <h3>Rien n’est collé.</h3><p>Des clips, des verrous, des vis.</p></div>
+      <div data-s="2">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5l16 9v20l-16 9-16-9V14z"/><path d="M8 14l16 9 16-9M24 23v20"/></svg>
+        <h3>Chaque pièce se change.</h3><p>Un module à la fois.</p></div>
+      <div data-s="3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".85" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-6-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+        <h3>Tout se fait à la main.</h3><p>Chez soi, sans atelier.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 02 · VERTANE M1 ============ -->
+  <section class="slide chap" data-id="ch-m1" data-theme="light" data-ch="2" data-title="Chapitre · Vertane M1"></section>
+
+  <section class="slide" data-id="m1-hero" data-theme="light" data-ch="2" data-title="Vertane M1" data-thumb="assets/img/m1-back-noir.webp">
+    <div class="col mid">
+      <p class="eyebrow a">Vertane M1</p>
+      <h2 class="h-l hl">Rien à <em>cacher.</em></h2>
+      <div class="specrow a" style="--d:500"><div class="rule" style="--d:500"><b>120&nbsp;Hz</b><span>Écran OLED</span></div><div class="rule" style="--d:600"><b>3&nbsp;+&nbsp;LiDAR</b><span>Capteurs photo</span></div><div class="rule" style="--d:700"><b>16&nbsp;h</b><span>D’autonomie</span></div></div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="m1-ouvre" data-theme="light" data-ch="2" data-title="Ouvre-le" data-steps="3" data-thumb="assets/img/exploded.webp">
+    <div class="col mid">
+      <p class="eyebrow a">Modularité</p>
+      <h2 class="h-m hl">Ouvre-le. <em>Tout est là.</em></h2>
+      <div class="caps a" style="--d:450">
+        <div class="stack">
+          <p data-o="0">Fermé, il est fin et solide.</p>
+          <p data-o="1">La coque se retire. <em>D’un geste.</em></p>
+          <p data-o="2">Chaque module se <em>clipse.</em></p>
+          <p data-o="3">Onze modules. <em>Zéro outil.</em></p>
+        </div>
+        <div class="ticks"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="m1-modules" data-theme="light" data-ch="2" data-title="Les modules du M1" data-steps="11" data-thumb="assets/img/mod-batt6000.webp">
+    <div class="col w8 tour">
+      <p class="eyebrow a">Les onze modules</p>
+      <div class="a" style="--d:250"><div class="stack" id="m1Stack"></div></div>
+      <div class="spacer"></div>
+      <div class="tnav ui a" id="m1Nav" style="--d:500"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="m1-chiffres" data-theme="green" data-ch="2" data-title="En chiffres">
+    <div class="pad">
+      <h2 class="h-m hl" style="max-width:1400px">Tu changes une pièce. <em>Pas tout le téléphone.</em></h2>
+    </div>
+    <div class="nums">
+      <div class="a rule" style="--d:300"><b><span class="count" data-to="11">11</span></b><span>modules remplaçables</span></div>
+      <div class="a rule" style="--d:380"><b><span class="count" data-to="0">0</span><small>outil</small></b><span>tout se fait à la main</span></div>
+      <div class="a rule" style="--d:460"><b><span class="count" data-to="30">30</span><small>s</small></b><span>pour changer la batterie</span></div>
+      <div class="a rule" style="--d:540"><b><span class="count" data-to="7">7</span><small>ans</small></b><span>de pièces détachées</span></div>
+      <div class="a rule" style="--d:620"><b><span class="count" data-to="5">5</span><small>ans</small></b><span>de mises à jour Android</span></div>
+      <div class="a rule" style="--d:700"><b><span class="count" data-to="33">33</span><small>h</small></b><span>d’autonomie, au maximum</span></div>
+    </div>
+  </section>
+
+  <section class="slide video" data-id="film-reparer" data-theme="black" data-ch="2" data-title="Film · Réparer le M1" data-thumb="assets/presentation/vertane-m1-reparer.jpg">
+    <video src="video-vertane/out/vertane-m1-reparer.mp4" preload="metadata" playsinline></video>
+    <button class="vplay ui" aria-label="Lire"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+    <div class="vhud"><span class="vt">0:00</span><div class="vbar"><i></i></div><span class="vd">1:02</span></div>
+  </section>
+
+  <section class="slide" data-id="m1-gamme" data-theme="light" data-ch="2" data-title="La gamme M1" data-thumb="assets/img/pro-back-orange.webp">
+    <div class="head2"><p class="eyebrow a">La gamme M1</p><h2 class="h-m hl">Quatre M1. <em>Tous réparables.</em></h2></div>
+    <div class="range" id="rangeM1"></div>
+  </section>
+
+  <section class="slide" data-id="m1-mesure" data-theme="light" data-ch="2" data-title="M1 sur mesure" data-thumb="assets/img/back-verre-or.webp">
+    <div class="col w6 mid mes">
+      <div class="mes-h" data-solo="xy"><p class="eyebrow a">M1 sur mesure</p><h2 class="h-m hl">Ou compose <em>le tien.</em></h2></div>
+      <div class="caps mes-caps">
+        <div class="stack" id="mesCaps">
+          <p>Chaque module <em>se choisit.</em></p>
+          <p>D’abord, <em>la coque.</em></p>
+          <p>En aluminium <em>recyclé.</em></p>
+          <p>Couleur <em>bleu intense.</em></p>
+          <p>Le tien. <em>Unique.</em></p>
+        </div>
+        <div class="ticks" id="mesTicks" data-own><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+    <div class="mwin" id="mWin">
+      <div class="mwin-bar"><i></i><i></i><i></i><span>Configurateur Vertane M1</span></div>
+      <div class="mwin-vp"><div class="mwin-zoom" id="mZoom">
+        <iframe id="cfgFrame" title="Configurateur Vertane M1, démonstration" data-near="1" tabindex="-1"></iframe>
+        <div class="mcur" id="mCur"><div class="mcur-y"><i class="ring"></i><svg viewBox="0 0 28 40" aria-hidden="true"><path d="M2 2v31.5l7.6-7.3 5 11.6 5.2-2.2-5-11.4H25.6z" fill="#111" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/></svg></div></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ============ 03 · VERTANE B1 ============ -->
+  <section class="slide chap" data-id="ch-b1" data-theme="light" data-ch="3" data-title="Chapitre · Vertane B1"></section>
+
+  <section class="slide" data-id="b1-hero" data-theme="light" data-ch="3" data-title="Vertane B1" data-thumb="assets/img/b1-hero.webp">
+    <div class="col w6 mid">
+      <p class="eyebrow a">Vertane B1</p>
+      <h2 class="h-m hl">L’ordinateur <em>qu’on ouvre.</em></h2>
+      <div class="specrow sm a" style="--d:500"><div class="rule" style="--d:500"><b>13–16″</b><span>Trois tailles</span></div><div class="rule" style="--d:600"><b>8&nbsp;baies</b><span>Ports au choix</span></div><div class="rule" style="--d:700"><b>99,5&nbsp;Wh</b><span>Batterie max.</span></div></div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="b1-baies" data-theme="light" data-ch="3" data-title="Les ports en baies" data-steps="3" data-thumb="assets/img/b1-cote-gauche.webp">
+    <div class="col w6">
+      <p class="eyebrow a">Ports en baies</p>
+      <h2 class="h-s hl">Tes ports. <em>Baie par baie.</em></h2>
+      <div class="caps a" style="--d:400">
+        <div class="stack">
+          <p data-o="0">Jusqu’à <em>huit baies.</em></p>
+          <p data-o="1">La carte glisse. <em>Sans outil.</em></p>
+          <p data-o="2">Un port, un <span style="white-space:nowrap">haut-parleur,</span> <em>ou un cache.</em></p>
+          <p data-o="3">La baie 1 reste <em>la charge.</em></p>
+        </div>
+        <div class="ticks"></div>
+      </div>
+      <div class="cards9" id="cards9" data-s="2"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="b1-ouvre" data-theme="light" data-ch="3" data-title="Ouvrir le B1" data-steps="4" data-thumb="assets/img/b1-eclate.webp">
+    <div class="col w6 mid">
+      <p class="eyebrow a">Démonstration</p>
+      <h2 class="h-m hl">Ouvre-le <em>en une minute.</em></h2>
+      <div class="caps num a" style="--d:400">
+        <span class="k"></span>
+        <div class="stack">
+          <p data-o="0">Retourne-le.</p>
+          <p data-o="1">Huit vis <em>imperdables.</em></p>
+          <p data-o="2">Remets-le à l’endroit.</p>
+          <p data-o="3">Soulève <em>le dessus.</em></p>
+          <p data-o="4">Tout est là. <em>Rien n’est collé.</em></p>
+        </div>
+        <div class="ticks"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="b1-modules" data-theme="light" data-ch="3" data-title="Les modules du B1" data-steps="7" data-thumb="assets/img/b1-eclate.webp">
+    <div class="col w6 tour">
+      <p class="eyebrow a">Les sept modules</p>
+      <div class="a" style="--d:250"><div class="stack" id="b1Stack"></div></div>
+      <div class="spacer"></div>
+      <div class="tnav ui a" id="b1Nav" style="--d:500"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="b1-gamme" data-theme="light" data-ch="3" data-title="La gamme B1" data-thumb="assets/img/b1-ultra-lin.webp">
+    <div class="head2"><p class="eyebrow a">La gamme B1</p><h2 class="h-m hl">Quatre B1. <em>Tous évolutifs.</em></h2></div>
+    <div class="range b1" id="rangeB1"></div>
+  </section>
+
+  <!-- ============ 04 · VERTANE OS ============ -->
+  <section class="slide chap" data-id="ch-os" data-theme="light" data-ch="4" data-title="Chapitre · Vertane OS"></section>
+
+  <section class="slide" data-id="os" data-theme="light" data-ch="4" data-title="Vertane OS" data-thumb="assets/img/m1-front-noir.webp">
+    <div class="col w8 mid">
+      <p class="eyebrow a">Vertane OS</p>
+      <h2 class="h-m hl">Le système qui <em>connaît chaque pièce.</em></h2>
+      <ul class="oslist" id="osList">
+        <li class="a" style="--d:400"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="17" width="28" height="14" rx="7"/><circle cx="31" cy="24" r="3"/></svg><div><b>La Capsule</b>Appels, minuteurs, musique.</div></li>
+        <li class="a" style="--d:480"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5l16 9v20l-16 9-16-9V14z"/><path d="M8 14l16 9 16-9M24 23v20"/></svg><div><b>L’app Vertane</b>L’état de chaque module.</div></li>
+        <li class="a" style="--d:560"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 6l3.6 10.4L38 20l-10.4 3.6L24 34l-3.6-10.4L10 20l10.4-3.6z"/><path d="M37 32l1.5 4.5L43 38l-4.5 1.5L37 44l-1.5-4.5L31 38l4.5-1.5z"/></svg><div><b>IA Vertane</b>Elle répond, résume, conseille.</div></li>
+        <li class="a" style="--d:640"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h32a3 3 0 0 1 3 3v17a3 3 0 0 1-3 3H20l-8 6v-6H8a3 3 0 0 1-3-3V15a3 3 0 0 1 3-3z"/><path d="M14 21h20M14 27h12"/></svg><div><b>Notifications</b>On répond sans ouvrir l’app.</div></li>
+      </ul>
+    </div>
+    <div class="osdev a" style="--d:300"><div class="phone"><span class="btn-r" style="top:200px;height:92px"></span><span class="btn-r" style="top:320px;height:56px"></span><span class="btn-r" style="top:384px;height:56px"></span><iframe id="osFrame" class="ui" title="Simulateur Vertane OS" data-src="vertane-os.html?dev=m1&amp;setup=0&amp;unlocked=1" allow="autoplay"></iframe></div></div>
+  </section>
+
+  <section class="slide video" data-id="film-os" data-theme="black" data-ch="4" data-title="Film · Vertane OS" data-thumb="assets/presentation/vertane-os.jpg">
+    <video src="video-vertane/out/vertane-os.mp4" preload="metadata" playsinline></video>
+    <button class="vplay ui" aria-label="Lire"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+    <div class="vhud"><span class="vt">0:00</span><div class="vbar"><i></i></div><span class="vd">1:44</span></div>
+  </section>
+
+  <!-- ============ 05 · L’ÉCOSYSTÈME ============ -->
+  <section class="slide chap" data-id="ch-eco" data-theme="light" data-ch="5" data-title="Chapitre · L’écosystème"></section>
+
+  <section class="slide" data-id="eco-hero" data-theme="dark" data-ch="5" data-title="Le bracelet Vertane" data-thumb="assets/presentation/eco-bracelet.jpg">
+    <div class="col w8 mid">
+      <p class="eyebrow a">Le bracelet Vertane</p>
+      <h2 class="h-m hl">Ton profil.<br><em>Partout.</em></h2>
+      <p class="lead eco-line a" style="--d:650">Un bracelet au poignet, et tout ce qui t’entoure te reconnaît.</p>
+      <div class="specrow sm a" style="--d:850">
+        <div class="rule" style="--d:850"><b>eSIM</b><span>5G et 4G, sa propre ligne</span></div>
+        <div class="rule" style="--d:950"><b>Santé</b><span>Capteurs au poignet</span></div>
+        <div class="rule" style="--d:1050"><b>1</b><span>bracelet, tous tes appareils</span></div>
+      </div>
+    </div>
+    <div class="ebr ui a" style="--d:150"><iframe id="braFrame" data-src="bracelet-3d.html" data-near="1" tabindex="-1" title="Le bracelet Vertane en 3D" allow="autoplay"></iframe></div>
+  </section>
+
+  <section class="slide" data-id="eco-liaison" data-theme="light" data-ch="5" data-title="Tout est lié" data-steps="3" data-thumb="assets/presentation/eco-liaison.jpg">
+    <div class="col w6 mid">
+      <p class="eyebrow a">L’écosystème</p>
+      <h2 class="h-m hl">Tout est <em>lié.</em></h2>
+      <div class="caps a" style="--d:400">
+        <div class="stack">
+          <p data-o="0">Ton téléphone. <em>Ta base centrale.</em></p>
+          <p data-o="1">Ton bracelet <em>débloque plus.</em></p>
+          <p data-o="2">Ta maison. <em>Tes objets.</em></p>
+          <p data-o="3">Un seul profil, <em>partout.</em></p>
+        </div>
+        <div class="ticks"></div>
+      </div>
+    </div>
+    <div class="emap a" id="emap" style="--d:300">
+      <svg viewBox="0 0 1000 840" aria-hidden="true">
+        <g id="emapLines"></g>
+      </svg>
+      <div class="nd hub" style="--x:470px;--y:420px"><div class="t"><svg viewBox="0 0 1024 1024"><path fill="currentColor" d="M537 700H490L682 276H795L572 748H452L229 276H343Z"/></svg></div><b>Base centrale</b><small>Toutes tes données</small></div>
+      <div class="nd" style="--x:150px;--y:230px"><div class="t"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="15" y="5" width="18" height="38" rx="4"/><rect x="17.5" y="7.5" width="13" height="6.5" rx="2.6"/><circle cx="21" cy="10.75" r="1.5"/></svg></div><b>Téléphone</b></div>
+      <div class="nd key" data-s="1" style="--x:150px;--y:610px"><div class="t"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="28" rx="15" ry="10.5"/><ellipse cx="24" cy="28" rx="10.6" ry="6.8"/><rect x="16.5" y="9" width="15" height="9" rx="3.2"/><circle cx="24" cy="13.5" r="1.6"/></svg></div><b>Bracelet</b></div>
+      <div class="nd" data-s="2" style="--x:583px;--y:26px"><div class="t"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 6a12 12 0 0 0-6.5 22c1 .8 1.5 2 1.5 3.2V34h10v-2.8c0-1.2.5-2.4 1.5-3.2A12 12 0 0 0 24 6z"/><path d="M19 39h10M21 43h6"/></svg></div><b>Lumières</b></div>
+      <div class="nd" data-s="2" style="--x:760px;--y:130px"><div class="t"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="9" width="38" height="26" rx="3.5"/><path d="M16 41h16M24 35v6"/></svg></div><b>Télé</b></div>
+      <div class="nd" data-s="2" style="--x:866px;--y:314px"><div class="t"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 16h18a8 8 0 0 1 7.8 6.2l2 8.8a4 4 0 0 1-7 3.4L32 30H16l-3.8 4.4a4 4 0 0 1-7-3.4l2-8.8A8 8 0 0 1 15 16z"/><path d="M14 21v5M11.5 23.5h5"/><circle cx="33" cy="22" r="1.2"/><circle cx="36" cy="25" r="1.2"/></svg></div><b>Console</b></div>
+      <div class="nd" data-s="2" style="--x:866px;--y:526px"><div class="t"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5l15 5v11c0 9-6 16-15 20C15 37 9 30 9 21V10z"/><path d="M17 24l5 5 9-10"/></svg></div><b>Alarme</b></div>
+      <div class="nd" data-s="2" style="--x:760px;--y:710px"><div class="t"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="21" width="26" height="20" rx="4"/><path d="M17 21v-5a7 7 0 0 1 14 0v5"/><circle cx="24" cy="31" r="2.2"/></svg></div><b>Serrure</b></div>
+      <div class="nd" data-s="2" style="--x:583px;--y:814px"><div class="t"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 40V12M43 40V12"/><path d="M9 14h13v24H9zM26 14h13v24H26z"/><path d="M13 14v24M17.5 14v24M30 14v24M34.5 14v24"/></svg></div><b>Portail</b></div>
+      <div class="eprofile" data-s="3"><i></i>Ton profil, partout</div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="eco-prox" data-theme="dark" data-ch="5" data-title="Il sait où tu es" data-steps="4" data-thumb="assets/presentation/eco-prox.jpg">
+    <div class="col w6 mid">
+      <p class="eyebrow a">Proximité</p>
+      <h2 class="h-m hl">Tu arrives. <em>Tout le sait.</em></h2>
+      <div class="caps a" style="--d:400">
+        <div class="stack">
+          <p data-o="0">Tu rentres <em>chez toi.</em></p>
+          <p data-o="1">Le portail <em>s’ouvre.</em></p>
+          <p data-o="2">La porte se déverrouille. <em>L’alarme se désarme.</em></p>
+          <p data-o="3">Les lumières te suivent. <em>Ta télé te reconnaît.</em></p>
+          <p data-o="4">Tu pars : tout s’éteint, <em>l’alarme s’arme.</em></p>
+        </div>
+        <div class="ticks"></div>
+      </div>
+    </div>
+    <div class="escene a" id="escene" data-st="0" style="--d:300">
+      <svg viewBox="0 0 1000 800" aria-hidden="true">
+        <defs>
+          <radialGradient id="eg"><stop offset="0" stop-color="#FFE3A6" stop-opacity=".62"/><stop offset=".55" stop-color="#FFD58A" stop-opacity=".2"/><stop offset="1" stop-color="#FFD58A" stop-opacity="0"/></radialGradient>
+          <radialGradient id="ep"><stop offset="0" stop-color="#A6E6BF"/><stop offset="1" stop-color="#2F7A55"/></radialGradient>
+          <clipPath id="ehouse"><rect x="300" y="100" width="620" height="580" rx="22"/></clipPath>
+        </defs>
+        <rect class="gnd" x="0" y="0" width="1000" height="800" rx="44"/>
+        <rect x="0" y="0" width="64" height="800" rx="0" fill="rgba(245,245,247,.05)"/>
+        <text class="rl" transform="translate(40 400) rotate(-90)" text-anchor="middle">Rue</text>
+        <path class="fence" d="M150 60V480M150 560V740"/>
+        <rect class="leaf l1" x="146" y="480" width="8" height="40" rx="3" style="transform-origin:150px 480px"/>
+        <rect class="leaf l2" x="146" y="520" width="8" height="40" rx="3" style="transform-origin:150px 560px"/>
+        <path class="path" d="M170 520H296"/>
+        <rect class="wall" x="300" y="100" width="620" height="580" rx="22"/>
+        <g clip-path="url(#ehouse)">
+          <circle class="gl g-e" cx="370" cy="540" r="190" fill="url(#eg)"/>
+          <circle class="gl g-s" cx="600" cy="270" r="340" fill="url(#eg)"/>
+          <circle class="gl g-c" cx="570" cy="560" r="210" fill="url(#eg)"/>
+        </g>
+        <path class="wl" d="M300 440H340M420 440H920M440 440V680M700 440V680"/>
+        <rect x="296" y="490" width="8" height="60" fill="#0B0C0C"/>
+        <path class="lkc" d="M300 492V548"/>
+        <text class="rl" x="330" y="146">Salon</text>
+        <text class="rl" x="318" y="662">Entrée</text>
+        <text class="rl" x="460" y="662">Cuisine</text>
+        <text class="rl" x="720" y="662">Chambre</text>
+        <rect x="540" y="296" width="220" height="64" rx="28" fill="rgba(245,245,247,.11)"/>
+        <rect x="500" y="520" width="140" height="56" rx="12" fill="rgba(245,245,247,.11)"/>
+        <rect x="760" y="500" width="120" height="130" rx="16" fill="rgba(245,245,247,.11)"/>
+        <text class="rl" x="650" y="150" text-anchor="middle" style="font-size:12px">Télé</text><text class="rl" x="835" y="160" text-anchor="middle" style="font-size:12px">Console</text>
+        <rect class="tvs" x="560" y="114" width="180" height="16" rx="6"/>
+        <g class="tvp"><circle cx="650" cy="188" r="22" fill="url(#ep)"/><text class="rl" x="650" y="238" text-anchor="middle" style="fill:#A6E6BF;letter-spacing:.1em">Ton profil</text></g>
+        <rect x="800" y="112" width="70" height="26" rx="9" fill="#101312" stroke="rgba(245,245,247,.4)" stroke-width="2"/>
+        <circle class="led on3" cx="858" cy="125" r="4.5"/>
+        <rect x="312" y="452" width="46" height="28" rx="7" fill="#101312" stroke="rgba(245,245,247,.4)" stroke-width="2"/>
+        <circle class="alm-r" cx="335" cy="466" r="6"/><circle class="alm-g" cx="335" cy="466" r="6"/>
+        <g class="bdot">
+          <circle class="bring" r="150"/>
+          <circle class="bp" r="34"/><circle class="bp" r="34" style="animation-delay:1.3s"/>
+          <circle r="22" fill="rgba(11,12,12,.7)" stroke="rgba(245,245,247,.45)" stroke-width="2"/>
+          <circle class="dotc" r="12"/>
+        </g>
+      </svg>
+      <div class="echips" id="echips"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="eco-sante" data-theme="light" data-ch="5" data-title="Santé et connexion" data-steps="1" data-thumb="assets/presentation/eco-sante.jpg">
+    <div class="col w6 mid">
+      <p class="eyebrow a">Au poignet</p>
+      <h2 class="h-m hl">Ta santé. <em>Ta ligne.</em></h2>
+      <p class="lead eco-line a" style="--d:600">Des capteurs de santé, et une eSIM intégrée : le bracelet vit sa vie, avec toi.</p>
+    </div>
+    <div class="hs a" style="--d:300">
+      <div class="ht">
+        <div class="k">Santé</div>
+        <h3>Il veille sur toi.</h3>
+        <p>Des capteurs au poignet suivent ton rythme, ton sommeil et ton activité.</p>
+        <div class="hv">
+          <svg class="ecg" viewBox="0 0 400 150" preserveAspectRatio="none"><path class="bg" d="M0 80H110l14-34 20 78 18-92 16 48H400"/><path d="M0 80H110l14-34 20 78 18-92 16 48H400"/></svg>
+          <div class="hrow"><div><b>72<small>bpm</small></b><span>Au repos</span></div><div><b>7 h 40</b><span>De sommeil</span></div></div>
+        </div>
+      </div>
+      <div class="ht dk" data-s="1">
+        <div class="k">Connexion</div>
+        <h3>Sa propre ligne.</h3>
+        <p>Une eSIM intégrée : 5G, 4G. Le bracelet reste connecté, où que tu sois.</p>
+        <div class="hv">
+          <div class="sig"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="net"><span class="on">5G</span><span>4G</span><span>eSIM</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="eco-ia" data-theme="dark" data-ch="5" data-title="Parle-lui" data-steps="3" data-thumb="assets/presentation/eco-ia.jpg">
+    <div class="col w6 mid">
+      <p class="eyebrow a">IA Vertane</p>
+      <h2 class="h-m hl">Parle-lui. <em>Elle agit.</em></h2>
+      <p class="lead eco-line a" style="--d:600">Dans le bracelet, dans le téléphone : tu demandes, elle allume, éteint, règle.</p>
+    </div>
+    <div class="ia a" style="--d:300">
+      <div class="ia-top"><div class="ia-orb"></div><div><b>IA Vertane</b><span>Je t’écoute</span></div><div class="ia-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="ia-feed" id="iaFeed">
+        <p class="ia-hint">Dis « Hé Vertane », <em>puis demande.</em></p>
+        <div class="ib me" data-s="1">Allume la télé.</div>
+        <div class="ia-do" data-s="1"><div class="ic"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="9" width="38" height="26" rx="3.5"/><path d="M16 41h16M24 35v6"/></svg></div><div><b>Télé du salon</b><span>Allumée, sur ton profil</span></div><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg></div>
+        <div class="ib me" data-s="2">Désactive l’alarme.</div>
+        <div class="ia-do" data-s="2"><div class="ic"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5l15 5v11c0 9-6 16-15 20C15 37 9 30 9 21V10z"/><path d="M17 24l5 5 9-10"/></svg></div><div><b>Alarme</b><span>Désactivée</span></div><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg></div>
+        <div class="ib me" data-s="3">Allume la lampe et mets-la en bleu.</div>
+        <div class="ia-do lampcard" id="lampCard" data-s="3"><div class="ic"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M24 6a12 12 0 0 0-6.5 22c1 .8 1.5 2 1.5 3.2V34h10v-2.8c0-1.2.5-2.4 1.5-3.2A12 12 0 0 0 24 6z"/><path d="M19 39h10M21 43h6"/></svg></div><div><b>Lampe du salon</b><span id="lampTxt">Allumée</span></div><div class="sw"><i style="background:#FFC066"></i><i style="background:#6F96FF" class="b"></i><i style="background:#5FD39A"></i><i style="background:#F28BB5"></i></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 06 · LA SUITE ============ -->
+  <section class="slide chap" data-id="ch-suite" data-theme="light" data-ch="6" data-title="Chapitre · La suite"></section>
+
+  <section class="slide" data-id="suite" data-theme="light" data-ch="6" data-title="La suite">
+    <div class="head2"><p class="eyebrow a">La suite</p><h2 class="h-m hl">Et ce n’est <em>que le début.</em></h2></div>
+    <div class="cats" id="cats"></div>
+  </section>
+
+  <section class="slide" data-id="fin" data-theme="light" data-title="Merci" data-thumb="assets/logo/vertane-logo-ivoire.svg">
+    <div class="end-top">
+      <h2 class="h-xl hl chars" style="--st:60ms">Merci.</h2>
+      <p class="lead a" style="--d:600">L’appareil le plus durable, <em>c’est celui que tu gardes.</em></p>
+    </div>
+    <svg class="end-logo a" style="--d:900" viewBox="0 0 6447 790" aria-label="Vertane"><path class="lv" d="M511 695H436L742 20H922L566 770H375L20 20H202Z"/><path class="lv" d="M1703 330V460H1166V330ZM1280 395 1230 713 1156 629H1734V770H1059L1117 395L1059 20H1729V161H1156L1230 77Z"/><path class="lv" d="M2061 353H2350Q2407 353 2440.5 326.5Q2474 300 2474 253Q2474 206 2440.5 180.0Q2407 154 2350 154H2036L2113 67V770H1943V20H2370Q2452 20 2514.0 49.5Q2576 79 2611.0 131.0Q2646 183 2646 253Q2646 322 2611.0 374.0Q2576 426 2514.0 455.5Q2452 485 2370 485H2061ZM2191 419H2385L2668 770H2469Z"/><path class="lv" d="M3092 96H3261V770H3092ZM2793 20H3559V170H2793Z"/><path class="la" d="M3857 612V474H4377V612ZM4230 20 4581 770H4400L4093 89H4149L3842 770H3661L4012 20Z"/><path class="la" d="M5437 658 5378 667V20H5543V770H5328L4848 123L4906 114V770H4742V20H4962Z"/><path class="la" d="M6396 330V460H5859V330ZM5973 395 5923 713 5849 629H6427V770H5752L5810 395L5752 20H6422V161H5849L5923 77Z"/></svg>
+  </section>
+
+</div>
+
+<div id="nav" aria-label="Navigation">
+  <button id="nPrev" title="Précédente (←)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <span class="pos" id="nPos"></span>
+  <button id="nNext" title="Suivante (→)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+  <span class="sep"></span>
+  <button id="nGrid" title="Vue d’ensemble (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></button>
+  <button id="nSpk" title="Vue présentateur (S)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M7 9h6M7 12h9"/></svg></button>
+  <button id="nFull" title="Plein écran (F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</div>
+<div class="ov" id="ov"><h2>Vue d’ensemble</h2><div class="ov-grid" id="ovGrid"></div></div>
+<div class="ov" id="help"><h2>Raccourcis</h2><div class="help-l">
+  <div><kbd>→</kbd><kbd>Espace</kbd>Étape ou diapo suivante</div><div><kbd>←</kbd>Étape ou diapo précédente</div>
+  <div><kbd>↓</kbd><kbd>↑</kbd>Diapo suivante / précédente (sans étapes)</div><div><kbd>K</kbd>Film&nbsp;: lecture / pause</div>
+  <div><kbd>R</kbd>Film&nbsp;: reprendre au début</div><div><kbd>M</kbd>Couper / remettre le son</div>
+  <div><kbd>F</kbd>Plein écran</div><div><kbd>S</kbd>Vue présentateur (notes, minuteur)</div>
+  <div><kbd>G</kbd>Vue d’ensemble</div><div><kbd>B</kbd>Écran noir</div>
+  <div><kbd>I</kbd>Rejouer l’intro (couverture)</div><div><kbd>12</kbd><kbd>↵</kbd>Aller à la diapo 12</div>
+  <div><kbd>Début</kbd><kbd>Fin</kbd>Première / dernière diapo</div><div><kbd>Échap</kbd>Fermer</div>
+  <div><kbd>?</kbd>Cette aide</div>
+</div></div>
+<div id="black"></div>
+<div id="goto"></div>
+
+<script src="assets/m1-data.js"></script>
+<script src="assets/lineup.js"></script>
+<script src="assets/catalogue.js"></script>
+<script src="assets/laptop.js"></script>
+<script src="assets/walls.js"></script>
+<script src="assets/b1-3d.js"></script>
+<script src="assets/presentation/deck.js"></script>
+<script src="assets/presentation/fx.js"></script>
+</body>
+</html>

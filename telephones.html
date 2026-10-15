@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Téléphones — Store Vertane</title>
+<meta name="description" content="Vertane M1 et Vertane P1 pliant : SE, standard, Pro et Ultra, ou sur mesure. Compare les modèles et choisis le tien.">
+<meta name="theme-color" content="#F3F1EA">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/vertane-favicon-16.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vertane.css">
+<style>
+.lineup{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:clamp(20px,3vw,36px)}
+.mcard{position:relative;background:var(--blanc);border-radius:var(--r-l);padding:28px 22px 30px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.mcard.dark{background:var(--noir);color:var(--ivoire)}
+.mcard .m-im{position:relative;width:100%;height:300px;margin-bottom:22px}
+.mcard .m-im img{position:absolute;left:0;right:0;margin:0 auto;height:100%;width:auto;max-width:none;opacity:0;transform:scale(.97);transition:opacity .5s var(--ease),transform .8s var(--ease-out);filter:drop-shadow(0 18px 24px rgba(22,24,26,.14))}
+.mcard .m-im img.on{opacity:1;transform:none}
+.mcard .swatches{justify-content:center;gap:6px;margin-bottom:6px}
+.mcard .sw{width:28px;height:28px}
+.mcard .sw span{inset:3px}
+.mcard.dark .sw.on{box-shadow:0 0 0 2px var(--sauge)}
+.mcard .m-col{font-size:12.5px;color:var(--pierre);min-height:18px;margin:0 0 16px}
+.mcard.dark .m-col,.mcard.dark .m-pitch{color:#B9BBB2}
+.mcard .m-tag{font:600 12px/1 var(--text);letter-spacing:.06em;text-transform:uppercase;color:var(--vert);min-height:12px;margin:0 0 10px}
+.mcard.dark .m-tag{color:var(--sauge)}
+.mcard h2{font:500 clamp(22px,2vw,26px)/1.15 var(--display);letter-spacing:-.02em;margin:0}
+.mcard .m-pitch{margin:8px 0 0;font-size:15px;color:var(--pierre);min-height:2.9em}
+.mcard .m-price{margin:14px 0 18px;font-size:15px}
+.mcard .ctas{gap:12px 18px;margin-bottom:24px}
+.mcard.dark .btn{background:var(--sauge);color:var(--noir)}
+.mcard.dark .link{color:var(--sauge)}
+.mcard ul{list-style:none;margin:auto 0 0;padding:20px 0 0;border-top:1px solid var(--lin-2);width:100%;display:grid;gap:16px}
+.mcard.dark ul{border-top-color:rgba(201,196,184,.2)}
+.mcard li{font-size:13.5px;line-height:1.35;color:var(--pierre)}
+.mcard.dark li{color:#B9BBB2}
+.mcard li b{display:block;font:500 16px/1.25 var(--display);letter-spacing:-.015em;color:var(--noir);margin-bottom:2px}
+.mcard.dark li b{color:var(--ivoire)}
+@media (max-width:1060px){.lineup{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.lineup{grid-template-columns:1fr}.mcard .m-im{height:320px}}
+
+/* sur mesure */
+.custom{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);align-items:center;gap:clamp(24px,4vw,56px);background:var(--vert);color:var(--ivoire);border-radius:var(--r-l);padding:clamp(32px,5vw,64px);overflow:hidden;margin-top:clamp(56px,7vw,96px)}
+.custom .eyebrow{color:var(--ivoire);opacity:.85}
+.custom .lead{color:rgba(243,241,234,.9);margin-top:16px}
+.custom ul{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:26px 0 30px;padding:0}
+.custom li{padding:7px 13px;border-radius:999px;background:rgba(243,241,234,.14);font-size:14px}
+.custom .btn{background:var(--ivoire);color:var(--vert)}
+.custom .btn:hover{background:#fff}
+.custom .link{color:var(--ivoire)}
+.custom-im{position:relative;margin:-8% -10% -14% 0}
+.custom-im img{width:100%;filter:drop-shadow(0 30px 40px rgba(0,0,0,.25))}
+@media (max-width:833px){.custom{grid-template-columns:1fr}.custom-im{margin:0 -6% -18%}}
+
+/* dos Connect */
+.connban{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:clamp(24px,4vw,56px);background:var(--noir);color:var(--ivoire);border-radius:var(--r-l);padding:clamp(32px,5vw,64px);overflow:hidden;margin-top:clamp(40px,5vw,64px)}
+.connban .eyebrow{color:var(--sauge)}
+.connban .lead{color:#B9BBB2;margin-top:16px}
+.connban ul{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:24px 0 28px;padding:0}
+.connban li{padding:7px 13px;border-radius:999px;background:rgba(243,241,234,.1);font-size:14px}
+.connban .btn{background:var(--sauge);color:var(--noir)}
+.connban .link{color:var(--sauge)}
+.cx-im{position:relative;margin:-10% 0 -16% -12%}
+.cx-im img{width:100%;height:auto;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35));-webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent);mask-image:linear-gradient(to bottom,#000 78%,transparent)}
+.cx-pins{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 22px;margin:22px 0 0;padding:20px 0 0;border-top:1px solid rgba(201,196,184,.2)}
+.cx-pins div{font-size:13.5px;line-height:1.4;color:#B9BBB2}
+.cx-pins b{display:block;font:500 16px/1.25 var(--display);letter-spacing:-.015em;color:var(--ivoire);margin-bottom:2px}
+@media (max-width:833px){.connban{grid-template-columns:1fr}.cx-im{margin:0 -8% -8%;order:2}}
+
+/* comparer */
+.cmp-wrap{overflow-x:auto;margin:0 calc(-1*var(--gut));padding:0 var(--gut)}
+.cmp4{width:100%;min-width:720px;border-collapse:collapse;font-size:15px;table-layout:fixed}
+.cmp4 th,.cmp4 td{padding:14px 12px;border-top:1px solid var(--lin);text-align:left;vertical-align:top}
+.cmp4 tbody th{font-weight:600;font-size:13px;color:var(--pierre);width:16%}
+.cmp4 thead th{border-top:0;padding-bottom:18px;vertical-align:bottom}
+.cmp4 thead img{height:150px;width:auto;margin-bottom:14px}
+.cmp4 thead b{display:block;font:500 19px/1.2 var(--display);letter-spacing:-.015em}
+.cmp4 thead span{display:block;font-weight:400;font-size:14px;color:var(--pierre);margin:4px 0 10px}
+
+/* le pliant */
+.fold-head{padding-top:clamp(64px,8vw,110px)}
+#lineupP1 .m-im img{top:0;height:100%;width:100%;object-fit:contain}
+.cmp4.p1 thead img{height:150px}
+.foldban{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:center;gap:clamp(24px,4vw,56px);background:var(--noir);color:var(--ivoire);border-radius:var(--r-l);padding:clamp(32px,5vw,64px);overflow:hidden;margin-top:clamp(40px,5vw,64px)}
+.foldban .eyebrow{color:var(--sauge)}
+.foldban .lead{color:#B9BBB2;margin-top:16px}
+.foldban ul{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:24px 0 28px;padding:0}
+.foldban li{padding:7px 13px;border-radius:999px;background:rgba(243,241,234,.1);font-size:14px}
+.foldban .btn{background:var(--sauge);color:var(--noir)}
+.foldban .link{color:var(--sauge)}
+.foldban img{width:100%;height:auto;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35))}
+@media (max-width:833px){.foldban{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page="telephones">
+<script src="assets/site.js"></script>
+<main id="main">
+  <header class="shell store-head">
+    <h1 class="h-hero rv"><a href="store.html" style="color:inherit">Store</a>. <span>Téléphones.</span></h1>
+    <div class="store-aside rv d1"><img src="assets/logo/vertane-icone-principal.svg" alt=""><span><b>Tous les M1 et les P1 se réparent.</b>Les modules sont compatibles d’un modèle à l’autre. <a href="modules.html">Voir les modules</a></span></div>
+  </header>
+
+  <nav aria-label="Catégories du Store"><ul class="cats rv d1" id="cats"></ul></nav>
+
+  <section class="shell" aria-labelledby="line-t" style="padding-top:clamp(20px,3vw,36px)">
+    <div class="shelf-h"><h2 id="line-t">Choisis ton M1. <span>Tu choisis la couleur et le stockage.</span></h2><a class="link" href="#comparer">Comparer</a></div>
+    <div class="lineup" id="lineup"></div>
+
+    <section class="custom rv" aria-labelledby="custom-t">
+      <div>
+        <p class="eyebrow">Sur mesure</p>
+        <h2 class="h2" id="custom-t">Aucun ne te ressemble&nbsp;? Compose le tien.</h2>
+        <p class="lead">Avec le M1 sur mesure, tu choisis chaque module un par un, avec l’aperçu 3D en direct.</p>
+        <ul><li>Écran IPS, OLED, Micro-LED ou pliable</li><li>3 cartes mères</li><li>1 à 4 capteurs photo</li><li>4 batteries</li><li>3 matières de coque</li><li>Dos Connect</li><li>Jusqu’à 2 To</li></ul>
+        <div class="ctas left"><a class="btn btn-lg" href="acheter.html">Configurer mon M1</a><a class="link" href="configurateur-m1.html">Configurateur 3D avancé</a></div>
+        <p style="margin:18px 0 0;font-size:14px;color:rgba(243,241,234,.8)" id="customFrom"></p>
+      </div>
+      <div class="custom-im"><img src="assets/img/exploded-orange.webp" alt="Vertane M1 ouvert, tous ses modules visibles" loading="lazy" width="1270" height="1604"></div>
+    </section>
+
+    <section class="connban rv" id="connect" aria-labelledby="cx-t">
+      <div class="cx-im"><img src="assets/img/connect-detail-orange.webp" alt="Dos Connect du Vertane M1 orange cosmique : deux connecteurs dorés sous le plateau photo" loading="lazy" width="1001" height="921"></div>
+      <div>
+        <p class="eyebrow">Nouveau · Dos Connect</p>
+        <h2 class="h2" id="cx-t">Quatre connecteurs. Tout s’y aimante.</h2>
+        <p class="lead">Une coque M1 avec quatre connecteurs dorés apparents&nbsp;: deux sous le plateau photo, deux en bas. Un accessoire s’y pose, les aimants le tiennent, les contacts l’alimentent et échangent les données.</p>
+        <div class="cx-pins">
+          <div><b>4 connecteurs</b>4 contacts dorés chacun, affleurants</div>
+          <div><b>Jusqu’à 15 W</b>Dans les deux sens : le téléphone alimente l’accessoire, ou l’inverse</div>
+          <div><b>USB 2.0</b>L’accessoire est reconnu dès qu’il touche le dos</div>
+          <div><b>8 aimants</b>Deux par connecteur, surmoulés dans la coque</div>
+        </div>
+        <ul><li>Tous les coloris</li><li>Se pose sur tout M1 en 10 s</li><li>+ <span id="cxPrice"></span></li></ul>
+        <div class="ctas left"><a class="btn btn-lg" href="acheter.html?conn=connect">Configurer un M1 Connect</a><a class="link" href="accessoires.html">Voir les accessoires</a><a class="link" href="modules.html?conn=connect#coque">Acheter la coque seule</a></div>
+      </div>
+    </section>
+  </section>
+
+  <section class="shell fold-head" id="pliant" aria-labelledby="p1-t">
+    <div class="shelf-h"><h2 id="p1-t">Ou choisis ton P1. <span>Le pliant qui se répare.</span></h2><a class="link" href="#comparer-p1">Comparer</a></div>
+    <div class="lineup" id="lineupP1"></div>
+    <section class="foldban rv" aria-labelledby="fb-t">
+      <div>
+        <p class="eyebrow">Nouveau · Vertane P1</p>
+        <h2 class="h2" id="fb-t">Deux écrans. Une charnière qui se change.</h2>
+        <p class="lead">Carte mère, stockage, port et haut-parleurs dans la moitié gauche. La batterie seule dans la moitié droite, entre l’écran intérieur de 8,0″ et l’écran extérieur de 5,6″.</p>
+        <ul><li>126 × 86 mm plié</li><li>8,0″ dedans, 5,6″ dehors</li><li>3 caméras</li><li>Charnière double axe</li><li>Jusqu’à 5 000 mAh</li><li>Sur mesure possible</li></ul>
+        <div class="ctas left"><a class="btn btn-lg" href="p1.html">Découvrir le P1</a><a class="link" href="acheter-pliant.html?m=mesure">P1 sur mesure</a><a class="link" href="configurateur-p1.html">Configurateur 3D</a></div>
+      </div>
+      <img src="assets/img/p1-hero.webp" alt="Vertane P1 entrouvert" loading="lazy" width="1600" height="1100">
+    </section>
+  </section>
+
+  <section class="sec-tight" id="comparer" aria-labelledby="cmp-t" style="padding-bottom:clamp(72px,9vw,120px)">
+    <div class="shell">
+      <div class="shelf-h"><h2 id="cmp-t">Comparer les modèles. <span>Tout ce qui change.</span></h2></div>
+      <div class="cmp-wrap"><table class="cmp4" id="cmp"></table></div>
+      <div class="shelf-h" id="comparer-p1" style="margin-top:clamp(56px,7vw,90px)"><h2 id="cmp2-t">Comparer les P1. <span>Les quatre pliants.</span></h2></div>
+      <div class="cmp-wrap"><table class="cmp4 p1" id="cmpP1" aria-labelledby="cmp2-t"></table></div>
+    </div>
+  </section>
+</main>
+
+<template id="foot-notes">
+  <ol>
+    <li>Paiement en 12 fois sans frais, sous réserve d’acceptation. Montants arrondis au centime supérieur. Prix TTC, livraison offerte en France métropolitaine.</li>
+    <li>Autonomie estimée en usage mixte, épaisseur hors plateau photo. Estimations de prototype.</li>
+  </ol>
+</template>
+
+<script src="assets/m1-data.js"></script>
+<script src="assets/lineup.js"></script>
+<script src="assets/p1-data.js"></script>
+<script>
+(function(){
+"use strict";
+const M=window.M1,L=window.LINEUP,V=window.V,$=s=>document.querySelector(s),esc=V.esc,money=V.money;
+
+$('#cats').innerHTML=L.CATS.map(c=>'<li><a class="cat" href="'+c.href+'"'+(c.k==='telephone'?' aria-current="page"':'')+'><span class="ci">'+L.ICON[c.k]+'</span>'+esc(c.s)+(c.live?'':'<small>Bientôt</small>')+'</a></li>').join('')+
+  '<li><a class="cat" href="modules.html"><span class="ci">'+L.ICON.modules+'</span>Modules</a></li>';
+
+/* les quatre modèles, du plus accessible au plus complet */
+const KEY=m=>{const c=L.cfgOf(m);return [
+  [M.byV('tech',c.tech).t,c.hz+' Hz, 6,3″'],
+  [c.cams+' capteurs'+(c.sensor==='big'?', dont un 1″':''),c.lidar?'Avec LiDAR et flash':'Avec flash'],
+  ['Carte '+M.byV('board',c.board).t,M.byV('board',c.board).d.split(',').slice(0,2).join(',')],
+  [Math.round(M.hours(c))+' h d’autonomie²',M.fmtN(M.capEff(c))+' mAh'],
+  [c.qi==='none'?'Recharge filaire':c.qi==='mag'?'Aimants pour accessoires':M.byV('qi',c.qi).t,M.byV('port',c.port).t]];};
+$('#lineup').innerHTML=L.MODELS.map((m,i)=>{const dark=m.k==='ultra',p=L.from(m);
+  return '<article class="mcard rv d'+i+(dark?' dark':'')+'" data-m="'+m.k+'"><div class="m-im">'+m.fins.map((f,j)=>'<img src="'+L.img(m,f[0])+'" alt="Vertane '+esc(m.name)+', '+esc(f[1])+'"'+(j?' loading="lazy"':'')+' class="'+(j?'':'on')+'" data-f="'+f[0]+'" width="554" height="1360">').join('')+'</div>'+
+    '<div class="swatches" role="radiogroup" aria-label="Couleur du '+esc(m.name)+'">'+m.fins.map((f,j)=>'<label class="sw'+(j?'':' on')+'" title="'+esc(f[1])+'"><input type="radio" name="c-'+m.k+'" value="'+f[0]+'"'+(j?'':' checked')+' aria-label="'+esc(f[1])+'"><span style="--c:'+L.hex(m,f[0])+'"></span></label>').join('')+'</div>'+
+    '<p class="m-col">'+esc(m.fins[0][1])+'</p><p class="m-tag">'+esc(m.tag)+'</p><h2><span class="sr">Vertane </span>'+esc(m.name)+'</h2><p class="m-pitch">'+esc(m.pitch)+'</p>'+
+    '<p class="m-price">À partir de '+money(p)+'<br><span class="muted" style="font-size:13px">ou '+V.monthly(p)+'/mois sur 12 mois¹</span></p>'+
+    '<div class="ctas"><a class="btn btn-sm" href="acheter-modele.html?m='+m.k+'">Acheter</a><a class="link" href="index.html" style="font-size:15px">En savoir plus</a></div>'+
+    '<ul>'+KEY(m).map(r=>'<li><b>'+esc(r[0])+'</b>'+esc(r[1])+'</li>').join('')+'</ul></article>';}).join('');
+$('#lineup').addEventListener('change',e=>{const card=e.target.closest('.mcard');if(!card)return;const m=L.byK(card.dataset.m),f=e.target.value;
+  card.querySelectorAll('.sw').forEach(s=>s.classList.toggle('on',s.querySelector('input').value===f));
+  card.querySelectorAll('.m-im img').forEach(im=>im.classList.toggle('on',im.dataset.f===f));
+  card.querySelector('.m-col').textContent=L.finOf(m,f)[1];card.querySelector('.btn').href='acheter-modele.html?m='+m.k+'&c='+f;});
+
+/* sur mesure : prix de départ calculé */
+const LOW={tech:'ips',hz:60,front:12,cams:1,sensor:'std',lidar:0,batt:3600,chem:'li',cap:64,tier:'eco',board:'e',cover:'none',fmat:'pla',fcol:'noir',cmat:'pla',ccol:'noir',qi:'none',spk:'std',port:'u2'};
+const low=M.price(Object.assign({},M.DEF,LOW));$('#customFrom').textContent='À partir de '+money(low)+' selon les modules choisis.';
+$('#cxPrice').textContent=money(M.byV('conn','connect').p);
+
+/* tableau comparatif */
+const rows=L.specs(L.MODELS[0]).map(r=>r[0]);
+$('#cmp').innerHTML='<thead><tr><th><span class="sr">Caractéristique</span></th>'+L.MODELS.map(m=>'<th scope="col"><img src="'+L.img(m,m.fins[0][0])+'" alt="" loading="lazy" width="554" height="1360"><b>'+esc(m.name)+'</b><span>À partir de '+money(L.from(m))+'</span><a class="btn btn-sm" href="acheter-modele.html?m='+m.k+'">Acheter</a></th>').join('')+'</tr></thead>'+
+  '<tbody>'+rows.map((r,i)=>'<tr><th scope="row">'+esc(r)+(r==='Autonomie'?'²':'')+'</th>'+L.MODELS.map(m=>'<td>'+esc(L.specs(m)[i][1])+'</td>').join('')+'</tr>').join('')+
+  '<tr><th scope="row">Couleurs</th>'+L.MODELS.map(m=>'<td>'+esc(m.fins.map(f=>f[1]).join(', '))+'</td>').join('')+'</tr></tbody>';
+
+/* le pliant : les quatre P1 */
+const P=window.P1;
+const KP=m=>{const c=P.cfgOf(m);return [
+  [P.byV('inner',c.inner).t,'8,0″ pliable dedans, 5,6″ dehors'],
+  [P.byV('cam',c.cam).t.split(',')[0]+', '+P.byV('cam',c.cam).t.split(', ')[1],'Une caméra au dos, deux caméras selfie'],
+  ['Carte '+P.byV('board',c.board).t,P.byV('board',c.board).d.split(',').slice(0,2).join(',')],
+  [Math.round(P.hours(c))+' h d’autonomie²',P.fmtN(P.mah(c))+' mAh, '+P.byV('chem',c.chem).t.toLowerCase()],
+  [c.qi==='none'?'Recharge filaire':c.qi==='mag'?'Aimants pour accessoires':P.byV('qi',c.qi).t,P.byV('port',c.port).t+', '+P.mass(c)+' g']];};
+$('#lineupP1').innerHTML=P.MODELS.map((m,i)=>{const dark=m.k==='ultra',p=P.from(m);
+  return '<article class="mcard rv d'+i+(dark?' dark':'')+'" data-m="'+m.k+'"><div class="m-im">'+m.fins.map((f,j)=>'<img src="'+P.img(m,f[0])+'" alt="Vertane '+esc(m.name)+', '+esc(f[1])+'"'+(j?' loading="lazy"':'')+' class="'+(j?'':'on')+'" data-f="'+f[0]+'" width="760" height="900">').join('')+'</div>'+
+    '<div class="swatches" role="radiogroup" aria-label="Couleur du '+esc(m.name)+'">'+m.fins.map((f,j)=>'<label class="sw'+(j?'':' on')+'" title="'+esc(f[1])+'"><input type="radio" name="p-'+m.k+'" value="'+f[0]+'"'+(j?'':' checked')+' aria-label="'+esc(f[1])+'"><span style="--c:'+P.hex(m,f[0])+'"></span></label>').join('')+'</div>'+
+    '<p class="m-col">'+esc(m.fins[0][1])+'</p><p class="m-tag">'+esc(m.tag||'Pliant')+'</p><h2><span class="sr">Vertane </span>'+esc(m.name)+'</h2><p class="m-pitch">'+esc(m.pitch)+'</p>'+
+    '<p class="m-price">À partir de '+money(p)+'<br><span class="muted" style="font-size:13px">ou '+V.monthly(p)+'/mois sur 12 mois¹</span></p>'+
+    '<div class="ctas"><a class="btn btn-sm" href="acheter-pliant.html?m='+m.k+'">Acheter</a><a class="link" href="p1.html" style="font-size:15px">En savoir plus</a></div>'+
+    '<ul>'+KP(m).map(r=>'<li><b>'+esc(r[0])+'</b>'+esc(r[1])+'</li>').join('')+'</ul></article>';}).join('');
+$('#lineupP1').addEventListener('change',e=>{const card=e.target.closest('.mcard');if(!card)return;const m=P.byK(card.dataset.m),f=e.target.value;
+  card.querySelectorAll('.sw').forEach(s=>s.classList.toggle('on',s.querySelector('input').value===f));
+  card.querySelectorAll('.m-im img').forEach(im=>im.classList.toggle('on',im.dataset.f===f));
+  card.querySelector('.m-col').textContent=P.finOf(m,f)[1];card.querySelector('.btn').href='acheter-pliant.html?m='+m.k+'&c='+f;});
+const rows2=P.modelSpecs(P.MODELS[0]).map(r=>r[0]);
+$('#cmpP1').innerHTML='<thead><tr><th><span class="sr">Caractéristique</span></th>'+P.MODELS.map(m=>'<th scope="col"><img src="'+P.img(m,m.fins[0][0])+'" alt="" loading="lazy" width="760" height="900"><b>'+esc(m.name)+'</b><span>À partir de '+money(P.from(m))+'</span><a class="btn btn-sm" href="acheter-pliant.html?m='+m.k+'">Acheter</a></th>').join('')+'</tr></thead>'+
+  '<tbody>'+rows2.map((r,i)=>'<tr><th scope="row">'+esc(r)+(r==='Autonomie'?'²':'')+'</th>'+P.MODELS.map(m=>'<td>'+esc(P.modelSpecs(m)[i][1])+'</td>').join('')+'</tr>').join('')+
+  '<tr><th scope="row">Couleurs</th>'+P.MODELS.map(m=>'<td>'+esc(m.fins.map(f=>f[1]).join(', '))+'</td>').join('')+'</tr></tbody>';
+})();
+</script>
+</body>
+</html>

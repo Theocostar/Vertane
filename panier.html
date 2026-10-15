@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panier — Vertane</title>
+<meta name="theme-color" content="#F3F1EA">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vertane.css">
+<style>
+.bag-head{padding-top:136px;padding-bottom:40px;text-align:center;border-bottom:1px solid var(--lin)}
+.bag-head .lead{margin:14px 0 26px}
+.bag-head .btn{min-width:280px}
+.added{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto 28px;padding:10px 18px;border-radius:999px;background:rgba(47,122,85,.1);color:var(--vert);font-size:15px;width:max-content;max-width:100%}
+.added svg{width:18px;height:18px}
+.items{list-style:none;margin:0;padding:0}
+.item{display:grid;grid-template-columns:200px minmax(0,1fr);gap:clamp(20px,4vw,48px);padding:48px 0;border-bottom:1px solid var(--lin)}
+.item .im{display:flex;justify-content:center;align-items:flex-start}
+.item .im img{max-height:230px;max-width:100%;width:auto;object-fit:contain}
+.it-top{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:16px 32px;align-items:start}
+.it-top h2{font:500 clamp(22px,2.4vw,28px)/1.2 var(--display);letter-spacing:-.02em;margin:0}
+.it-top .spec{margin:6px 0 0;font-size:14px;color:var(--pierre)}
+.qty{position:relative}
+.qty select{appearance:none;-webkit-appearance:none;border:0;background:transparent;font:400 19px/1.2 var(--text);color:var(--vert);padding:2px 22px 2px 4px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232F7A55' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right center;background-size:16px}
+.it-price{text-align:right;font:500 22px/1.2 var(--display);letter-spacing:-.02em;white-space:nowrap}
+.it-price small{display:block;font:400 13px/1.4 var(--text);color:var(--pierre);letter-spacing:0;margin-top:4px}
+.it-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 22px;margin-top:10px}
+.it-actions button{border:0;background:none;padding:0;color:var(--vert);font-size:15px}
+.it-actions button:hover{text-decoration:underline;text-underline-offset:.18em}
+.det{margin-top:22px;border-top:1px solid var(--lin-2)}
+.det summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:14px 0;font-size:15px;color:var(--noir)}
+.det summary::-webkit-details-marker{display:none}
+.det summary svg{width:18px;height:18px;transition:transform .3s var(--ease)}
+.det[open] summary svg{transform:rotate(180deg)}
+.det ul{list-style:none;margin:0 0 6px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 28px}
+.det li{font-size:13.5px;color:var(--pierre)}
+.det li b{display:block;color:var(--noir);font-weight:600}
+.addons{margin-top:6px;border-top:1px solid var(--lin-2)}
+.addon{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;padding:14px 0;border-bottom:1px solid var(--lin-2);font-size:15px}
+.addon:last-child{border-bottom:0}
+.addon .l{display:flex;align-items:center;gap:12px}
+.addon .l svg{width:26px;height:26px;color:var(--vert);flex:0 0 auto}
+.addon .l small{display:block;color:var(--pierre);font-size:13px}
+.addon .r{display:flex;align-items:center;gap:18px;white-space:nowrap}
+.addon button{border:0;background:none;padding:0;color:var(--vert);font-size:15px}
+.addon button:hover{text-decoration:underline}
+@media (max-width:760px){.item{grid-template-columns:1fr}.item .im img{max-height:200px}.it-top{grid-template-columns:1fr auto}.it-top .qty{grid-row:2}.it-price{grid-row:2;grid-column:2}.det ul{grid-template-columns:1fr}}
+
+.sum{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);gap:40px;padding:48px 0 0}
+.sum dl{margin:0}
+.sum .row{display:flex;justify-content:space-between;gap:16px;padding:6px 0;font-size:17px}
+.sum .row dd{margin:0;text-align:right}
+.sum .row.minus dd{color:var(--vert)}
+.sum .total{border-top:1px solid var(--lin);margin-top:14px;padding-top:20px;font:500 24px/1.2 var(--display);letter-spacing:-.02em}
+.sum .mo{text-align:right;color:var(--pierre);font-size:14px;margin:4px 0 26px}
+.sum .note{font-size:14px;color:var(--pierre)}
+.sum .note p{margin:0 0 10px;display:flex;gap:10px}
+.sum .note svg{width:20px;height:20px;flex:0 0 auto;color:var(--vert)}
+@media (max-width:860px){.sum{grid-template-columns:1fr}.sum .note{order:2}}
+
+.empty{text-align:center;padding:40px 0 20px}
+.recs{padding:clamp(64px,8vw,110px) 0}
+.recs h2{margin-bottom:28px}
+.rec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.rec{background:var(--blanc);border-radius:var(--r-m);padding:22px;display:flex;flex-direction:column;gap:6px}
+.rec .ri{height:150px;display:grid;place-items:center;margin-bottom:10px}
+.rec .ri img{max-height:140px;width:auto;max-width:100%;object-fit:contain}
+.rec b{font-weight:600;font-size:15px}
+.rec span{font-size:14px;color:var(--pierre)}
+.rec .btn{margin-top:10px;align-self:flex-start}
+@media (max-width:900px){.rec-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body data-page="panier">
+<script src="assets/site.js"></script>
+<main id="main">
+  <div class="shell" id="bag"></div>
+  <section class="shell recs" aria-labelledby="r-t"><h2 class="h3" id="r-t">Complète ton M1.</h2><div class="rec-grid" id="recs"></div></section>
+</main>
+<template id="foot-notes"><ol><li>Paiement en 12 fois sans frais, sous réserve d’acceptation. Prix TTC.</li><li>Valeur de reprise estimée, confirmée après inspection de l’appareil.</li></ol></template>
+<script src="assets/m1-data.js"></script>
+<script src="assets/catalogue.js"></script>
+<script src="assets/laptop.js"></script>
+<script src="assets/p1-data.js"></script>
+<script src="assets/devices.js"></script>
+<script>
+(function(){
+"use strict";
+const M=window.M1,V=window.V,C=window.CAT,B=V.Bag,$=s=>document.querySelector(s),esc=V.esc,money=V.money;
+const CHEV='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+const SHIELD='<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l8 3v6c0 5.5-3.6 9.3-8 11-4.4-1.7-8-5.5-8-11V6z"/><path d="M9.5 13l2.5 2.5 4.5-5"/></svg>';
+const SWAP='<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 9a8.5 8.5 0 0 0-15-2.5M5 17a8.5 8.5 0 0 0 15 2.5"/><path d="M5.5 3v4h4M20.5 23v-4h-4"/></svg>';
+const CHECK='<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M6.5 10.2l2.3 2.3 4.7-5"/></svg>';
+const CARE={name:'Vertane Care, 2 ans',price:79};
+const careOf=x=>x.type==='laptop'?{name:'Vertane Care, 2 ans',price:129}:x.type==='fold'?{name:'Vertane Care, 2 ans',price:149}:x.type==='device'&&window.DEV.fam(x.fam)?{name:'Vertane Care, 2 ans',price:window.DEV.fam(x.fam).care}:CARE;
+const added=new URLSearchParams(location.search).get('ajout');
+
+function eta(){const d=new Date();let n=0;while(n<5){d.setDate(d.getDate()+1);if(d.getDay()%6)n++;}return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});}
+function itemHTML(x){const phone=x.type==='phone'||x.type==='laptop'||x.type==='fold'||x.type==='device',CARE=careOf(x);
+  const det=phone&&x.lines?'<details class="det"><summary>Détail de la configuration'+CHEV+'</summary><ul>'+x.lines.map(l=>'<li><b>'+esc(l[0])+'</b>'+esc(l[1])+'</li>').join('')+'</ul></details>':'';
+  const addons=phone?'<div class="addons">'+
+    (x.care?'<div class="addon"><span class="l">'+SHIELD+'<span>'+esc(x.care.name)+'<small>Casse et panne couvertes, module de remplacement en 24 h</small></span></span><span class="r">'+money(x.care.price*x.qty)+'<button data-act="care-off" data-id="'+x.id+'">Supprimer</button></span></div>'
+      :'<div class="addon"><span class="l">'+SHIELD+'<span>Ajoute Vertane Care pour '+money(CARE.price)+'<small>Casse et panne couvertes pendant 2 ans</small></span></span><span class="r"><button data-act="care-on" data-id="'+x.id+'">Ajouter</button></span></div>')+
+    (x.trade?'<div class="addon"><span class="l">'+SWAP+'<span>Reprise estimée²<small>'+esc(x.trade.label)+'</small></span></span><span class="r" style="color:var(--vert)">− '+money(x.trade.value)+'<button data-act="trade-off" data-id="'+x.id+'">Supprimer</button></span></div>':'')+'</div>':'';
+  return '<li class="item"><div class="im"><img src="'+esc(x.img)+'" alt=""></div><div><div class="it-top"><div><h2>'+esc(x.name)+'</h2>'+(x.specs?'<p class="spec">'+esc(x.specs)+'</p>':x.lines?'<p class="spec">'+esc(x.lines[0][1])+'</p>':'')+'</div>'+
+    '<div class="qty"><label class="sr" for="q-'+x.id+'">Quantité</label><select id="q-'+x.id+'" data-id="'+x.id+'">'+Array.from({length:10},(_,i)=>'<option'+(i+1===x.qty?' selected':'')+'>'+(i+1)+'</option>').join('')+'</select></div>'+
+    '<div><div class="it-price">'+money(x.price*x.qty)+(phone?'<small>ou '+V.monthly(x.price*x.qty)+'/mois¹</small>':'')+'</div><div class="it-actions">'+(phone?'<button data-act="edit" data-id="'+x.id+'">Modifier</button>':'')+'<button data-act="del" data-id="'+x.id+'">Supprimer</button></div></div></div>'+det+addons+'</div></li>';}
+function render(){const a=B.items(),bag=$('#bag');
+  if(!a.length){bag.innerHTML='<header class="bag-head" style="border:0"><h1 class="h1">Ton panier est vide.</h1><p class="lead">Choisis ton appareil Vertane, ou ajoute un module à l’unité.</p><div class="ctas"><a class="btn btn-lg" href="store.html">Aller au Store</a><a class="link" href="modules.html">Voir les modules</a></div></header>';return;}
+  const sub=a.reduce((s,x)=>s+(x.price+(x.care?x.care.price:0))*x.qty,0),tr=a.reduce((s,x)=>s+(x.trade?x.trade.value:0),0),tot=sub-tr;
+  bag.innerHTML='<header class="bag-head">'+(added&&a.some(x=>x.id===added)?'<p class="added">'+CHECK+'Ajouté à ton panier</p>':'')+'<h1 class="h1">Ton panier : '+money(tot)+'.</h1><p class="lead">Livraison et retours gratuits.</p><a class="btn btn-lg" href="commande.html">Paiement</a></header>'+
+    '<ul class="items">'+a.map(itemHTML).join('')+'</ul>'+
+    '<div class="sum"><div class="note"><p>'+V.I.box+'<span><b style="color:var(--noir)">Livré au plus tard le '+eta()+'.</b> Expédié sous 3 à 5 jours ouvrés, gratuitement.</span></p><p>'+V.I.tool+'<span>Chaque module reste disponible à l’unité pour réparer ou améliorer ton appareil.</span></p></div>'+
+    '<div><dl><div class="row"><dt>Sous-total</dt><dd>'+money(sub)+'</dd></div>'+(tr?'<div class="row minus"><dt>Reprise estimée²</dt><dd>− '+money(tr)+'</dd></div>':'')+'<div class="row"><dt>Livraison</dt><dd>Gratuite</dd></div>'+
+    '<div class="row total"><dt>Total</dt><dd>'+money(tot)+'</dd></div></dl><p class="mo">dont TVA '+money(tot-tot/1.2)+' · ou '+V.monthly(tot)+'/mois sur 12 mois¹</p><a class="btn btn-lg btn-block" href="commande.html">Paiement</a></div></div>';}
+function recs(){const a=B.items(),has=k=>a.some(x=>x.sku&&x.sku.indexOf('M1-'+k.toUpperCase())===0);
+  /* un B1 dans le panier : on propose des cartes de ports et un second chargeur */
+  const LB=window.LAPTOP,lap=a.find(x=>x.type==='laptop'),phone=a.some(x=>x.type==='phone'),fold=a.find(x=>x.type==='fold');
+  $('#r-t').textContent=fold&&!lap&&!phone?'Complète ton P1.':lap&&!phone&&!fold?'Complète ton B1.':lap||fold?'Complète ton équipement Vertane.':'Complète ton M1.';
+  /* un autre appareil Vertane : ses modules les plus utiles */
+  const dev=a.find(x=>x.type==='device');
+  if(dev&&!lap&&!fold&&!phone){const D=window.DEV.fam(dev.fam);if(D){$('#r-t').textContent='Complète ton '+D.name+'.';const hasD=k=>a.some(x=>x.sku&&x.sku.indexOf(D.gen.toUpperCase()+'-'+k.toUpperCase()+'-')===0);
+    $('#recs').innerHTML=D.MODS.filter(m=>!hasD(m.k)).slice(-4).reverse().map(m=>{const j=m.vars.length-1,v=m.vars[j],name=m.t+' '+D.name+(v[0]?', '+v[0]:'');
+      return '<div class="rec"><div class="ri"><img src="'+D.modImg(m.k)+'" alt="" loading="lazy"></div><b>'+esc(name)+'</b><span>'+money(v[1])+'</span><button class="btn btn-sm" data-dev="'+D.k+'" data-mk="'+m.k+'" data-j="'+j+'">Ajouter</button></div>';}).join('');return;}}
+  /* un P1 dans le panier : on propose ses modules les plus utiles */
+  if(fold&&!lap){const PP=window.P1,c=fold.cfg||{},hasP=k=>a.some(x=>x.sku&&x.sku.indexOf('P1-'+k.toUpperCase()+'-')===0);
+    const want=[['batt',1],['qi',3],['coque',3],['sto',2],['port',2]].filter(w=>!hasP(w[0])&&!(w[0]==='qi'&&(c.qi==='q25'||c.cmat==='alu'))&&!(w[0]==='port'&&c.port==='u4')&&!(w[0]==='coque'&&c.cmat==='lin')).slice(0,4);
+    $('#recs').innerHTML=want.map(([k,j])=>{const m=PP.MODS.find(x=>x.k===k),v=m.vars[Math.min(j,m.vars.length-1)],name=m.t+' P1'+(v[0]?', '+v[0]:'');
+      return '<div class="rec"><div class="ri"><img src="'+PP.modImg(k)+'" alt="" loading="lazy"></div><b>'+esc(name)+'</b><span>'+money(v[1])+'</span><button class="btn btn-sm" data-p1="'+k+'" data-j="'+Math.min(j,m.vars.length-1)+'">Ajouter</button></div>';}).join('');return;}
+  if(lap){const have=k=>a.some(x=>x.sku&&x.sku.indexOf('B1-'+k+'-')===0)||(lap.cfg&&lap.cfg.ports.indexOf(k.replace('port-',''))>=0);
+    const pick=['port-hdmi','port-sd','port-usba','port-eth','port-dp','charger'].filter(k=>!have(k)).slice(0,4);
+    $('#recs').innerHTML=pick.map(k=>{const m=LB.MODS.find(x=>x.k===k),v=m.vars[0],name=m.t+(v[0]?' '+v[0]:'');
+      return '<div class="rec"><div class="ri"><img src="'+m.img+'" alt="" loading="lazy"></div><b>'+esc(name)+'</b><span>'+money(v[1])+'</span><button class="btn btn-sm" data-lap="'+k+'">Ajouter</button></div>';}).join('');return;}
+  const pick=[['batt',{batt:6000,chem:'sic'}],['qi',{qi:'q25'}],['coque',{cmat:'verre',ccol:'noir',xl:'std'}],['spk',{spk:'hifi'}],['sto',{cap:1024,tier:'std'}],['port',{port:'u4'}]].filter(p=>!has(p[0])).slice(0,4);
+  $('#recs').innerHTML=pick.map(([k,s])=>{const m=C.byK(k),sel=C.fixSel(m,Object.assign(C.defaults(m),s));const img=k==='coque'?V.phoneImg(sel):'assets/img/'+m.img+'.webp';
+    return '<div class="rec"><div class="ri"><img src="'+img+'" alt="" loading="lazy"></div><b>'+esc(m.label(sel))+'</b><span>'+money(m.price(sel))+'</span><button class="btn btn-sm" data-add="'+k+'" data-sel="'+esc(JSON.stringify(sel))+'">Ajouter</button></div>';}).join('');}
+document.addEventListener('change',e=>{const s=e.target;if(s.tagName==='SELECT'&&s.dataset.id){B.qty(s.dataset.id,+s.value);}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b){const id=b.dataset.id,x=B.items().find(y=>y.id===id);if(!x)return;
+    if(b.dataset.act==='del'){B.remove(id);V.toast(x.name+' retiré du panier.');}
+    if(b.dataset.act==='care-on')B.update(id,{care:careOf(x)});if(b.dataset.act==='care-off')B.update(id,{care:null});if(b.dataset.act==='trade-off')B.update(id,{trade:null});
+    if(b.dataset.act==='edit'&&x.type==='laptop'){location.href='acheter-ordinateur.html?edit='+encodeURIComponent(id);return;}
+    if(b.dataset.act==='edit'&&x.type==='fold'){location.href='acheter-pliant.html?edit='+encodeURIComponent(id);return;}
+    if(b.dataset.act==='edit'&&x.type==='device'){location.href='acheter-appareil.html?d='+encodeURIComponent(x.fam)+'&m='+encodeURIComponent(x.model)+'&edit='+encodeURIComponent(id);return;}
+    if(b.dataset.act==='edit'&&x.model){location.href='acheter-modele.html?m='+encodeURIComponent(x.model)+'&c='+encodeURIComponent(x.fin)+'&s='+x.cap+'&edit='+encodeURIComponent(id);return;}
+    if(b.dataset.act==='edit'){V.store.set('m1-config-v1',x.cfg);V.store.set('vertane-edit',id);location.href='acheter.html?from=config';}return;}
+  const dq=e.target.closest('[data-dev]');if(dq){const D=window.DEV.fam(dq.dataset.dev),m=D.MODS.find(x=>x.k===dq.dataset.mk),j=+dq.dataset.j,v=m.vars[j],name=m.t+' '+D.name+(v[0]?', '+v[0]:'');
+    B.add({type:'module',sku:D.gen.toUpperCase()+'-'+m.k.toUpperCase()+'-'+j,name,img:D.modImg(m.k),price:v[1],lines:[[m.t,D.full+(m.time?', se change en '+m.time:'')]]});V.toast(name+' ajouté.');return;}
+  const q=e.target.closest('[data-p1]');if(q){const PP=window.P1,m=PP.MODS.find(x=>x.k===q.dataset.p1),j=+q.dataset.j,v=m.vars[j],name=m.t+' P1'+(v[0]?', '+v[0]:'');
+    B.add({type:'module',sku:'P1-'+m.k.toUpperCase()+'-'+j,name,img:PP.modImg(m.k),price:v[1],lines:[[m.t,'Vertane P1, se change en '+m.time]]});V.toast(name+' ajouté.');return;}
+  const l=e.target.closest('[data-lap]');if(l){const m=window.LAPTOP.MODS.find(x=>x.k===l.dataset.lap),v=m.vars[0],name=m.t+(v[0]?' '+v[0]:'');
+    B.add({type:'module',sku:'B1-'+m.k+'-0',name,img:m.img,price:v[1],lines:[[m.t,m.time?'Se change en '+m.time:'Accessoire']]});V.toast(name+' ajouté.');return;}
+  const r=e.target.closest('[data-add]');if(r){const m=C.byK(r.dataset.add),sel=JSON.parse(r.dataset.sel);
+    B.add({type:'module',sku:C.sku(m,sel),name:m.label(sel),img:r.closest('.rec').querySelector('img').getAttribute('src'),price:m.price(sel),lines:[[m.t,'Se change en '+m.time]]});V.toast(m.label(sel)+' ajouté.');}});
+document.addEventListener('bag:change',()=>{render();recs();});
+render();recs();
+})();
+</script>
+</body>
+</html>

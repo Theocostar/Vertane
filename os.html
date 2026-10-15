@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vertane OS — Vertane</title>
+<meta name="description" content="Vertane OS, le système des appareils Vertane : tout Android, la Capsule autour de la caméra, le verre, l’app Vertane qui connaît chaque module et l’IA Vertane. Essaie-le dans le simulateur.">
+<meta name="theme-color" content="#F3F1EA">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/vertane-favicon-16.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vertane.css">
+<link rel="stylesheet" href="assets/os/os-page.css">
+</head>
+<body data-page="os" data-local='{"title":"Vertane OS","after":".os-hero","links":[["#simulateur","Simulateur"],["#capsule","Capsule"],["#verre","Verre"],["#gestes","Gestes"],["#app-vertane","App Vertane"],["#ia","IA"],["#configuration","Configuration"]],"cta":["#simulateur","Essayer"]}'>
+<script src="assets/site.js"></script>
+<main id="main">
+  <header class="shell store-head os-hero">
+    <h1 class="h-hero rv">Vertane OS. <span>Tout Android. En plus clair.</span></h1>
+    <div class="store-aside rv d1"><img src="assets/logo/vertane-icone-principal.svg" alt=""><span><b>Vertane OS 1.0</b>Basé sur Android 17. Essaie-le dans le simulateur, sans rien installer.</span></div>
+  </header>
+
+  <nav aria-label="Vertane OS par appareil"><ul class="cats rv d1" id="fams"></ul></nav>
+
+  <section class="shell" aria-labelledby="versT">
+    <h2 class="gens-h" id="versT"></h2>
+    <div class="gens" id="vers" role="group" aria-labelledby="versT"></div>
+  </section>
+
+  <!-- ===================== simulateur ===================== -->
+  <section class="sec-dark sim-sec" id="simulateur" data-nav="dark" aria-labelledby="simT">
+    <div class="shell shell-wide">
+      <div class="sim-head">
+        <div><p class="eyebrow" id="simEy">Simulateur</p><h2 class="h2" id="simT">Essaie-le. <span class="grad">Tout se touche.</span></h2></div>
+        <p class="lead" id="simLead">Glisse, touche, maintiens : les gestes, la Capsule, les apps et les réglages fonctionnent comme sur le téléphone.</p>
+      </div>
+      <div class="sim" id="sim">
+        <div class="stage" id="stage">
+          <div class="dev-wrap" id="devWrap"></div>
+          <div class="swapov" id="swapOv" hidden></div>
+        </div>
+        <aside class="panel" id="panel" aria-label="Commandes du simulateur">
+          <div class="p-state" id="pState"></div>
+          <div class="p-tabs" role="tablist" id="pTabs"></div>
+          <div class="p-body" id="pBody"></div>
+        </aside>
+      </div>
+      <p class="sim-legend" id="legend"></p>
+    </div>
+  </section>
+
+  <!-- ===================== Capsule ===================== -->
+  <section class="sec" id="capsule" aria-labelledby="capT">
+    <div class="shell">
+      <p class="eyebrow rv">La Capsule</p>
+      <h2 class="h1 rv" id="capT">Elle vit autour <span class="grad">de ta caméra.</span></h2>
+      <p class="lead rv" style="max-width:40ch;margin-top:18px">Le trou de la caméra devient une capsule noire qui s’étire pour te montrer ce qui se passe en direct. Sur chaque appareil, elle se loge exactement là où est la caméra.</p>
+      <div class="cap-grid">
+        <figure class="tile rv"><div class="cap-art" id="capArt1"></div><figcaption><b>Vertane M1</b>La caméra est centrée : la Capsule s’étire des deux côtés.</figcaption></figure>
+        <figure class="tile rv d1"><div class="cap-art" id="capArt2"></div><figcaption><b>P1, écran extérieur</b>Même place, centrée, sur l’écran de 5,6″.</figcaption></figure>
+        <figure class="tile rv d2"><div class="cap-art wide" id="capArt3"></div><figcaption><b>P1, écran intérieur</b>La caméra est en haut de la moitié gauche : la Capsule la suit et reste dans cette moitié.</figcaption></figure>
+      </div>
+      <div class="acts rv">
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M10 2.5h4"/></svg><b>Minuteur et chrono</b><span>Le temps restant, sans ouvrir l’app.</span></div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 18V5.5l11-2V16"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg><b>Musique</b><span>La pochette et les ondes, les commandes en la dépliant.</span></div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6.6 3.5h2.8l1.6 4.4-2.1 1.5a11 11 0 0 0 5.7 5.7l1.5-2.1 4.4 1.6v2.8a2 2 0 0 1-2.2 2A16 16 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg><b>Appels</b><span>Décroche ou raccroche depuis la Capsule.</span></div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M13 2.5 5 13.5h6l-1 8 8-11h-6z"/></svg><b>Recharge</b><span>Le pourcentage, et l’anneau en recharge sans fil.</span></div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 20v-7a4 4 0 0 1 4-4h8M15 5l4 4-4 4"/></svg><b>Itinéraires</b><span>La prochaine direction et la distance.</span></div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5v-9Z"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9"/></svg><b>Nouveau module</b><span>Au démarrage, la Capsule annonce le module reconnu et le calibre.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Verre ===================== -->
+  <section class="sec sec-dark" id="verre" data-nav="dark" aria-labelledby="verT">
+    <div class="shell">
+      <p class="eyebrow rv">Le verre</p>
+      <h2 class="h1 rv" id="verT">Des angles qui suivent <span class="grad">la courbe de l’écran.</span></h2>
+      <div class="glass-grid">
+        <div class="rv">
+          <p class="lead">Les surfaces de Vertane OS sont en verre : translucides, avec un reflet sur les bords. Elles laissent passer ton fond d’écran et prennent sa couleur.</p>
+          <p class="lead" style="margin-top:16px">Et chaque coin respecte une règle simple : <b style="color:var(--ivoire)">un élément posé à une distance d du bord d’un écran de rayon R prend le rayon R − d.</b> Le Dock, les notifications, le centre de contrôle, la Capsule dépliée : tout est concentrique.</p>
+          <label class="rule-ctl"><span>Distance au bord : <b id="ruleD">10</b> px</span><input type="range" min="4" max="40" value="10" id="ruleR" aria-label="Distance au bord"></label>
+          <p class="fine" style="color:#A9ABA3">Sur le M1, R = 50 px. Sur le P1 : 40 px dehors, 28 px dedans.</p>
+        </div>
+        <div class="rule rv d1" id="ruleArt" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Gestes ===================== -->
+  <section class="sec" id="gestes" aria-labelledby="gesT">
+    <div class="shell">
+      <p class="eyebrow rv">Les gestes</p>
+      <h2 class="h1 rv" id="gesT">Les gestes d’iPhone. <span class="grad">Le retour d’Android.</span></h2>
+      <div class="gest-grid" id="gestGrid"></div>
+      <p class="fine rv" style="margin-top:18px">Tu préfères les trois boutons d’Android ? Ils sont dans Réglages, Navigation système.</p>
+    </div>
+  </section>
+
+  <!-- ===================== App Vertane ===================== -->
+  <section class="sec sec-tight" id="app-vertane" aria-labelledby="appT" style="padding-top:0">
+    <div class="shell">
+      <p class="eyebrow rv">L’app Vertane</p>
+      <h2 class="h1 rv" id="appT">Elle connaît <span class="grad">chaque module.</span></h2>
+      <p class="lead rv" style="max-width:44ch;margin-top:18px">Tes composants, leur niveau de vie, ce qui freine ton téléphone, les tutos de réparation, les astuces et la présentation de Vertane OS : tout est dans une seule app.</p>
+      <div class="tiles app-tiles">
+        <div class="tile w7 rv"><p class="eyebrow">Mes composants</p><h3 class="h3">Chaque pièce, avec sa fiche.</h3><p class="muted" style="margin-top:10px">Batterie, écran, carte mère, module photo, stockage, port, haut-parleurs : le modèle installé, ses statistiques et les modules compatibles.</p>
+          <div class="mini-list" id="miniComps"></div><button class="btn btn-sm" data-go='{"cmd":"open","data":{"app":"vertane","args":{"tab":"appareil"}}}'>Ouvrir dans le simulateur</button></div>
+        <div class="tile w5 dark rv d1"><p class="eyebrow">Santé</p><h3 class="h3">Le niveau de vie de tout.</h3><p style="margin-top:10px;color:#B9BBB2">Cycles de la batterie, heures d’écran, données écrites, branchements du câble, pliages de la charnière : mesurés, et traduits en années restantes.</p>
+          <div class="life" id="lifeDemo"></div><button class="btn btn-sm" data-go='{"cmd":"open","data":{"app":"vertane","args":{"tab":"sante"}}}'>Voir la santé</button></div>
+        <div class="tile w12 green rv"><p class="eyebrow">Optimiser</p><h3 class="h3" style="max-width:26ch">Un capteur trop puissant pour la carte mère ? Une batterie trop petite pour l’écran ? Vertane te le dit.</h3>
+          <div class="opt-ex"><div><b>Capteur 1″ trop puissant pour la carte mère</b><span>La carte Essentielle lit le capteur en 12 bits au lieu de 14 : rafale limitée à 5 images par seconde.</span></div><div><b>Batterie trop petite pour ton écran</b><span>Micro-LED 240 Hz sur 3 600 mAh : environ 11 h. Plafonner à 120 Hz, ou passer à la batterie Endurance.</span></div><div><b>Et si je changeais…</b><span>Choisis un module : Vertane calcule l’autonomie et l’équilibre avant que tu l’achètes.</span></div></div>
+          <button class="btn btn-sm" data-go='{"cmd":"open","data":{"app":"vertane","args":{"tab":"opti"}}}'>Voir les optimisations</button></div>
+        <div class="tile w6 rv"><p class="eyebrow">Tutos</p><h3 class="h3">Pas à pas, dans le téléphone.</h3><p class="muted" style="margin-top:10px">Les mêmes gestes que sur le site, avec la durée et la pièce à commander. Conseillés quand un module passe sous 85 %.</p><button class="btn btn-sm" style="margin-top:auto" data-go='{"cmd":"open","data":{"app":"vertane","args":{"tab":"tutos"}}}'>Voir les tutos</button></div>
+        <div class="tile w6 rv d1"><p class="eyebrow">Découvrir</p><h3 class="h3">Astuces et présentation.</h3><p class="muted" style="margin-top:10px">La Capsule, le verre, les gestes, l’IA, tout Android : chaque nouveauté avec un bouton pour l’essayer.</p><button class="btn btn-sm" style="margin-top:auto" data-go='{"cmd":"open","data":{"app":"vertane","args":{"tab":"decouvrir"}}}'>Découvrir</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== IA ===================== -->
+  <section class="sec sec-dark" id="ia" data-nav="dark" aria-labelledby="iaT">
+    <div class="shell ia-grid">
+      <div>
+        <p class="eyebrow rv">L’IA Vertane</p>
+        <h2 class="h1 rv" id="iaT">Demande. <span class="grad">Elle connaît ton téléphone.</span></h2>
+        <p class="lead rv" style="margin-top:18px">Maintiens le bouton latéral, ou dis « Hé Vertane ». L’IA lit l’état de tes modules, règle ton téléphone, lance un minuteur, écrit un message ou t’explique un tuto. Avec la carte mère Pro, tout reste sur le téléphone.</p>
+        <div class="ask rv" id="askChips"></div>
+      </div>
+      <div class="chat rv d1" aria-hidden="true">
+        <p class="me">Comment va ma batterie ?</p>
+        <p class="ai">Elle est à 78 %, soit environ 12 h. Sa santé : 95 % de sa capacité d’origine, après 196 cycles. Elle est en pleine forme.</p>
+        <p class="me">Et si je passais à 240 Hz ?</p>
+        <p class="ai">Ta carte mère Performance pilote l’écran jusqu’à 144 Hz. Le 240 Hz demande la carte mère Pro.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Première configuration ===================== -->
+  <section class="sec" id="configuration" aria-labelledby="cfgT">
+    <div class="shell">
+      <p class="eyebrow rv">Premier allumage</p>
+      <h2 class="h1 rv" id="cfgT">Bonjour. <span class="grad">Tes données arrivent.</span></h2>
+      <ol class="steps rv" id="steps"></ol>
+      <div class="tiles" style="margin-top:28px">
+        <div class="tile w6 dark rv"><p class="eyebrow">Depuis un iPhone</p><h3 class="h3">Contacts, messages, photos, apps.</h3><ul class="chk-l"><li>Contacts, calendriers et notes</li><li>SMS et iMessage, avec les pièces jointes</li><li>Photos et vidéos, dans leur qualité d’origine</li><li>Les apps qui existent sur Android se réinstallent</li><li>Ta ligne, par eSIM</li></ul><p class="fine" style="color:#A9ABA3;margin-top:auto">Pense à désactiver iMessage sur ton iPhone pour recevoir tes SMS.</p></div>
+        <div class="tile w6 rv d1"><p class="eyebrow">Depuis Android</p><h3 class="h3">Tout. Même tes apps connectées.</h3><ul class="chk-l"><li>Les apps et leurs données</li><li>La disposition de l’écran d’accueil et les widgets</li><li>SMS, RCS et historique des appels</li><li>Réglages, Wi-Fi, sonneries</li><li>Photos et vidéos</li></ul><p class="fine" style="margin-top:auto">Par câble USB-C ou sans fil, les deux téléphones l’un près de l’autre.</p></div>
+      </div>
+      <div class="ctas left rv" style="margin-top:28px"><button class="btn" data-go='{"cmd":"setup"}'>Relancer la configuration dans le simulateur</button></div>
+    </div>
+  </section>
+
+  <!-- ===================== Android ===================== -->
+  <section class="sec sec-tight" aria-labelledby="andT" style="padding-top:0">
+    <div class="shell">
+      <p class="eyebrow rv">Base Android 17</p>
+      <h2 class="h1 rv" id="andT">Rien de perdu. <span class="grad">Tout est plus clair.</span></h2>
+      <ul class="and-grid rv" id="andGrid"></ul>
+    </div>
+  </section>
+
+  <!-- ===================== Versions ===================== -->
+  <section class="sec sec-tight" id="versions" aria-labelledby="vT" style="padding-top:0;padding-bottom:clamp(64px,8vw,110px)">
+    <div class="shell">
+      <h2 class="h2 rv" id="vT">Sur quels appareils. <span class="grad">Et jusqu’à quand.</span></h2>
+      <div class="vt-wrap rv"><table class="vt" id="vTable"></table></div>
+    </div>
+  </section>
+</main>
+
+<template id="foot-notes">
+  <ol>
+    <li>Démonstration : Vertane OS est présenté ici sous forme de simulateur HTML. Les données (santé des modules, messages, photos, transferts) sont simulées et restent dans ton navigateur.</li>
+    <li>Les appareils annoncés « Bientôt » sont en préparation : l’interface montrée est un aperçu, leurs caractéristiques ne sont pas encore fixées.</li>
+    <li>Android est une marque de Google LLC. Vertane OS est basé sur le projet open source Android (AOSP).</li>
+  </ol>
+</template>
+
+<script src="assets/m1-data.js"></script>
+<script src="assets/lineup.js"></script>
+<script src="assets/p1-data.js"></script>
+<script src="assets/laptop.js"></script>
+<script src="assets/os/os-page.js"></script>
+</body>
+</html>

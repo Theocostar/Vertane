@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Store — Vertane</title>
+<meta name="description" content="Le Store Vertane : les téléphones M1, le pliant P1, les ordinateurs B1, le sur mesure, les modules et bientôt toute la gamme.">
+<meta name="theme-color" content="#F3F1EA">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/vertane-favicon-16.png">
+<link rel="apple-touch-icon" href="assets/logo/vertane-apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vertane.css">
+<style>
+.store-sec{padding:clamp(28px,4vw,48px) 0 clamp(8px,2vw,20px)}
+.help-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.help-card{background:var(--blanc);border-radius:var(--r-l);padding:30px;display:flex;flex-direction:column;gap:10px;min-height:230px}
+.help-card svg{width:40px;height:40px;color:var(--vert)}
+.help-card h3{font:500 21px/1.25 var(--display);letter-spacing:-.015em;margin:6px 0 0}
+.help-card p{margin:0;color:var(--pierre);font-size:15px}
+.help-card .link{margin-top:auto;font-size:15px}
+@media (max-width:833px){.help-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page="store">
+<script src="assets/site.js"></script>
+<main id="main">
+  <header class="shell store-head">
+    <h1 class="h-hero rv">Store. <span>La meilleure façon d’acheter Vertane.</span></h1>
+    <div class="store-aside rv d1"><img src="assets/logo/vertane-icone-principal.svg" alt=""><span><b>Besoin d’aide pour choisir ?</b><a href="reparer.html#contact">Écris-nous</a> ou <a href="telephones.html#comparer">compare les modèles</a>.</span></div>
+  </header>
+
+  <nav aria-label="Catégories du Store"><ul class="cats rv d1" id="cats"></ul></nav>
+
+  <section class="store-sec" aria-labelledby="new-t">
+    <div class="shell shelf-h"><h2 id="new-t">Les derniers produits. <span>Tout juste arrivés.</span></h2><span class="head-links" style="display:flex;gap:8px 22px;flex-wrap:wrap"><a class="link" href="p1.html">Le pliant P1</a><a class="link" href="ordinateurs.html">Ordinateurs</a><a class="link" href="telephones.html">Téléphones</a></span></div>
+    <div class="shelf"><div class="shelf-track" id="newShelf"></div></div>
+  </section>
+
+  <section class="store-sec" aria-labelledby="soon-t">
+    <div class="shell shelf-h"><h2 id="soon-t">Toute la famille Vertane. <span>La même idée, partout.</span></h2><a class="link" href="modules.html">Tous les modules</a></div>
+    <div class="shelf"><div class="shelf-track" id="soonShelf"></div></div>
+  </section>
+
+  <section class="store-sec" aria-labelledby="why-t">
+    <div class="shell">
+      <div class="shelf-h"><h2 id="why-t">L’expérience Vertane. <span>Acheter en toute sérénité.</span></h2></div>
+      <div class="why">
+        <div class="why-item rv"><svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3 9h17v14H3zM20 13h6l5 5v5H20z"/><circle cx="9" cy="25" r="3" fill="var(--blanc)"/><circle cx="25" cy="25" r="3" fill="var(--blanc)"/></svg><h3>Livraison gratuite</h3><p>Expédié sous 3 à 5 jours ouvrés, retours gratuits pendant 30 jours.</p></div>
+        <div class="why-item rv d1"><svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="8" width="28" height="19" rx="3"/><path d="M3 14h28M8 22h6"/></svg><h3>Paiement en 12 fois</h3><p>Sans frais, dès 150 € d’achat.¹</p></div>
+        <div class="why-item rv d2"><svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M27 12a11 11 0 0 0-19-3M7 22a11 11 0 0 0 19 3"/><path d="M8 4v5h5M26 30v-5h-5"/></svg><h3>Reprise</h3><p>Ton ancien téléphone vaut une réduction immédiate.²</p></div>
+        <div class="why-item rv d3"><svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8a6 6 0 0 0 7 7L16 26a3 3 0 0 1-4-4z"/></svg><h3>Réparation à vie</h3><p>Chaque pièce reste disponible à l’unité.</p></div>
+        <div class="why-item rv d4"><svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l11 4v9c0 7-5 12-11 15C11 28 6 23 6 16V7z"/><path d="M12 17l4 4 7-8"/></svg><h3>Vertane Care</h3><p>Casse et panne couvertes pendant 2 ans.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="store-sec" aria-labelledby="help-t" style="padding-bottom:clamp(64px,8vw,110px)">
+    <div class="shell">
+      <div class="shelf-h"><h2 id="help-t">Après l’achat. <span>On reste là.</span></h2></div>
+      <div class="help-grid">
+        <div class="help-card rv"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 9a7 7 0 0 0 8 8L19 30a3.5 3.5 0 0 1-5-5z"/><path d="M24 9l4-4 7 7-4 4"/></svg><h3>Répare toi-même.</h3><p>Chaque module se change à la main, en quelques secondes. Les tutoriels sont pas à pas.</p><a class="link" href="reparer.html#etapes">Changer un module</a></div>
+        <div class="help-card rv d1"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14l12-7 12 7v12l-12 7-12-7z"/><path d="M8 14l12 7 12-7M20 21v12"/></svg><h3>Améliore ton M1.</h3><p>Plus de batterie, un meilleur module photo, un autre écran : ajoute ce qui te manque.</p><a class="link" href="modules.html">Voir les modules</a></div>
+        <div class="help-card rv d2"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="20" r="14"/><path d="M15.5 16a4.5 4.5 0 1 1 6 4.2c-1 .5-1.5 1.3-1.5 2.4v.6"/><circle cx="20" cy="28" r=".8" fill="currentColor"/></svg><h3>Une question ?</h3><p>Livraison, paiement, reprise, garantie : les réponses sont ici, ou écris-nous.</p><a class="link" href="reparer.html#aide">Assistance</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<template id="foot-notes">
+  <ol>
+    <li>Paiement en 12 fois sans frais, sous réserve d’acceptation. Montants arrondis au centime supérieur. Prix TTC, livraison offerte en France métropolitaine.</li>
+    <li>Valeur de reprise estimée, confirmée après inspection de l’appareil et déduite du total de la commande.</li>
+    <li>Estimations de prototype.</li>
+  </ol>
+</template>
+
+<script src="assets/m1-data.js"></script>
+<script src="assets/catalogue.js"></script>
+<script src="assets/lineup.js"></script>
+<script src="assets/laptop.js"></script>
+<script src="assets/p1-data.js"></script>
+<script src="assets/devices.js"></script>
+<script src="assets/connect-data.js"></script>
+<script>
+(function(){
+"use strict";
+const L=window.LINEUP,V=window.V,$=s=>document.querySelector(s),esc=V.esc,money=V.money;
+
+/* rangée des catégories */
+$('#cats').innerHTML=L.CATS.map(c=>'<li><a class="cat" href="'+c.href+'"><span class="ci">'+L.ICON[c.k]+'</span>'+esc(c.s)+(c.live?'':'<small>Bientôt</small>')+'</a></li>').join('')+
+  '<li><a class="cat" href="modules.html"><span class="ci">'+L.ICON.modules+'</span>Modules</a></li><li><a class="cat" href="accessoires.html"><span class="ci">'+V.CI.connect+'</span>Accessoires</a></li>';
+
+/* derniers produits : du plus récent au plus accessible */
+const ORDER=['ultra','pro','m1','se'];
+const card=m=>{const f=m.fins[0][0],fb=m.fins[1]?m.fins[1][0]:f,p=L.from(m),dark=m.k==='ultra';
+  return '<a class="pcard'+(dark?' dark':'')+'" href="acheter-modele.html?m='+m.k+'"><p class="p-ey">'+(m.tag||'Téléphone')+'</p><h3>Vertane '+esc(m.name)+'</h3>'+
+    '<p class="p-d">'+esc(m.pitch)+'</p><p class="p-pr">À partir de '+money(p)+' ou '+V.monthly(p)+'/mois¹</p>'+
+    '<div class="p-im"><img class="pf" src="'+L.img(m,fb,'front')+'" alt="" loading="lazy" width="594" height="1352"><img class="pb" src="'+L.img(m,f)+'" alt="Vertane '+esc(m.name)+', finition '+esc(m.fins[0][1])+'" loading="lazy" width="554" height="1360"></div></a>';};
+const B=window.LAPTOP;
+const lap=m=>{const c=B.cfgOf(m),p=B.from(m);return '<a class="pcard'+(m.k==='ultra'?' dark':'')+'" href="acheter-ordinateur.html?m='+m.k+'"><p class="p-ey">'+(m.tag?esc(m.tag)+' · Ordinateur':'Ordinateur')+'</p><h3>Vertane '+esc(m.name)+'</h3>'+
+  '<p class="p-d">'+esc(m.pitch)+'</p><p class="p-pr">À partir de '+money(p)+' ou '+V.monthly(p)+'/mois¹</p><div class="p-im"><img class="wide" src="'+B.photo(m,c.col)+'" alt="Vertane '+esc(m.name)+', finition '+esc(B.COL[c.col][0])+'" loading="lazy" width="1084" height="850" style="top:36px"></div></a>';};
+const P=window.P1;
+const fold=m=>{const f=m.fins[0][0],p=P.from(m);return '<a class="pcard'+(m.k==='ultra'?' dark':'')+'" href="acheter-pliant.html?m='+m.k+'"><p class="p-ey">'+(m.tag?esc(m.tag)+' · Pliant':'Nouveau · Pliant')+'</p><h3>Vertane '+esc(m.name)+'</h3>'+
+  '<p class="p-d">'+esc(m.pitch)+'</p><p class="p-pr">À partir de '+money(p)+' ou '+V.monthly(p)+'/mois¹</p>'+
+  '<div class="p-im"><img class="pf" src="'+P.img(m,f,'face')+'" alt="" loading="lazy" width="760" height="900" style="height:250px;top:52px;left:calc(50% - 196px)"><img class="pb" src="'+P.img(m,f)+'" alt="Vertane '+esc(m.name)+', finition '+esc(m.fins[0][1])+'" loading="lazy" width="760" height="900" style="height:270px;top:34px;left:calc(50% - 50px)"></div></a>';};
+/* toute la famille : un rayon par appareil */
+const DV=window.DEV,cn=k=>(V.CATS.find(c=>c.k===k)||{}).s||'';
+const fam=D=>{const m=D.MODELS[D.MODELS.length-1],f=m.fins[0][0],p=D.from0();return '<a class="pcard'+(D.k==='enceinte'||D.k==='salon'?' dark':'')+'" href="appareil.html?d='+D.k+'"><p class="p-ey">Nouveau · '+esc(cn(D.k))+'</p><h3>'+esc(D.full)+'</h3>'+
+  '<p class="p-d">'+esc(D.pitch)+'</p><p class="p-pr">À partir de '+money(p)+' ou '+V.monthly(p)+'/mois¹</p><div class="p-im"><img class="wide" src="'+D.img(m,f)+'" alt="Vertane '+esc(m.name)+', '+esc(m.fins[0][1])+'" loading="lazy" width="900" height="900" style="width:74%;left:13%;top:0"></div></a>';};
+$('#newShelf').innerHTML='<a class="pcard dark" href="accessoires.html"><p class="p-ey">Nouveau · Accessoires</p><h3>Vertane Connect</h3><p class="p-d">Batterie, objectif, manette, caméra : ils s’aimantent au dos Connect du M1.</p><p class="p-pr">À partir de '+money(Math.min(...window.CONNECT.ACC.map(a=>a.p)))+'</p><div class="p-im"><img class="wide" src="assets/img/cx-famille.webp" alt="" loading="lazy" style="width:112%;left:-6%;top:40px"></div></a>'+['tablette','enceinte','portable'].map(k=>{const D=DV.fam(k),m=D.MODELS[D.MODELS.length-1];return fam(D).replace('href="appareil.html?d='+k+'"','href="acheter-appareil.html?d='+k+'&amp;m='+m.k+'"').replace('<h3>'+esc(D.full)+'</h3>','<h3>Vertane '+esc(m.name)+'</h3>');}).join('')+['ultra','pro','p1','se'].map(k=>fold(P.byK(k))).join('')+['ultra','pro','b1','se'].map(k=>lap(B.byK(k))).join('')+ORDER.map(k=>card(L.byK(k))).join('')+
+  '<a class="pcard green" href="acheter-pliant.html?m=mesure"><p class="p-ey">Sur mesure</p><h3>Vertane P1 sur mesure</h3><p class="p-d">Écrans, carte mère, capteur photo, batterie, cadres et coque : module par module.</p><p class="p-pr">Charnière double axe incluse</p><div class="p-im"><img class="wide" src="assets/img/p1-eclate.webp" alt="" loading="lazy" style="top:20px"></div></a>'+
+  '<a class="pcard green" href="acheter.html"><p class="p-ey">Sur mesure</p><h3>Vertane M1 sur mesure</h3><p class="p-d">Choisis chaque module : écran, carte mère, photo, batterie, finitions.</p><p class="p-pr">Plus de mille combinaisons</p><div class="p-im"><img class="wide" src="assets/img/exploded-orange.webp" alt="" loading="lazy"></div></a>'+
+  '<a class="pcard green" href="acheter-ordinateur.html?m=mesure"><p class="p-ey">Sur mesure</p><h3>Vertane B1 sur mesure</h3><p class="p-d">Taille, écran, puce, mémoire, couleur et ports : choisis chaque pièce.</p><p class="p-pr">Ports au choix, caches inclus</p><div class="p-im"><img class="wide" src="'+B.photo(B.MESURE,'sauge')+'" alt="" loading="lazy" width="1084" height="850" style="top:36px"></div></a>'+
+  '<a class="pcard" href="modules.html"><p class="p-ey">Modules</p><h3>Chaque pièce, à l’unité.</h3><p class="p-d">Batterie, écran, module photo, coque. Se changent sans outil.</p><p class="p-pr">À partir de '+money(Math.min(...window.CAT.MODS.map(window.CAT.from)))+'</p><div class="p-im"><img class="wide" src="assets/img/mod-photo4.webp" alt="" loading="lazy" style="width:70%;left:15%"></div></a>';
+
+$('#soonShelf').innerHTML=DV.all().map(fam).join('');
+V.shelves();
+})();
+</script>
+</body>
+</html>

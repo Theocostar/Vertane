@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertane OS Bureau — simulateur</title>
+<meta name="description" content="Simulateur de Vertane OS Bureau, le système des ordinateurs Vertane B1.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/vertane-favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Unbounded:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/os/os.css">
+<style>
+body{background:#000}
+.pc{position:fixed;inset:0;overflow:hidden;--R:10px;color:var(--ink);font-size:14px;user-select:none;-webkit-user-select:none}
+.pc .wall{position:absolute;inset:0}
+.bar{position:absolute;left:0;right:0;top:0;height:34px;z-index:50;display:flex;align-items:center;gap:4px;padding:0 10px;color:#fff;font:500 13.5px/1 var(--font);background:rgba(20,22,24,.28);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);box-shadow:inset 0 -.5px 0 rgba(255,255,255,.14)}
+.bar button{height:26px;padding:0 10px;border-radius:8px;display:flex;align-items:center;gap:7px;color:#fff;font:inherit}
+.bar button:hover,.bar button.on{background:rgba(255,255,255,.16)}
+.bar .vl{width:18px;height:18px;color:#fff}
+.bar .ttl{font-weight:700}
+.bar .menu{opacity:.85;font-weight:400}
+.bar .sp{flex:1}
+.bar svg{width:15px;height:15px}
+.bar .bt{display:flex;align-items:center;gap:6px}
+.bar .bt i{position:relative;width:24px;height:11px;border-radius:3px;border:1.2px solid #fff;padding:1px;display:block}
+.bar .bt i b{display:block;height:100%;background:#fff;border-radius:1.5px}
+.bar .bt i.chg b{background:#34C46A}
+.bar .bt i.low b{background:#E5484D}
+/* Capsule : elle descend de la caméra, au centre du bord supérieur */
+.pcap{position:absolute;z-index:60;top:0;left:50%;transform:translateX(-50%);background:#000;color:#fff;border-radius:0 0 16px 16px;height:0;width:120px;overflow:hidden;transition:width .55s var(--spring),height .55s var(--spring),border-radius .5s var(--spring),box-shadow .4s;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font:600 13px/1 var(--font);cursor:pointer;white-space:nowrap}
+.pcap.on{height:34px}
+.pcap.big{height:108px;border-radius:0 0 26px 26px;box-shadow:0 20px 40px rgba(0,0,0,.35);align-items:flex-start;padding-top:14px;cursor:default}
+.pcap .l,.pcap .r{display:flex;align-items:center;gap:8px}
+.pcap svg{width:16px;height:16px}
+.desk{position:absolute;left:0;right:0;top:34px;bottom:0;z-index:10}
+.dico{position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px;width:92px;color:#fff;font:500 12px/1.25 var(--font);text-align:center;text-shadow:0 1px 4px rgba(0,0,0,.45);padding:8px 4px;border-radius:12px}
+.dico:hover{background:rgba(255,255,255,.12)}
+.dico .ico{width:52px;height:52px}
+/* fenêtres */
+.w{position:absolute;border-radius:14px;overflow:hidden;background:var(--bg);color:var(--ink);box-shadow:0 30px 70px rgba(0,0,0,.35),0 0 0 .5px rgba(0,0,0,.25);display:flex;flex-direction:column;min-width:360px;min-height:240px;transition:box-shadow .2s}
+.w.focus{box-shadow:0 40px 90px rgba(0,0,0,.45),0 0 0 .5px rgba(0,0,0,.3)}
+.w.max{border-radius:0}
+.w.opening{animation:wopen .38s var(--out)}
+@keyframes wopen{from{transform:scale(.92);opacity:0}}
+.wt{height:40px;flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:0 6px 0 12px;background:color-mix(in srgb,var(--bg) 75%,transparent);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:.5px solid var(--sep);cursor:default}
+.wt .ico{width:20px;height:20px;border-radius:5px;box-shadow:none}
+.wt b{font:600 13.5px/1 var(--font);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wt button{width:34px;height:28px;border-radius:8px;display:grid;place-items:center;color:var(--ink-2)}
+.wt button:hover{background:var(--fill)}
+.wt button.x:hover{background:#E5484D;color:#fff}
+.wt svg{width:14px;height:14px}
+.wb{flex:1;overflow:auto;position:relative}
+.wr{position:absolute;right:0;bottom:0;width:18px;height:18px;cursor:nwse-resize;z-index:3}
+.side{display:grid;grid-template-columns:210px 1fr;height:100%}
+.side nav{padding:12px 8px;background:color-mix(in srgb,var(--card) 55%,transparent);border-right:.5px solid var(--sep);overflow:auto}
+.side nav button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:9px;font:500 13.5px/1.2 var(--font);color:var(--ink);text-align:left}
+.side nav button.on{background:var(--accent);color:#fff}
+.side nav button svg{width:16px;height:16px;opacity:.85}
+.side nav h4{margin:14px 10px 6px;font:600 11px/1 var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.side main{overflow:auto;padding:22px 26px 30px}
+.pc .lt{font-size:28px}
+.pc .row{min-height:42px;font-size:14.5px}
+.pc .grp,.pc .card{border-radius:14px}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:14px 0}
+.kv div{background:var(--card);border-radius:12px;padding:12px 14px}
+.kv small{display:block;color:var(--ink-2);font-size:12px;font-weight:600}
+.kv b{display:block;font:700 18px/1.3 var(--font);margin-top:3px}
+/* Dock */
+.dock2{position:absolute;z-index:40;left:50%;bottom:8px;transform:translateX(-50%);display:flex;align-items:flex-end;gap:8px;padding:8px 10px;border-radius:24px}
+.dock2 button{position:relative;width:50px;height:50px;transition:transform .25s var(--spring)}
+.dock2 button:hover{transform:translateY(-6px) scale(1.12)}
+.dock2 .ico{width:50px;height:50px}
+.dock2 i{position:absolute;left:50%;bottom:-6px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:#fff;opacity:.9}
+.dock2 .sep{width:1px;height:40px;background:rgba(255,255,255,.35);align-self:center}
+.dock2 button[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:64px;left:50%;transform:translateX(-50%);padding:6px 10px;border-radius:8px;background:rgba(20,22,24,.85);color:#fff;font:500 12px/1 var(--font);white-space:nowrap}
+/* lanceur */
+.launch{position:absolute;inset:0;z-index:70;background:rgba(0,0,0,.25);-webkit-backdrop-filter:blur(30px) saturate(1.4);backdrop-filter:blur(30px) saturate(1.4);display:flex;flex-direction:column;align-items:center;padding-top:70px;opacity:0;pointer-events:none;transition:opacity .25s}
+.launch.on{opacity:1;pointer-events:auto}
+.launch .sfield{width:420px}
+.lgrid{display:grid;grid-template-columns:repeat(6,110px);gap:24px 20px;margin-top:40px}
+.lgrid button{display:flex;flex-direction:column;align-items:center;gap:8px;color:#fff;font:500 13px/1.2 var(--font);text-shadow:0 1px 4px rgba(0,0,0,.4)}
+.lgrid .ico{width:72px;height:72px}
+/* panneaux */
+.pan{position:absolute;z-index:65;top:42px;right:10px;width:340px;border-radius:22px;padding:14px;color:#fff;opacity:0;transform:translateY(-8px) scale(.98);transform-origin:top right;pointer-events:none;transition:opacity .2s,transform .3s var(--spring)}
+.pan.on{opacity:1;transform:none;pointer-events:auto}
+.qsg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qs{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:rgba(255,255,255,.12);color:#fff;text-align:left;font:600 13px/1.2 var(--font)}
+.qs i{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.18);flex:0 0 auto}
+.qs.on i{background:var(--accent)}
+.qs svg{width:16px;height:16px}
+.qs small{display:block;font-weight:400;opacity:.7;font-size:11.5px;margin-top:2px}
+.sl{margin-top:12px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);border-radius:14px;padding:10px 12px}
+.sl svg{width:16px;height:16px;flex:0 0 auto}
+.sl input{flex:1;accent-color:#fff}
+.ntc{display:grid;grid-template-columns:34px 1fr;gap:4px 10px;padding:12px;border-radius:16px;background:rgba(255,255,255,.12);margin-bottom:8px;cursor:pointer}
+.ntc .ico{width:34px;height:34px;border-radius:9px;grid-row:span 2}
+.ntc b{font:600 13.5px/1.2 var(--font)}
+.ntc span{font-size:13px;opacity:.85}
+.toasts{position:absolute;z-index:66;top:44px;right:12px;width:340px;display:flex;flex-direction:column;gap:8px}
+.toasts .ntc{animation:tin .45s var(--spring);color:#fff}
+@keyframes tin{from{transform:translateX(110%)}}
+/* verrouillage */
+.plock{position:absolute;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:opacity .45s,transform .5s var(--out)}
+.plock.out{opacity:0;transform:scale(1.04);pointer-events:none}
+.plock .clk{font:300 110px/1 var(--display);letter-spacing:-.04em}
+.plock .dt{font:500 20px/1.2 var(--font);opacity:.9;margin-bottom:6px}
+.plock .who{margin-top:120px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.plock .av{width:76px;height:76px;border-radius:50%;background:linear-gradient(160deg,#8DB89A,#2F7A55);display:grid;place-items:center}
+.plock .av svg{width:38px;height:38px}
+.plock p{margin:0;font-size:13px;opacity:.75}
+/* terminal */
+.term{background:#0d1117;color:#c9d1d9;font:400 13px/1.55 "JetBrains Mono",ui-monospace,monospace;padding:14px 16px;height:100%;overflow:auto;user-select:text;-webkit-user-select:text}
+.term .p{color:#8DB89A}
+.term input{background:none;border:0;outline:0;color:#c9d1d9;font:inherit;width:70%}
+/* ia */
+.aibar{position:absolute;z-index:80;left:50%;top:22%;width:620px;margin-left:-310px;border-radius:26px;padding:12px;color:var(--ink);opacity:0;transform:translateY(-10px) scale(.98);pointer-events:none;transition:opacity .25s,transform .35s var(--spring)}
+.aibar.on{opacity:1;transform:none;pointer-events:auto}
+.aibar .ai-row{padding:4px}
+.aibar .ai-in{height:48px;font-size:17px}
+.aibar .ans{padding:12px 14px 6px;font-size:15px;line-height:1.5}
+.aiglow{position:absolute;inset:0;z-index:79;pointer-events:none;opacity:0;transition:opacity .4s;box-shadow:inset 0 0 40px 6px rgba(120,170,255,.45),inset 0 0 90px 10px rgba(141,184,154,.35)}
+.aiglow.on{opacity:1}
+.boot2{position:absolute;inset:0;z-index:95;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:28px;color:#fff}
+.boot2.on{display:flex}
+.boot2 img{width:90px;height:90px}
+.boot2 .bar3{width:200px;height:4px;border-radius:2px;background:rgba(255,255,255,.2);overflow:hidden}
+.boot2 .bar3 i{display:block;height:100%;width:0;background:#fff;transition:width 1.8s ease}
+.off2{position:absolute;inset:0;z-index:96;background:#000;display:none}
+.off2.on{display:block}
+.expo .w{transition:transform .45s var(--out)!important}
+</style>
+</head>
+<body>
+<script src="assets/laptop.js"></script>
+<script>
+(function(){
+"use strict";
+const B=window.LAPTOP,doc=document,Q=new URLSearchParams(location.search),EMBED=window.parent!==window;
+const $=(s,r)=>(r||doc).querySelector(s),$$=(s,r)=>Array.from((r||doc).querySelectorAll(s));
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),wait=ms=>new Promise(r=>setTimeout(r,ms));
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+const S=(d,sw)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(sw||1.8)+'" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+d+'</svg>';
+const G={x:'<path d="M6 6l12 12M18 6 6 18"/>',min:'<path d="M5 12h14"/>',max:'<rect x="5" y="5" width="14" height="14" rx="2.5"/>',wifi:'<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.3a9.5 9.5 0 0 1 13 0M8.6 15.5a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19" r="1.3" fill="currentColor"/>',bt:'<path d="M7 7l10 10-5 4V3l5 4L7 17"/>',
+  moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',leaf:'<path d="M5 19c0-9 5-14 15-15-.5 10-6 15-15 15z"/><path d="M5 19c3-5 6-8 10-10"/>',
+  vol:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/>',
+  spark:'<path d="M12 2.5c.6 4.6 2.9 6.9 7.5 7.5-4.6.6-6.9 2.9-7.5 7.5-.6-4.6-2.9-6.9-7.5-7.5 4.6-.6 6.9-2.9 7.5-7.5z" fill="currentColor" stroke="none"/>',timer:'<circle cx="12" cy="13" r="8"/><path d="M12 13V9M10 2.5h4"/>',
+  folder:'<path d="M3.5 7.5A2 2 0 0 1 5.5 5.5h4l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z" fill="currentColor" stroke="none"/>',compass:'<circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z" fill="currentColor"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.8l1.6 2.3 2.7-.7.4 2.8 2.6 1.1-1.2 2.5 1.2 2.5-2.6 1.1-.4 2.8-2.7-.7L12 21.2l-1.6-2.3-2.7.7-.4-2.8-2.6-1.1L5.9 13 4.7 10.5l2.6-1.1.4-2.8 2.7.7z"/>',term:'<rect x="3" y="4.5" width="18" height="15" rx="3"/><path d="M7 10l3 2.5L7 15M12.5 15H17"/>',
+  note:'<path d="M9 18V5.5l11-2V16"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="17.5" cy="16" r="2.5" fill="currentColor"/>',notes:'<path d="M6 3.5h12v17H6z"/><path d="M9 8h6M9 12h6M9 16h4"/>',bubble:'<path d="M12 3.5c5.2 0 9 3.4 9 7.7s-3.8 7.7-9 7.7c-1 0-2-.1-2.9-.4L4.5 20.5l1.3-3.8C4.1 15.3 3 13.4 3 11.2 3 6.9 6.8 3.5 12 3.5z" fill="currentColor" stroke="none"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/>',photo:'<rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/>',
+  batt:'<rect x="3" y="7" width="16" height="10" rx="2.5"/><path d="M21 10.5v3"/>',screen:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',chip:'<rect x="6.5" y="6.5" width="11" height="11" rx="2"/><path d="M9 3v3.5M12 3v3.5M15 3v3.5M9 17.5V21M12 17.5V21M15 17.5V21M3 9h3.5M3 12h3.5M3 15h3.5M17.5 9H21M17.5 12H21M17.5 15H21"/>',
+  ram:'<rect x="3" y="8" width="18" height="8" rx="1.5"/><path d="M6 11h2M10 11h2M14 11h2M6 16v2M18 16v2"/>',disk:'<rect x="4" y="6" width="16" height="12" rx="2.5"/><path d="M7.5 10h9M7.5 14h5"/>',plug:'<path d="M9 3v5M15 3v5M6.5 8h11v3a5.5 5.5 0 0 1-11 0zM12 16.5V21"/>',
+  kb:'<rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6 10h0M9 10h0M12 10h0M15 10h0M18 10h0M7 14h10"/>',fan:'<circle cx="12" cy="12" r="1.8"/><path d="M12 10.2c-1-3.5.5-6.7 3-6.7 2 0 2.5 3-3 6.7zM13.8 12c3.5-1 6.7.5 6.7 3 0 2-3 2.5-6.7-3zM12 13.8c1 3.5-.5 6.7-3 6.7-2 0-2.5-3 3-6.7zM10.2 12c-3.5 1-6.7-.5-6.7-3 0-2 3-2.5 6.7 3z"/>',
+  heart:'<path d="M12 20s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.4 4.3 4.3 0 0 1 19.5 10c0 5.6-7.5 10-7.5 10z"/>',tool:'<path d="M14.5 6.5a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3l7.5-7.5"/><path d="M14.5 6.5 17 4l3 3-2.5 2.5"/>',sparkles:'<path d="M9 3.5c.4 3 1.9 4.5 5 5-3.1.5-4.6 2-5 5-.4-3-1.9-4.5-5-5 3.1-.5 4.6-2 5-5z"/><path d="M17 12c.3 2 1.1 2.8 3 3-1.9.3-2.7 1.1-3 3-.3-1.9-1.1-2.7-3-3 1.9-.2 2.7-1 3-3z"/>',
+  person:'<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1-4 4-6 7.5-6s6.5 2 7.5 6"/>',phone:'<path d="M6.6 3.5h2.8l1.6 4.4-2.1 1.5a11 11 0 0 0 5.7 5.7l1.5-2.1 4.4 1.6v2.8a2 2 0 0 1-2.2 2A16 16 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z" fill="currentColor" stroke="none"/>',
+  phoneDown:'<path d="M3 13.2c5-4.6 13-4.6 18 0l-.3 2.6-3.9.9-.9-2.6a8 8 0 0 0-7.8 0l-.9 2.6-3.9-.9z" fill="currentColor" stroke="none"/>',play:'<path d="M7 4.5v15l13-7.5z" fill="currentColor" stroke="none"/>',pause:'<path d="M7 4.5h3.5v15H7zM13.5 4.5H17v15h-3.5z" fill="currentColor" stroke="none"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6" fill="currentColor"/>',bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/>',video:'<rect x="3" y="6.5" width="12.5" height="11" rx="2.5"/><path d="M15.5 10.5l5-3v9l-5-3z"/>',grid:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.8"/>'};
+const VL='<svg viewBox="0 0 1024 1024" aria-hidden="true"><path fill="currentColor" d="M537 700H490L682 276H795L572 748H452L229 276H343Z"/></svg>';
+const APPS={vertane:{n:'Vertane',bg:'linear-gradient(160deg,#FAF8F2,#E4E0D3)',fg:'#2F7A55',g:'v'},files:{n:'Fichiers',bg:'linear-gradient(160deg,#fff,#EEF2F7)',fg:'#2476F0',g:'folder'},web:{n:'Web',bg:'linear-gradient(160deg,#fff,#E3ECF8)',fg:'#2476F0',g:'compass'},
+  msg:{n:'Messages',bg:'linear-gradient(160deg,#5ADBA6,#1D9F70)',fg:'#fff',g:'bubble'},mail:{n:'Mail',bg:'linear-gradient(160deg,#6BB8FF,#2476F0)',fg:'#fff',g:'mail'},music:{n:'Musique',bg:'linear-gradient(160deg,#FF7C6D,#EE355C)',fg:'#fff',g:'note'},
+  photos:{n:'Photos',bg:'linear-gradient(160deg,#FFD36B,#F09A26)',fg:'#fff',g:'photo'},notes:{n:'Notes',bg:'linear-gradient(180deg,#F8D25A 0 26%,#FFFEF8 26%)',fg:'#b8a86a',g:'notes'},term:{n:'Terminal',bg:'linear-gradient(160deg,#2a2d31,#0d1117)',fg:'#8DB89A',g:'term'},
+  ia:{n:'IA Vertane',bg:'conic-gradient(from 210deg at 50% 55%,#8DB89A,#2F9E73,#3F7FE8,#9C7BF2,#F08A63,#8DB89A)',fg:'#fff',g:'spark'},settings:{n:'Réglages',bg:'linear-gradient(160deg,#A8ADB4,#6A6F76)',fg:'#fff',g:'gear'}};
+const icon=id=>{const a=APPS[id];return '<div class="ico" style="background:'+a.bg+';color:'+a.fg+'">'+(a.g==='v'?VL.replace('<svg','<svg style="width:62%;height:62%"'):S(G[a.g],1.8))+'</div>';};
+
+/* ---------- l’ordinateur ---------- */
+const MK=Q.get('m')||'b1',model=B.byK(MK)||B.byK('b1'),KEY='vos1-pc-'+model.k;
+function fresh(){const c=B.cfgOf(model,Q.get('fin')||null,model.caps[Math.min(1,model.caps.length-1)]);return {cfg:c,usage:{days:300,cycles:240,scrH:1450,tbw:18,fanH:2100,keys:4.2,plugs:380},parts:{},history:[],batt:82,dark:false,notes:'Idées : ajouter une carte Ethernet dans la baie 5.'};}
+let DS=Object.assign(fresh(),LS.get(KEY,{}));if(Q.has('fresh'))DS=fresh();DS.cfg=B.fix(Object.assign({},DS.cfg,{ports:DS.cfg.ports.slice()}));
+const save=()=>{LS.set(KEY,DS);sync();};
+const name='Vertane '+model.name,size=()=>B.sizeOf(DS.cfg);
+const wall='url(assets/img/wall/sauge-l.webp) center/cover no-repeat,linear-gradient(160deg,#5f9e83,#16372f)';
+
+/* santé et analyse */
+function health(){const c=DS.cfg,u=DS.usage,p=k=>DS.parts[k]||{};const bh=clamp(100-(u.cycles-(p('batt').cy||0))*.02-(u.days-(p('batt').d||0))*.003,55,100);
+  const end=c.sto*600/1000,ssd=clamp(100-(u.tbw-(p('sto').tb||0))/end*100,0,100),fan=clamp(100-(u.fanH-(p('board').fh||0))/120,40,100),kb=clamp(100-(u.keys-(p('kb').k||0))*1.4,50,100),scr=clamp(100-(u.scrH-(p('screen').sh||0))/(c.screen==='oled'?600:1200),60,100);
+  return [{k:'batt',t:'Batterie',ic:'batt',pct:bh,s:[['Capacité',String(size().batt).replace('.',',')+' Wh'],['Santé',Math.round(bh)+' %'],['Cycles',u.cycles-(p('batt').cy||0)]]},
+    {k:'screen',t:'Écran',ic:'screen',pct:scr,s:[['Dalle',B.byV(B.SCREENS,c.screen).t],['Heures allumé',u.scrH+' h']]},
+    {k:'board',t:'Carte mère et ventilateur',ic:'fan',pct:fan,s:[['Puce',B.byV(B.BOARDS,c.board).t],['Ventilateur',Math.round(u.fanH-(p('board').fh||0))+' h'],['Poussière',fan<85?'Nettoyage conseillé':'Faible']]},
+    {k:'ram',t:'Mémoire LPCAMM2',ic:'ram',pct:100,s:[['Capacité',c.ram+' Go'],['Erreurs','0']]},
+    {k:'sto',t:'SSD M.2',ic:'disk',pct:ssd,s:[['Capacité',B.capL(c.sto)],['Écrit',Math.round(u.tbw-(p('sto').tb||0))+' To sur '+Math.round(end)+' To']]},
+    {k:'kb',t:'Clavier et pavé tactile',ic:'kb',pct:kb,s:[['Frappes',(u.keys-(p('kb').k||0)).toFixed(1).replace('.',',')+' millions'],['Touches usées','Aucune']]}];}
+function analyze(){const c=DS.cfg,it=[],s=size(),h=B.hours(c),n={};c.ports.forEach(p=>n[p]=(n[p]||0)+1);const half=c.ports.length/2,L=c.ports.slice(0,half).includes('spk'),R=c.ports.slice(half).includes('spk');
+  if(c.board==='g'&&c.ram<32)it.push({sev:'warn',t:'Mémoire trop juste pour la carte graphique',b:'Avec la graphique dédiée, 16 Go se remplissent vite en 3D : Vertane OS utilise alors le SSD, bien plus lent. Passe à 32 Go.'});
+  if(c.ram===64&&c.board==='e')it.push({sev:'tip',t:'Mémoire surdimensionnée pour la puce',b:'La puce 8 cœurs n’exploite pas 64 Go. 32 Go suffisent, la différence pourrait aller dans un SSD plus grand.'});
+  if((c.board==='x'||c.board==='g')&&c.screen==='ips')it.push({sev:'tip',t:'L’écran bride ta puce',b:'Ta puce 16 cœurs peut afficher bien plus que 60 Hz. Un écran 120 Hz rendrait tout plus fluide.'});
+  if(h<10)it.push({sev:'warn',t:'Batterie trop petite pour ton écran et ta puce',b:'Environ '+h+' h d’autonomie. Baisse la fréquence de l’écran, ou choisis un châssis plus grand pour une batterie plus grosse.'});
+  if(n.cache)it.push({sev:'tip',t:(n.cache>1?n.cache+' baies vides':'Une baie vide'),b:'Elles sont fermées par des caches. Tu peux y clipser un lecteur SD, un port Ethernet ou un haut-parleur de plus, sans outil.'});
+  if(!(L&&R))it.push({sev:'tip',t:L||R?'Son mono':'Aucun haut-parleur',b:'Ajoute une carte haut-parleur de l’autre côté pour la stéréo.'});
+  if(c.sto<=512&&c.board==='g')it.push({sev:'tip',t:'SSD un peu petit pour le jeu',b:'Les jeux récents pèsent 100 Go et plus. Un SSD de 1 To se change en 5 minutes.'});
+  health().forEach(x=>{if(x.pct<80)it.push({sev:'warn',t:x.t+' en fin de vie',b:'Niveau de vie : '+Math.round(x.pct)+' %. Il se change en quelques minutes.'});else if(x.k==='board'&&x.pct<85)it.push({sev:'tip',t:'Ventilateur à dépoussiérer',b:'Il tourne plus vite pour refroidir : un nettoyage le rendra plus silencieux.'});});
+  const w=it.filter(i=>i.sev==='warn').length,t=it.filter(i=>i.sev==='tip').length;if(!w)it.push({sev:'ok',t:'Puce et écran bien assortis',b:'Ta puce exploite ton écran '+B.byV(B.SCREENS,c.screen).t+'.'});
+  return {it,score:clamp(100-w*14-t*5,20,100),h};}
+
+/* ---------- structure ---------- */
+const root=doc.createElement('div');root.className='pc os';root.dataset.theme=DS.dark?'dark':'light';
+root.innerHTML='<div class="wall" style="background:'+wall+'"></div><div class="desk" id="desk"></div>'+
+  '<div class="bar" id="bar"><button id="vbtn" aria-label="Lanceur"><span class="vl">'+VL+'</span></button><button class="ttl" id="appT">Bureau</button><span class="menu" style="display:flex;gap:2px">'+['Fichier','Édition','Affichage','Fenêtre','Aide'].map(m=>'<button class="menu">'+m+'</button>').join('')+'</span><span class="sp"></span>'+
+  '<button id="aiB" aria-label="IA Vertane">'+S(G.spark)+'</button><button id="ncB" aria-label="Notifications">'+S(G.bell)+'</button><button id="qsB">'+S(G.wifi)+'<span class="bt" id="bt"></span><span id="clk"></span></button></div>'+
+  '<div class="pcap" id="pcap"></div>'+
+  '<div class="dock2 gl dk" id="dock"></div>'+
+  '<div class="launch" id="launch"><div class="sfield gl dk">'+S(G.search,2)+'<input id="lq" placeholder="Rechercher une app"></div><div class="lgrid" id="lgrid"></div></div>'+
+  '<div class="pan gl dk" id="qs"></div><div class="pan gl dk" id="ncp" style="width:360px;max-height:80%;overflow:auto"></div><div class="toasts" id="toasts"></div>'+
+  '<div class="aiglow" id="aiglow"></div><div class="aibar gu" id="aibar"></div>'+
+  '<div class="plock" id="plock"></div><div class="boot2" id="boot"><img src="assets/logo/vertane-icone-principal.svg" alt=""><div class="bar3"><i></i></div></div><div class="off2" id="off"></div>';
+doc.body.appendChild(root);
+
+/* ---------- barre, horloge, batterie ---------- */
+const ST={locked:true,screen:'on',charging:false};let NOTS=[];
+const hm=d=>String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+function renderBar(){const d=new Date(),b=DS.batt;$('#clk').textContent=d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'}).replace('.','')+'  '+hm(d);
+  $('#bt').innerHTML=b+' %<i class="'+(ST.charging?'chg':b<=15?'low':'')+'"><b style="width:'+b+'%"></b></i>';}
+setInterval(renderBar,10000);setInterval(()=>{if(ST.charging){if(DS.batt<100)DS.batt++;}else if(Math.random()<.2)DS.batt=Math.max(1,DS.batt-1);renderBar();},4000);
+
+/* ---------- Capsule ---------- */
+const cap={acts:[],alert:null,exp:false};
+function capRender(){const e=$('#pcap');const a=cap.alert||cap.acts[cap.acts.length-1];
+  if(!a){e.className='pcap';e.style.width='120px';e.innerHTML='';return;}
+  if(cap.exp&&a.x&&!cap.alert){e.className='pcap on big';e.style.width='420px';e.innerHTML=a.x();a.bind&&a.bind(e);return;}
+  e.className='pcap on';e.style.width=(a.w||220)+'px';e.innerHTML='<span class="l">'+(typeof a.l==='function'?a.l():a.l)+'</span><span class="r">'+(typeof a.r==='function'?a.r():a.r)+'</span>';}
+function capSet(id,a){a.id=id;cap.acts=cap.acts.filter(x=>x.id!==id);cap.acts.push(a);capRender();}
+function capDel(id){cap.acts=cap.acts.filter(x=>x.id!==id);cap.exp=false;capRender();}
+function capAlert(a,ms){cap.alert=a;capRender();clearTimeout(capAlert.t);capAlert.t=setTimeout(()=>{cap.alert=null;capRender();},ms||2600);}
+$('#pcap').addEventListener('click',e=>{if(e.target.closest('button'))return;if(cap.alert)return;const a=cap.acts[cap.acts.length-1];if(!a)return;if(a.x){cap.exp=!cap.exp;capRender();}else if(a.app)openApp(a.app);});
+setInterval(()=>{if(cap.acts.length&&!cap.exp)capRender();if(cap.exp){const a=cap.acts[cap.acts.length-1];if(a&&a.upd)a.upd($('#pcap'));}},500);
+const fmtS=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+function timer(sec){const end=Date.now()+sec*1000,left=()=>(end-Date.now())/1000;capSet('timer',{w:170,l:'<span style="color:#F5A524">'+S(G.timer,2)+'</span>',r:()=>'<span style="color:#F5A524">'+fmtS(left())+'</span>',
+  x:()=>'<div style="width:100%"><div style="display:flex;justify-content:space-between;opacity:.7;font-weight:500">Minuteur<span style="color:#F5A524">'+fmtS(sec)+'</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><button class="xbtn red" data-x>'+S(G.x,2.4)+'</button><span class="xbig" style="color:#F5A524" data-t>'+fmtS(left())+'</span></div></div>',bind:e=>{e.querySelector('[data-x]').onclick=()=>capDel('timer');},upd:e=>{const t=e.querySelector('[data-t]');if(t)t.textContent=fmtS(left());}});
+  const iv=setInterval(()=>{if(!cap.acts.find(a=>a.id==='timer'))return clearInterval(iv);if(left()<=0){clearInterval(iv);capDel('timer');capAlert({w:240,l:'<span style="color:#F5A524">'+S(G.timer,2)+' Minuteur</span>',r:'Terminé'},3500);notify('clock','Minuteur','Le minuteur est terminé.');}},300);}
+const MU={on:false,t0:0,pos:0,i:0,T:[['Verre et lumière','Les Modules',214],['Sauge','Clara Lune',188],['Minuit à Lyon','Noé & les Ondes',201]]};
+function music(force){if(MU.on&&force)return;MU.on=!MU.on;if(MU.on)MU.t0=Date.now();else MU.pos+=(Date.now()-MU.t0)/1000;
+  capSet('music',{w:200,app:'music',l:'<span style="width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,#8fb3ff,#f4a6d8)"></span>',r:()=>'<span class="wave'+(MU.on?'':' stop')+'" style="color:#8DB89A"><i></i><i></i><i></i><i></i><i></i></span>',
+    x:()=>'<div style="width:100%;display:flex;gap:12px;align-items:center"><span style="width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#8fb3ff,#f4a6d8);flex:0 0 auto"></span><div style="flex:1"><div class="xt">'+esc(MU.T[MU.i][0])+'</div><div class="xs">'+esc(MU.T[MU.i][1])+' · haut-parleurs '+esc(B.sound(DS.cfg).split(',')[0].toLowerCase())+'</div></div><button class="xbtn" data-pp>'+S(MU.on?G.pause:G.play)+'</button></div>',bind:e=>{e.querySelector('[data-pp]').onclick=()=>{music();cap.exp=true;capRender();};}});
+  if(W.music)W.music.draw&&W.music.draw();}
+
+/* ---------- notifications ---------- */
+function notify(app,title,body){const n={app:APPS[app]?app:'vertane',title,body,t:Date.now()};NOTS.unshift(n);
+  if(ST.locked||ST.screen!=='on')return;const el=doc.createElement('div');el.className='ntc gl dk';el.innerHTML=icon(n.app)+'<b>'+esc(title)+'</b><span>'+esc(body)+'</span>';$('#toasts').appendChild(el);
+  el.onclick=()=>{el.remove();openApp(n.app==='clock'?'vertane':n.app);};setTimeout(()=>{el.style.transition='opacity .3s,transform .3s';el.style.opacity=0;el.style.transform='translateX(40px)';setTimeout(()=>el.remove(),300);},5500);post('notified',{app});}
+function renderNC(){$('#ncp').innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin:2px 4px 12px"><b style="font:600 16px/1 var(--font)">Notifications</b>'+(NOTS.length?'<button class="qs" style="padding:6px 10px" data-clr>Effacer</button>':'')+'</div>'+(NOTS.length?NOTS.slice(0,10).map(n=>'<div class="ntc">'+icon(n.app)+'<b>'+esc(n.title)+'</b><span>'+esc(n.body)+'</span></div>').join(''):'<p style="opacity:.7;text-align:center;margin:20px 0">Aucune notification</p>');
+  const c=$('[data-clr]',$('#ncp'));if(c)c.onclick=()=>{NOTS=[];renderNC();};}
+
+/* ---------- réglages rapides ---------- */
+const Q2={wifi:true,bt:true,dnd:false,saver:false};
+function renderQS(){const an=analyze();$('#qs').innerHTML='<div class="qsg">'+[['wifi','Wi-Fi',Q2.wifi?'Maison-5G':'Désactivé',G.wifi],['bt','Bluetooth',Q2.bt?'Souris, casque':'Désactivé',G.bt],['dnd','Concentration',Q2.dnd?'Activée':'Désactivée',G.moon],['saver','Économie',Q2.saver?'Activée':'Désactivée',G.leaf],['dark','Mode sombre',DS.dark?'Activé':'Désactivé',G.moon],['vertane','Équilibre',an.score+'/100',G.heart]].map(x=>'<button class="qs'+((x[0]==='dark'?DS.dark:Q2[x[0]])?' on':'')+'" data-q="'+x[0]+'"><i>'+S(x[3])+'</i><span>'+x[1]+'<small>'+x[2]+'</small></span></button>').join('')+'</div>'+
+  '<div class="sl">'+S(G.sun)+'<input type="range" value="80" aria-label="Luminosité"></div><div class="sl">'+S(G.vol)+'<input type="range" value="55" aria-label="Volume"></div><div class="sl" style="justify-content:space-between"><span>'+S(G.batt)+'</span><span style="flex:1">Batterie '+DS.batt+' %'+(ST.charging?' · en charge':'')+'</span><span style="opacity:.7">≈ '+Math.round(an.h*DS.batt/100)+' h</span></div>';}
+$('#qs').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b)return;const k=b.dataset.q;if(k==='dark'){DS.dark=!DS.dark;root.dataset.theme=DS.dark?'dark':'light';save();}else if(k==='vertane'){togglePan(null);openApp('vertane',{tab:'opti'});return;}else Q2[k]=!Q2[k];renderQS();});
+let panOpen=null;function togglePan(id){['qs','ncp'].forEach(p=>$('#'+p).classList.toggle('on',p===id&&panOpen!==id));panOpen=panOpen===id?null:id;$('#launch').classList.remove('on');if(panOpen==='qs')renderQS();if(panOpen==='ncp')renderNC();}
+$('#qsB').onclick=()=>togglePan('qs');$('#ncB').onclick=()=>togglePan('ncp');
+root.addEventListener('pointerdown',e=>{if(panOpen&&!e.target.closest('.pan,#qsB,#ncB'))togglePan(null);if($('#launch').classList.contains('on')&&e.target.id==='launch')launcher(false);if($('#aibar').classList.contains('on')&&!e.target.closest('#aibar,#aiB'))ai(false);});
+
+/* ---------- Dock et lanceur ---------- */
+const DOCK=['vertane','files','web','msg','mail','music','photos','notes','term','ia','settings'];
+function renderDock(){$('#dock').innerHTML='<button data-tip="Toutes les apps" data-l><div class="ico" style="background:rgba(255,255,255,.2);color:#fff">'+S(G.grid,1.8)+'</div></button><span class="sep"></span>'+DOCK.map(id=>'<button data-app="'+id+'" data-tip="'+esc(APPS[id].n)+'">'+icon(id)+(W[id]?'<i></i>':'')+'</button>').join('');}
+$('#dock').addEventListener('click',e=>{const b=e.target.closest('[data-app]');if(b){const w=W[b.dataset.app];if(w&&w.min){w.min=false;w.el.style.display='';focus(w);}else openApp(b.dataset.app);}if(e.target.closest('[data-l]'))launcher(true);});
+function launcher(on){$('#launch').classList.toggle('on',on);if(on){$('#lgrid').innerHTML=Object.keys(APPS).map(id=>'<button data-app="'+id+'">'+icon(id)+esc(APPS[id].n)+'</button>').join('');const q=$('#lq');q.value='';setTimeout(()=>q.focus(),60);}}
+$('#vbtn').onclick=()=>launcher(!$('#launch').classList.contains('on'));
+$('#lgrid').addEventListener('click',e=>{const b=e.target.closest('[data-app]');if(b){launcher(false);openApp(b.dataset.app);}});
+$('#lq').addEventListener('input',e=>{const v=e.target.value.toLowerCase();$$('#lgrid [data-app]').forEach(b=>b.style.display=APPS[b.dataset.app].n.toLowerCase().includes(v)?'':'none');});
+$('#lq').addEventListener('keydown',e=>{if(e.key==='Enter'){const b=$$('#lgrid [data-app]').find(x=>x.style.display!=='none');if(b){launcher(false);openApp(b.dataset.app);}}if(e.key==='Escape')launcher(false);});
+/* icônes du bureau */
+$('#desk').innerHTML=[['vertane',40,30],['files',40,140],['term',40,250]].map(x=>'<button class="dico" data-open="'+x[0]+'" style="right:'+x[1]+'px;top:'+x[2]+'px">'+icon(x[0])+esc(APPS[x[0]].n)+'</button>').join('');
+$('#desk').addEventListener('dblclick',e=>{const b=e.target.closest('[data-open]');if(b)openApp(b.dataset.open);});
+$('#desk').addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b&&e.detail===1&&matchMedia('(pointer:coarse)').matches)openApp(b.dataset.open);});
+
+/* ---------- fenêtres ---------- */
+const W={};let Z=20,cur=null;
+const SIZES={vertane:[900,600],files:[760,480],web:[980,620],msg:[720,500],mail:[760,500],music:[520,420],photos:[760,520],notes:[560,440],term:[720,440],ia:[560,560],settings:[820,540]};
+function openApp(id,args){if(!APPS[id])return;if(ST.locked)return;launcher(false);let w=W[id];
+  if(!w){const [ww,hh]=SIZES[id]||[700,480],n=Object.keys(W).length,x=clamp(80+n*36,10,innerWidth-ww-10),y=clamp(60+n*28,44,innerHeight-hh-90);
+    const el=doc.createElement('div');el.className='w opening';el.style.cssText='left:'+x+'px;top:'+y+'px;width:'+Math.min(ww,innerWidth-20)+'px;height:'+Math.min(hh,innerHeight-130)+'px';
+    el.innerHTML='<div class="wt">'+icon(id)+'<b>'+esc(APPS[id].n)+'</b><button data-a="min" aria-label="Réduire">'+S(G.min,2)+'</button><button data-a="max" aria-label="Agrandir">'+S(G.max,1.8)+'</button><button class="x" data-a="x" aria-label="Fermer">'+S(G.x,2)+'</button></div><div class="wb"></div><div class="wr"></div>';
+    $('#desk').appendChild(el);w=W[id]={id,el,body:el.querySelector('.wb')};setTimeout(()=>el.classList.remove('opening'),400);
+    APPIMPL[id]?APPIMPL[id](w,args||{}):w.body.innerHTML='<p style="padding:20px">…</p>';bindWin(w);renderDock();}
+  else{w.min=false;w.el.style.display='';if(APPIMPL[id]&&args&&w.args)w.args(args);}
+  focus(w);sync();}
+function focus(w){$$('.w').forEach(x=>x.classList.remove('focus'));w.el.classList.add('focus');w.el.style.zIndex=++Z;cur=w;$('#appT').textContent=APPS[w.id].n;sync();}
+function closeWin(w){w.el.style.transition='transform .2s,opacity .2s';w.el.style.transform='scale(.95)';w.el.style.opacity=0;setTimeout(()=>w.el.remove(),200);delete W[w.id];if(w.kill)w.kill();if(cur===w){cur=null;$('#appT').textContent='Bureau';}renderDock();sync();}
+function bindWin(w){const el=w.el,t=el.querySelector('.wt');
+  el.addEventListener('pointerdown',()=>focus(w));
+  t.addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a)return;if(a.dataset.a==='x')closeWin(w);if(a.dataset.a==='min'){w.min=true;el.style.display='none';cur=null;$('#appT').textContent='Bureau';}if(a.dataset.a==='max')maxWin(w);});
+  t.addEventListener('dblclick',e=>{if(!e.target.closest('button'))maxWin(w);});
+  let d=null;t.addEventListener('pointerdown',e=>{if(e.target.closest('button')||el.classList.contains('max'))return;d={x:e.clientX,y:e.clientY,l:el.offsetLeft,t:el.offsetTop};t.setPointerCapture(e.pointerId);});
+  t.addEventListener('pointermove',e=>{if(!d)return;el.style.left=clamp(d.l+e.clientX-d.x,-el.offsetWidth+120,innerWidth-120)+'px';el.style.top=clamp(d.t+e.clientY-d.y,0,innerHeight-80)+'px';});
+  t.addEventListener('pointerup',()=>d=null);
+  const r=el.querySelector('.wr');let rs=null;r.addEventListener('pointerdown',e=>{rs={x:e.clientX,y:e.clientY,w:el.offsetWidth,h:el.offsetHeight};r.setPointerCapture(e.pointerId);e.stopPropagation();});
+  r.addEventListener('pointermove',e=>{if(!rs)return;el.style.width=Math.max(360,rs.w+e.clientX-rs.x)+'px';el.style.height=Math.max(240,rs.h+e.clientY-rs.y)+'px';});r.addEventListener('pointerup',()=>rs=null);}
+function maxWin(w){const el=w.el;if(el.classList.contains('max')){el.classList.remove('max');Object.assign(el.style,w.prev);}else{w.prev={left:el.style.left,top:el.style.top,width:el.style.width,height:el.style.height};el.classList.add('max');Object.assign(el.style,{left:'0px',top:'0px',width:'100%',height:'calc(100% - 78px)'});}}
+function expose(){const ws=Object.values(W).filter(w=>!w.min);if(!ws.length)return;const on=!root.classList.contains('expo');root.classList.toggle('expo',on);
+  const n=ws.length,cols=Math.ceil(Math.sqrt(n)),rows=Math.ceil(n/cols),cw=innerWidth/cols,ch=(innerHeight-120)/rows;
+  ws.forEach((w,i)=>{if(!on){w.el.style.transform='';return;}const c=i%cols,r2=Math.floor(i/cols),k=Math.min(.9*cw/w.el.offsetWidth,.85*ch/w.el.offsetHeight,.8);
+    const tx=c*cw+cw/2-(w.el.offsetLeft+w.el.offsetWidth/2),ty=r2*ch+ch/2+10-(w.el.offsetTop+w.el.offsetHeight/2);w.el.style.transformOrigin='center';w.el.style.transform='translate('+tx+'px,'+ty+'px) scale('+k+')';
+    w.el.onclick=()=>{if(!root.classList.contains('expo'))return;expose();focus(w);};});}
+
+/* ---------- apps ---------- */
+const APPIMPL={};
+const rowkv=(a,b)=>'<div class="row static noi"><span class="rt">'+a+'</span><span class="rv">'+b+'</span></div>';
+const lifeCol=p=>p<80?'var(--red)':p<88?'var(--orange)':'var(--green)';
+APPIMPL.vertane=(w,args)=>{let tab=args.tab||'b1';
+  const draw=()=>{const c=DS.cfg,hs=health(),an=analyze(),s=size();
+    const nav=[['b1','Mon '+model.name,G.screen],['sante','Santé',G.heart],['ports','Ports et baies',G.plug],['opti','Optimiser',G.sparkles],['tutos','Tutos',G.tool]];
+    let main='';
+    if(tab==='b1')main='<h1 class="lt">'+esc(name)+'<small>'+esc(B.COL[c.col][0])+' · Vertane OS 1.0 Bureau</small></h1><div style="display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:center"><img src="'+B.photo(model,c.col)+'" alt="" style="width:100%"><div class="kv" style="margin:0"><div><small>Équilibre</small><b>'+an.score+'/100</b></div><div><small>Autonomie</small><b>'+an.h+' h</b></div><div><small>Mémoire</small><b>'+c.ram+' Go</b></div><div><small>SSD</small><b>'+B.capL(c.sto)+'</b></div></div></div>'+
+      '<div class="sh">Caractéristiques</div><div class="grp">'+B.specs(c).map(r=>rowkv(esc(r[0]),esc(r[1]))).join('')+'</div>'+
+      '<div class="sh">Historique des modules</div><div class="grp">'+(DS.history.length?DS.history.slice(0,6).map(h=>rowkv(esc(h.t),esc(h.v))).join(''):rowkv('<span class="muted">Aucun module changé</span>',''))+'</div>';
+    if(tab==='sante')main='<h1 class="lt">Santé<small>Le niveau de vie de chaque pièce</small></h1><div class="grp">'+hs.map(x=>'<div class="row static"><span class="ri" style="background:var(--accent)">'+S(G[x.ic],1.9)+'</span><span class="rt">'+x.t+'<small>'+x.s.map(s=>s[0]+' : '+s[1]).join(' · ')+'</small><div class="bar2" style="margin-top:7px"><i style="width:'+x.pct+'%;background:'+lifeCol(x.pct)+'"></i></div></span><span class="rv">'+Math.round(x.pct)+' %</span></div>').join('')+'</div>';
+    if(tab==='ports')main='<h1 class="lt">Ports et baies<small>'+s.bays+' baies · '+esc(B.portsSum(c))+'</small></h1><div class="card" style="background:#F3F1EA;padding:10px">'+B.sides(c,{})+'</div><div class="sh">Baie par baie</div><div class="grp">'+c.ports.map((p,i)=>rowkv('Baie '+(i+1)+(i<s.bays/2?' · gauche':' · droite'),esc(B.byV(B.PORTS,p).t)+(i===0?' · charge':''))).join('')+'</div><p class="fine" style="margin:10px 6px">La baie 1 reste un USB-C : c’est là qu’on branche le chargeur. Les autres cartes se clipsent sans outil, en 5 secondes.</p>';
+    if(tab==='opti')main='<h1 class="lt">Optimiser<small>Ce qui freine ton '+esc(model.name)+'</small></h1><div class="card" style="display:flex;align-items:center;gap:16px;margin-bottom:12px"><b style="font:700 40px/1 var(--font)">'+an.score+'</b><span class="muted">sur 100 · Vertane compare chaque pièce aux autres : puce, écran, mémoire, batterie et baies.</span></div>'+
+      an.it.map(i=>'<div class="card" style="margin-bottom:10px"><span class="pill '+(i.sev==='warn'?'warn':i.sev==='ok'?'ok':'')+'">'+(i.sev==='warn'?'Important':i.sev==='ok'?'Bien':'Conseil')+'</span><b style="display:block;font-size:16px;margin-top:8px">'+esc(i.t)+'</b><p class="muted" style="margin:4px 0 0">'+esc(i.b)+'</p></div>').join('');
+    if(tab==='tutos')main='<h1 class="lt">Tutos<small>Tournevis fourni, vis imperdables</small></h1><div class="grp">'+[['Cartes de ports','5 secondes','Pousse la carte, elle se déclipse. Clipse la nouvelle.'],['Mémoire LPCAMM2','5 minutes','Retourne l’ordinateur, desserre les 8 vis du dessous, retourne-le et soulève le dessus. La mémoire est vissée à plat.'],['SSD M.2','5 minutes','Même ouverture. Une vis tient le SSD : dévisse, glisse le nouveau.'],['Batterie','5 minutes','Même ouverture. Débranche le connecteur, dévisse, déclipse.'],['Dessus : clavier et pavé','5 minutes','Le dessus entier est un seul module : il se soulève après les 8 vis.'],['Écran complet','2 minutes','2 vis par charnière, par l’arrière. L’écran se détache avec son connecteur.'],['Carte mère et ventilateur','15 minutes','Débranche mémoire, SSD, batterie et baies, puis 6 vis.']].map(t=>'<div class="row static"><span class="ri" style="background:var(--accent)">'+S(G.tool,1.9)+'</span><span class="rt">'+t[0]+'<small>'+t[2]+'</small></span><span class="rv">'+t[1]+'</span></div>').join('')+'</div>';
+    w.body.innerHTML='<div class="side"><nav>'+nav.map(n=>'<button data-t="'+n[0]+'" class="'+(n[0]===tab?'on':'')+'">'+S(n[2])+esc(n[1])+'</button>').join('')+'</nav><main>'+main+'</main></div>';};
+  w.body.addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(b){tab=b.dataset.t;draw();}});w.args=a=>{if(a.tab){tab=a.tab;draw();}};w.draw=draw;draw();};
+APPIMPL.files=w=>{const c=DS.cfg;w.body.innerHTML='<div class="side"><nav><h4>Favoris</h4>'+[['Récents',G.timer],['Documents',G.notes],['Images',G.photo],['Téléchargements',G.folder]].map((n,i)=>'<button class="'+(i?'':'on')+'">'+S(n[1])+n[0]+'</button>').join('')+'<h4>Emplacements</h4><button>'+S(G.disk)+'SSD '+B.capL(c.sto)+'</button><button>'+S(G.plug)+'Carte SD</button></nav><main><h1 class="lt" style="font-size:22px">Récents</h1><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:16px">'+
+  [['Facture modules.pdf','#E5484D'],['Présentation.key','#F5A524'],['Photos vacances','#3B82F6'],['Budget 2026.xlsx','#34C46A'],['Notes de cours','#7C5CFF'],['Maquette site','#2F7A55'],['Contrat.docx','#3B82F6'],['Musique','#EE355C']].map(f=>'<div style="text-align:center;font-size:12.5px"><div style="height:80px;border-radius:12px;background:'+f[1]+'22;color:'+f[1]+';display:grid;place-items:center;margin-bottom:6px"><span style="width:34px;height:34px">'+S(f[0].includes('.')?G.notes:G.folder,1.6)+'</span></div>'+f[0]+'</div>').join('')+'</div></main></div>';};
+APPIMPL.web=(w,args)=>{w.body.innerHTML='<div style="display:flex;flex-direction:column;height:100%"><div style="display:flex;gap:8px;padding:8px 12px;border-bottom:.5px solid var(--sep)"><input value="vertane.fr" data-u style="flex:1;height:32px;border-radius:10px;border:0;background:var(--fill);padding:0 12px;color:var(--ink);font-size:13.5px;outline:0"></div><iframe src="index.html" title="Web" style="flex:1;border:0;width:100%;background:#fff"></iframe></div>';
+  const u=w.body.querySelector('[data-u]'),f=w.body.querySelector('iframe');u.addEventListener('keydown',e=>{if(e.key==='Enter'){let p=u.value.trim();p=/os/i.test(p)?'os.html':/b1|ordi/i.test(p)?'b1.html':/store/i.test(p)?'store.html':/module/i.test(p)?'modules.html':'index.html';f.src=p;u.value='vertane.fr/'+p.replace('.html','').replace('index','');}});};
+APPIMPL.term=w=>{w.body.innerHTML='<div class="term" data-t><div>Vertane OS Bureau 1.0 (Android 17) · '+esc(name)+'</div><div>Tape <span class="p">help</span> pour la liste des commandes.</div><br></div>';const t=w.body.querySelector('[data-t]');
+  const line=()=>{const d=doc.createElement('div');d.innerHTML='<span class="p">vertane@'+model.k+'</span>:~$ <input spellcheck="false" autocomplete="off">';t.appendChild(d);const i=d.querySelector('input');i.focus();
+    i.addEventListener('keydown',e=>{if(e.key!=='Enter')return;const v=i.value.trim();i.replaceWith(doc.createTextNode(v));out(v);line();t.scrollTop=1e6;});};
+  const out=v=>{const c=DS.cfg,an=analyze();let r='';const [cmd,arg]=v.split(/\s+/);
+    if(cmd==='help')r='vertane status   état de l’ordinateur\nvertane modules  liste des modules\nvertane ports    les baies\nvertane sante    niveau de vie\nneofetch         résumé du système\nclear            efface l’écran';
+    else if(v==='vertane status')r='Équilibre : '+an.score+'/100\nBatterie : '+DS.batt+' %'+(ST.charging?' (en charge)':'')+'\nAutonomie estimée : '+an.h+' h';
+    else if(v==='vertane modules')r=B.specs(c).map(s=>s[0].padEnd(10)+' '+s[1]).join('\n');
+    else if(v==='vertane ports')r=c.ports.map((p,i)=>'baie '+(i+1)+'  '+B.byV(B.PORTS,p).t).join('\n');
+    else if(v==='vertane sante')r=health().map(h=>h.t.padEnd(26)+Math.round(h.pct)+' %').join('\n');
+    else if(cmd==='neofetch')r='       ▲▲▲▲▲       '+name+'\n     ▲▲     ▲▲     OS : Vertane OS Bureau 1.0\n    ▲▲  ▼▼▼  ▲▲    Base : Android 17 (mode bureau)\n     ▲▲  ▼  ▲▲     Puce : '+B.byV(B.BOARDS,c.board).t+'\n       ▲▲▲▲▲       Mémoire : '+c.ram+' Go · SSD '+B.capL(c.sto);
+    else if(cmd==='clear'){t.innerHTML='';return;}else if(v)r=cmd+' : commande introuvable. Essaie « help ».';
+    if(r){const p=doc.createElement('pre');p.style.margin='2px 0 8px';p.style.font='inherit';p.textContent=r;t.appendChild(p);}};
+  line();w.body.addEventListener('click',()=>{const i=t.querySelector('input');if(i)i.focus();});};
+APPIMPL.notes=w=>{w.body.innerHTML='<textarea style="width:100%;height:100%;border:0;outline:0;padding:22px;font:400 16px/1.6 var(--font);background:#FFFEF8;color:#222;resize:none">'+esc(DS.notes)+'</textarea>';w.body.querySelector('textarea').addEventListener('input',e=>{DS.notes=e.target.value;LS.set(KEY,DS);});};
+APPIMPL.music=w=>{const draw=()=>{const t=MU.T[MU.i];w.body.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;padding:20px"><div style="width:170px;height:170px;border-radius:20px;background:linear-gradient(135deg,#8fb3ff,#f4a6d8);box-shadow:0 20px 40px rgba(0,0,0,.2)"></div><b style="font-size:18px">'+esc(t[0])+'</b><span class="muted">'+esc(t[1])+'</span><button class="pbtn" data-p>'+(MU.on?'Pause':'Lecture')+'</button><span class="pill">'+esc(B.sound(DS.cfg))+'</span></div>';w.body.querySelector('[data-p]').onclick=()=>music();};w.draw=draw;draw();};
+APPIMPL.photos=w=>{w.body.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:4px;padding:4px">'+Array.from({length:24},(_,i)=>'<div style="aspect-ratio:1;border-radius:6px;background:linear-gradient('+(i*37%360)+'deg,hsl('+(i*47%360)+' 60% 70%),hsl('+((i*47+60)%360)+' 50% 40%))"></div>').join('')+'</div>';};
+APPIMPL.msg=w=>{const C=[['Léa Martin','Tu me montres la Capsule ce soir ?'],['Hugo Bernard','On se fait un foot samedi ?'],['Atelier Vertane','Ta carte Ethernet est expédiée.']];let cur=0;
+  const draw=()=>{w.body.innerHTML='<div class="side"><nav>'+C.map((c,i)=>'<button class="'+(i===cur?'on':'')+'" data-c="'+i+'" style="flex-direction:column;align-items:flex-start;gap:2px"><b style="font-weight:600">'+esc(c[0])+'</b><small style="opacity:.75;font-weight:400">'+esc(c[1])+'</small></button>').join('')+'</nav><main style="display:flex;flex-direction:column;padding:16px"><div style="flex:1"><p style="background:var(--card);padding:10px 14px;border-radius:18px;max-width:70%;display:inline-block">'+esc(C[cur][1])+'</p></div><input placeholder="Message (synchronisé avec ton téléphone)" style="height:40px;border-radius:20px;border:0;background:var(--fill);padding:0 16px;color:var(--ink);outline:0"></main></div>';};
+  w.body.addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(b){cur=+b.dataset.c;draw();}});draw();};
+APPIMPL.mail=w=>{w.body.innerHTML='<div class="side"><nav><button class="on">'+S(G.mail)+'Réception</button><button>'+S(G.check)+'Envoyés</button></nav><main>'+[['Atelier Vertane','Ta carte Ethernet est expédiée'],['Léa Martin','Photos du week-end'],['Vertane Care','Ton ordinateur est protégé']].map(m=>'<div class="row"><span class="rt"><b style="font-weight:600">'+m[0]+'</b><small>'+m[1]+'</small></span></div>').join('')+'</main></div>';};
+APPIMPL.settings=w=>{let t='aff';const draw=()=>{const c=DS.cfg,s=size();const P={aff:['Affichage',rowkv('Écran',esc(B.byV(B.SCREENS,c.screen).t))+rowkv('Taille',esc(s.t))+rowkv('Écran externe','USB4 ou HDMI')],batt:['Batterie',rowkv('Niveau',DS.batt+' %')+rowkv('Capacité',String(s.batt).replace('.',',')+' Wh')+rowkv('Autonomie estimée',analyze().h+' h')],
+    ports:['Ports',c.ports.map((p,i)=>rowkv('Baie '+(i+1),esc(B.byV(B.PORTS,p).t))).join('')],kb:['Clavier',rowkv('Disposition',(c.kb||'azerty').toUpperCase())+rowkv('Rétroéclairage','Automatique')],sys:['Système',rowkv('Vertane OS','1.0 Bureau')+rowkv('Android','17, mode bureau')+rowkv('Mises à jour','Jusqu’en 2033')+rowkv('Continuité','Ton téléphone Vertane est relié')]};
+  w.body.innerHTML='<div class="side"><nav>'+Object.keys(P).map(k=>'<button data-s="'+k+'" class="'+(k===t?'on':'')+'">'+P[k][0]+'</button>').join('')+'</nav><main><h1 class="lt">'+P[t][0]+'</h1><div class="grp">'+P[t][1]+'</div></main></div>';};
+  w.body.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b){t=b.dataset.s;draw();}});draw();};
+APPIMPL.ia=w=>{w.body.innerHTML='<div style="display:flex;flex-direction:column;height:100%"><div data-c style="flex:1;overflow:auto;padding:18px"><div class="card" style="text-align:center"><div class="aiglyph" style="width:54px;height:54px;margin:0 auto 10px"><span style="width:26px;height:26px">'+S(G.spark)+'</span></div><b>Bonjour</b><p class="muted" style="margin:4px 0 0">Demande-moi l’état de ton '+esc(model.name)+', ou quoi améliorer.</p></div></div><div style="display:flex;gap:8px;padding:12px"><input class="ai-in" data-i placeholder="Demande à Vertane…"></div></div>';
+  const c=w.body.querySelector('[data-c]'),i=w.body.querySelector('[data-i]');i.addEventListener('keydown',e=>{if(e.key!=='Enter'||!i.value.trim())return;const q=i.value.trim();i.value='';c.insertAdjacentHTML('beforeend','<p style="text-align:right"><span style="background:var(--accent);color:#fff;padding:9px 14px;border-radius:18px;display:inline-block">'+esc(q)+'</span></p><p><span style="background:var(--card);padding:9px 14px;border-radius:18px;display:inline-block;max-width:80%">'+esc(answer(q))+'</span></p>');c.scrollTop=1e6;});};
+function answer(q){const n=q.toLowerCase(),an=analyze(),c=DS.cfg;
+  if(/batter|autonomie/.test(n))return 'Batterie à '+DS.batt+' %, environ '+Math.round(an.h*DS.batt/100)+' h. Santé : '+Math.round(health()[0].pct)+' %.';
+  if(/optimis|amélior|ameliore|conseil/.test(n))return an.it.filter(i=>i.sev!=='ok').slice(0,2).map(i=>i.t+' : '+i.b).join(' ')||'Ton '+model.name+' est bien équilibré ('+an.score+'/100).';
+  if(/port|baie/.test(n))return 'Tes baies : '+B.portsSum(c)+'. La baie 1 reste l’USB-C de charge.';
+  if(/mémoire|memoire|ram/.test(n))return c.ram+' Go de LPCAMM2, un seul module vissé à plat : 5 minutes pour le changer.';
+  if(/minuteur/.test(n)){timer(300);return 'Minuteur de 5 minutes lancé : il s’affiche dans la Capsule, sous la caméra.';}
+  return 'En démonstration, je réponds sur la batterie, les baies, la mémoire, les optimisations et les minuteurs.';}
+function ai(on,text){$('#aibar').classList.toggle('on',on);$('#aiglow').classList.toggle('on',on);if(!on)return;
+  $('#aibar').innerHTML='<div class="ai-row"><span class="aiglyph">'+S(G.spark)+'</span><input class="ai-in" id="aiq" placeholder="Demande à Vertane…"></div><div class="ans" id="aia"></div>';const i=$('#aiq');setTimeout(()=>i.focus(),60);
+  const go=q=>{$('#aia').textContent=answer(q);};i.addEventListener('keydown',e=>{if(e.key==='Enter'&&i.value.trim())go(i.value.trim());if(e.key==='Escape')ai(false);});if(text){i.value=text;go(text);}}
+$('#aiB').onclick=()=>ai(!$('#aibar').classList.contains('on'));
+
+/* ---------- verrouillage, démarrage, remplacement ---------- */
+function renderLock(){const d=new Date();$('#plock').innerHTML='<div class="wall" style="background:'+wall+';filter:blur(8px) brightness(.85);transform:scale(1.05)"></div><div style="position:relative;text-align:center"><div class="dt">'+d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</div><div class="clk">'+hm(d)+'</div></div><div class="who" style="position:relative"><div class="av">'+S(G.person,1.6)+'</div><b>Compte Vertane</b><p>Touche l’écran ou appuie sur une touche</p></div>';}
+async function unlock(){if(!ST.locked)return;capAlert({w:170,l:'<span style="color:#8DB89A">'+S('<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/>',2)+'</span>',r:'Visage reconnu'},1200);await wait(700);ST.locked=false;$('#plock').classList.add('out');sync();}
+function lock(){ST.locked=true;renderLock();$('#plock').classList.remove('out');sync();}
+$('#plock').addEventListener('click',unlock);doc.addEventListener('keydown',e=>{if(ST.locked&&ST.screen==='on')unlock();});
+async function boot(msg){$('#boot').classList.add('on');$('#off').classList.remove('on');const b=$('#boot i');b.style.width='0';await wait(50);b.style.width='100%';await wait(2000);$('#boot').classList.remove('on');}
+function catalog(){const s=size();return [
+  {k:'screen',t:'Écran complet',fields:[{f:'screen',t:'Dalle',opts:B.SCREENS.filter(x=>x.sizes.includes(s.v)).map(x=>[x.v,x.t])}]},
+  {k:'board',t:'Carte mère et ventilateur',fields:[{f:'board',t:'Puce',opts:B.BOARDS.filter(x=>x.sizes.includes(s.v)).map(x=>[x.v,x.t])}]},
+  {k:'ram',t:'Mémoire LPCAMM2',fields:[{f:'ram',t:'Capacité',opts:B.RAMS.map(x=>[x.v,x.t])}]},
+  {k:'sto',t:'SSD M.2',fields:[{f:'sto',t:'Capacité',opts:B.STOS.map(x=>[x.v,x.t])}]},
+  {k:'kb',t:'Dessus : clavier et pavé',fields:[{f:'kb',t:'Disposition',opts:[['azerty','AZERTY'],['qwerty','QWERTY'],['qwertz','QWERTZ'],['bepo','BÉPO']]}]},
+  {k:'bays',t:'Cartes de ports',fields:DS.cfg.ports.map((p,i)=>({f:'bay'+(i+1),t:'Baie '+(i+1),opts:i===0?[['usbc','USB-C (charge)']]:B.PORTS.map(x=>[x.v,x.t])}))}];}
+function flatCfg(){const c=Object.assign({},DS.cfg);c.kb=c.kb||'azerty';c.ports.forEach((p,i)=>c['bay'+(i+1)]=p);delete c.ports;return c;}
+async function swap(part,patch){post('swap:start',{part});$('#off').classList.add('on');await wait(2600);const c=DS.cfg;
+  Object.keys(patch).forEach(k=>{let v=patch[k];if(/^bay\d+$/.test(k)){c.ports[+k.slice(3)-1]=v;return;}if(k==='ram'||k==='sto')v=+v;c[k]=v;});DS.cfg=B.fix(c);
+  const u=DS.usage;DS.parts[part]={d:u.days,cy:u.cycles,tb:u.tbw,fh:u.fanH,k:u.keys,sh:u.scrH};const lab=catalog().find(p=>p.k===part);
+  const val=part==='bays'?B.portsSum(DS.cfg):part==='ram'?DS.cfg.ram+' Go':part==='sto'?B.capL(DS.cfg.sto):part==='screen'?B.byV(B.SCREENS,DS.cfg.screen).t:part==='board'?B.byV(B.BOARDS,DS.cfg.board).t:String(DS.cfg.kb||'').toUpperCase();
+  DS.history.unshift({t:lab?lab.t:part,v:val});save();await boot();ST.locked=true;renderLock();$('#plock').classList.remove('out');
+  capAlert({w:340,l:'<span style="color:#8DB89A">'+S(G.check,2.4)+' Nouveau module</span>',r:esc((lab?lab.t:'')).slice(0,22)},3200);
+  Object.values(W).forEach(w=>w.draw&&w.draw());const an=analyze();setTimeout(()=>notify('vertane',(lab?lab.t:'Module')+' installé',an.it[0]&&an.it[0].sev!=='ok'?an.it[0].t+'.':'Analyse terminée : '+an.score+'/100.'),1200);post('swap:done',{part});}
+
+/* ---------- pont avec la page ---------- */
+function post(evt,data){if(!EMBED)return;try{parent.postMessage({vos:1,evt,data:data||{}},'*');}catch(e){}}
+let st=0;function sync(){clearTimeout(st);st=setTimeout(()=>post('state',{dev:'b1-'+model.k,name,setup:true,screen:ST.screen,locked:ST.locked,app:cur?cur.id:null,batt:DS.batt,charging:ST.charging,cfg:flatCfg(),catalog:catalog(),score:analyze().score,theme:DS.dark?'dark':'light'}),120);}
+const CMD={power:()=>{if(ST.screen==='on'){ST.screen='off';$('#off').classList.add('on');lock();}else{ST.screen='on';$('#off').classList.remove('on');}sync();},powerLong:()=>ai(true),
+  ai:d=>ai(true,d.text),cc:()=>togglePan('qs'),nc:()=>togglePan('ncp'),switcher:()=>expose(),home:()=>{Object.values(W).forEach(w=>{w.min=true;w.el.style.display='none';});cur=null;$('#appT').textContent='Bureau';},
+  open:d=>{if(ST.locked)unlock().then(()=>openApp(d.app,d.args));else openApp(d.app,d.args);},unlock:()=>unlock(),
+  notify:d=>{const P={msg:['msg','Léa Martin','Tu me montres la Capsule ce soir ?'],mail:['mail','Atelier Vertane','Ta carte Ethernet est expédiée.'],vertane:['vertane','Astuce Vertane','Glisse une fenêtre par sa barre, double-clique pour l’agrandir.'],cal:['vertane','Point projet','Dans 15 minutes, en visio.']};const n=P[d.app]||P.msg;notify(n[0],n[1],n[2]);},
+  timer:d=>timer(d.sec||300),music:()=>music(true),
+  call:d=>{const t0=Date.now();capSet('call',{w:230,l:'<span style="color:#34C46A">'+S(G.video,2)+'</span><span>'+esc(d.name||'Hugo')+'</span>',r:()=>'<span style="color:#34C46A">'+fmtS((Date.now()-t0)/1000)+'</span>',x:()=>'<div style="width:100%;display:flex;align-items:center;gap:12px"><span style="width:48px;height:48px;border-radius:50%;background:#3E6FB0;display:grid;place-items:center;font:600 18px/1 var(--font)">'+esc((d.name||'H')[0])+'</span><div style="flex:1"><div class="xt">Appel vidéo</div><div class="xs">'+esc(d.name||'Hugo')+' · caméra de l’écran</div></div><button class="xbtn red" data-e>'+S(G.phoneDown)+'</button></div>',bind:e=>{e.querySelector('[data-e]').onclick=()=>capDel('call');}});},
+  charge:d=>{ST.charging=d.on!==false;renderBar();if(ST.charging)capAlert({w:220,l:'En charge',r:'<span style="color:#34C46A">'+DS.batt+' %</span>'});sync();},
+  battery:d=>{DS.batt=clamp(d.level|0,1,100);renderBar();if(DS.batt<=15)notify('vertane','Batterie faible','Il reste '+DS.batt+' %. Branche le chargeur USB-C sur la baie 1.');sync();},
+  swap:d=>swap(d.part,d.patch||{}),age:d=>{const k=(d.days||365)/365,u=DS.usage;u.days+=d.days||365;u.cycles+=Math.round(260*k);u.tbw+=14*k;u.fanH+=Math.round(1500*k);u.keys+=3*k;u.scrH+=1200*k;save();Object.values(W).forEach(w=>w.draw&&w.draw());notify('vertane','Bilan de santé','Ouvre l’app Vertane pour voir le niveau de vie de chaque pièce.');},
+  reset:()=>{try{localStorage.removeItem(KEY);}catch(e){}location.reload();},theme:d=>{DS.dark=d.theme==='dark';root.dataset.theme=DS.dark?'dark':'light';save();},state:()=>sync()};
+window.addEventListener('message',e=>{const m=e.data;if(!m||!m.vos||!CMD[m.cmd])return;try{CMD[m.cmd](m.data||{});}catch(err){console.error(err);}});
+
+renderBar();renderDock();renderLock();capRender();
+setTimeout(()=>{post('ready',{});sync();},50);
+})();
+</script>
+</body>
+</html>
