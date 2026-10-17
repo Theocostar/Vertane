@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Camille Malatray — Alternance géomètre-topographe</title>
+<meta name="description" content="Camille Malatray, futur BTS Géomètre-Topographe et Modélisation Numérique en alternance à l'école SEPR. Drones, IA, développement et design. Recherche d'alternance pour la rentrée de septembre 2027.">
+<meta name="theme-color" content="#F6F5F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   Jetons — palette Vertane (vert, sauge, ivoire, noir)
+   ========================================================= */
+:root{
+  --vert:#2F7A55;--sauge:#8DB89A;--ivoire:#F3F1EA;--noir:#1D1D1F;--pierre:#55584F;--lin:#C9C4B8;
+  --bg:#F6F5F0;--bg2:#FFFFFF;--bg3:#EDEBE4;
+  --fg:#1D1D1F;--fg2:#6E6E73;--fg3:#86868B;
+  --acc:#2F7A55;--acc-soft:rgba(47,122,85,.10);
+  --line:rgba(29,29,31,.08);
+  --topo:rgba(47,122,85,.22);
+  /* verre liquide */
+  --g-bg:rgba(255,255,255,.38);
+  --g-rim-a:rgba(255,255,255,.95);--g-rim-b:rgba(255,255,255,.18);
+  --g-hi:rgba(255,255,255,.75);--g-lo:rgba(255,255,255,.22);
+  --g-drop:0 12px 40px rgba(22,24,26,.12),0 2px 6px rgba(22,24,26,.06);
+  --g-spec:rgba(255,255,255,.55);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;
+  --display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",system-ui,sans-serif;
+  --ease:cubic-bezier(.25,.1,.25,1);--out:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.56,.64,1);
+  --shell:1080px;--gut:24px;--r-l:32px;--r-m:22px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#000;--bg2:#141416;--bg3:#1C1C1E;
+    --fg:#F5F5F7;--fg2:#A1A1A6;--fg3:#86868B;
+    --acc:#8DB89A;--acc-soft:rgba(141,184,154,.14);
+    --line:rgba(255,255,255,.10);
+    --topo:rgba(141,184,154,.20);
+    --g-bg:rgba(36,38,40,.42);
+    --g-rim-a:rgba(255,255,255,.42);--g-rim-b:rgba(255,255,255,.06);
+    --g-hi:rgba(255,255,255,.22);--g-lo:rgba(255,255,255,.06);
+    --g-drop:0 14px 44px rgba(0,0,0,.5),0 2px 6px rgba(0,0,0,.3);
+    --g-spec:rgba(255,255,255,.18);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#000;--bg2:#141416;--bg3:#1C1C1E;
+  --fg:#F5F5F7;--fg2:#A1A1A6;--fg3:#86868B;
+  --acc:#8DB89A;--acc-soft:rgba(141,184,154,.14);
+  --line:rgba(255,255,255,.10);
+  --topo:rgba(141,184,154,.20);
+  --g-bg:rgba(36,38,40,.42);
+  --g-rim-a:rgba(255,255,255,.42);--g-rim-b:rgba(255,255,255,.06);
+  --g-hi:rgba(255,255,255,.22);--g-lo:rgba(255,255,255,.06);
+  --g-drop:0 14px 44px rgba(0,0,0,.5),0 2px 6px rgba(0,0,0,.3);
+  --g-spec:rgba(255,255,255,.18);
+  color-scheme:dark;
+}
+
+/* =========================================================
+   Base
+   ========================================================= */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 17px/1.47 var(--font);letter-spacing:-.022em;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;transition:background .5s var(--ease),color .5s var(--ease)}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:8px}
+.shell{max-width:var(--shell);margin:0 auto;padding:0 var(--gut)}
+section{position:relative}
+.sec{padding:clamp(96px,14vw,168px) 0}
+.eyebrow{font:600 14px/1.2 var(--font);letter-spacing:-.01em;color:var(--acc);margin:0 0 14px}
+h1,h2,h3{font-family:var(--display);margin:0;font-weight:700}
+h2{font-size:clamp(40px,6.4vw,72px);line-height:1.05;letter-spacing:-.035em}
+h3{font-size:clamp(22px,2.4vw,28px);line-height:1.15;letter-spacing:-.025em;font-weight:600}
+.lead{font-size:clamp(19px,2vw,24px);line-height:1.38;letter-spacing:-.02em;color:var(--fg2);font-weight:500;max-width:36ch}
+.muted{color:var(--fg2)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Infos à compléter : bien visibles, à remplacer par tes vraies données */
+.todo{display:inline-flex;align-items:center;gap:6px;padding:1px 10px 1px 8px;border-radius:999px;border:1.5px dashed currentColor;background:rgba(255,196,0,.14);color:#A26A00;font-weight:600;font-size:.86em;letter-spacing:-.01em;line-height:1.6;vertical-align:baseline;white-space:normal}
+.todo::before{content:"";width:12px;height:12px;flex:none;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zm17.7-10.2a1 1 0 0 0 0-1.42l-2.33-2.33a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zm17.7-10.2a1 1 0 0 0 0-1.42l-2.33-2.33a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-theme="dark"] .todo{color:#FFC94D;background:rgba(255,196,0,.10)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .todo{color:#FFC94D;background:rgba(255,196,0,.10)}}
+
+/* =========================================================
+   Verre liquide (inspiré de la classe .gl de Vertane OS)
+   - fond translucide + flou + saturation
+   - liseré lumineux dégradé (bord biseauté)
+   - reflet spéculaire qui suit le pointeur
+   ========================================================= */
+.glass{position:relative;isolation:isolate;background:var(--g-bg);-webkit-backdrop-filter:blur(var(--blur,22px)) saturate(1.8);backdrop-filter:blur(var(--blur,22px)) saturate(1.8);box-shadow:inset 0 1px 0 var(--g-hi),inset 0 -1px 0 var(--g-lo),var(--g-drop)}
+.glass::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:-1;background:linear-gradient(140deg,var(--g-rim-a),var(--g-rim-b) 34%,var(--g-rim-b) 64%,var(--g-rim-a));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.glass::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;background:radial-gradient(420px circle at var(--mx,30%) var(--my,0%),var(--g-spec),transparent 46%);opacity:.7;transition:opacity .4s var(--ease)}
+.glass.spec::after{opacity:1}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass{background:var(--bg2)}}
+
+/* Apparition douce (équivalent du BlurFade de Magic UI) */
+.rv{opacity:0;filter:blur(8px);transform:translateY(18px);transition:opacity .9s var(--out),filter .9s var(--out),transform .9s var(--out);transition-delay:var(--d,0s)}
+.rv.in{opacity:1;filter:none;transform:none}
+
+/* =========================================================
+   Héros — relevé topographique en fond
+   ========================================================= */
+.hero{min-height:100svh;display:flex;align-items:center;padding:110px 0 140px;overflow:hidden}
+.hero canvas{position:absolute;inset:-8% 0 0;width:100%;height:116%;z-index:0;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;z-index:0;pointer-events:none;animation:float 18s var(--ease) infinite alternate}
+.blob.b1{width:46vw;height:46vw;max-width:620px;max-height:620px;left:-10vw;top:6vh;background:radial-gradient(circle,var(--sauge),transparent 68%)}
+.blob.b2{width:38vw;height:38vw;max-width:520px;max-height:520px;right:-8vw;bottom:2vh;background:radial-gradient(circle,var(--vert),transparent 68%);opacity:.38;animation-duration:22s}
+@keyframes float{to{transform:translate3d(4vw,-3vh,0) scale(1.08)}}
+.hero-fade{position:absolute;left:0;right:0;bottom:0;height:200px;background:linear-gradient(transparent,var(--bg));z-index:1;pointer-events:none}
+.hero .shell{position:relative;z-index:2;width:100%;text-align:center}
+.pill{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 18px;border-radius:999px;font:600 14px/1 var(--font);letter-spacing:-.01em}
+.pill .live{position:relative;width:8px;height:8px;border-radius:50%;background:#34C46A}
+.pill .live::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid #34C46A;opacity:0;animation:ping 2.4s var(--out) infinite}
+@keyframes ping{0%{transform:scale(.5);opacity:.8}100%{transform:scale(1.8);opacity:0}}
+.avatar{position:relative;width:132px;height:132px;margin:36px auto 30px;border-radius:50%;padding:6px}
+.avatar .in{position:relative;width:100%;height:100%;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(140deg,var(--vert),#1f5a3d);color:#fff;font:600 40px/1 var(--display);letter-spacing:-.03em}
+.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.avatar .hint{position:absolute;left:50%;bottom:-12px;transform:translateX(-50%);white-space:nowrap;font-size:12px}
+.hero h1{font-size:clamp(52px,10vw,112px);line-height:1;letter-spacing:-.045em}
+.hero h1 span{display:block;background:linear-gradient(100deg,var(--fg) 30%,var(--acc) 70%,var(--fg));-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:sheen 9s var(--ease) infinite alternate}
+@keyframes sheen{to{background-position:100% 0}}
+.hero .tag{margin:22px auto 0;max-width:24ch;font:600 clamp(22px,3vw,32px)/1.18 var(--display);letter-spacing:-.03em}
+.hero .tag em{font-style:normal;color:var(--fg2)}
+.meta{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 22px;margin:28px 0 0;padding:0;list-style:none;color:var(--fg2);font-size:15px}
+.meta li{display:flex;align-items:center;gap:7px}
+.meta svg{width:16px;height:16px;color:var(--acc)}
+.cta{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:38px}
+@media (max-width:600px){
+  .hero{padding:72px 0 120px;min-height:0}
+  .pill{height:36px;padding:0 14px;font-size:12px;gap:8px;white-space:nowrap}
+  .avatar{width:108px;height:108px;margin:26px auto 22px}
+  .avatar .in{font-size:34px}
+  .meta{font-size:14px;gap:8px 16px}
+  .cta .btn{width:100%}
+}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:52px;padding:0 26px;border-radius:999px;font:600 16px/1 var(--font);letter-spacing:-.01em;transition:transform .35s var(--spring),background .3s,box-shadow .3s}
+.btn:hover{transform:scale(1.04)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--vert);color:#fff;box-shadow:0 10px 30px rgba(47,122,85,.35)}
+.btn.primary:hover{background:#28694a}
+.btn svg{width:18px;height:18px}
+
+/* =========================================================
+   Ce que j'apporte — trois cartes de verre sur fond vert
+   ========================================================= */
+.apport{padding:clamp(40px,6vw,64px) 0 clamp(96px,14vw,168px)}
+.stage{position:relative;border-radius:var(--r-l);overflow:hidden;padding:clamp(36px,6vw,72px) clamp(20px,4vw,56px);background:#123323;color:#F5F5F7}
+.stage .glow{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none}
+.stage .g1{width:60%;height:90%;left:-12%;top:-30%;background:radial-gradient(circle,#3f9a6c,transparent 65%)}
+.stage .g2{width:50%;height:80%;right:-10%;bottom:-30%;background:radial-gradient(circle,var(--sauge),transparent 65%);opacity:.7}
+.stage .g3{width:30%;height:50%;left:40%;top:30%;background:radial-gradient(circle,#c9e4a2,transparent 65%);opacity:.45;animation:float 14s var(--ease) infinite alternate}
+.stage svg.lines{position:absolute;inset:0;width:100%;height:100%;opacity:.16;pointer-events:none}
+.stage-head{position:relative;max-width:640px;margin-bottom:clamp(32px,5vw,56px)}
+.stage-head .eyebrow{color:var(--sauge)}
+.stage-head h2{color:#fff}
+.trio{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.stage .glass{--g-bg:rgba(255,255,255,.10);--g-rim-a:rgba(255,255,255,.6);--g-rim-b:rgba(255,255,255,.08);--g-hi:rgba(255,255,255,.35);--g-lo:rgba(255,255,255,.08);--g-drop:0 20px 50px rgba(0,0,0,.25);--g-spec:rgba(255,255,255,.22)}
+.tile{border-radius:var(--r-m);padding:30px 28px 32px;transition:transform .5s var(--out)}
+.tile:hover{transform:translateY(-6px)}
+.tile .ico{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;background:rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.35);margin-bottom:26px}
+.tile .ico svg{width:28px;height:28px;color:#fff}
+.tile h3{color:#fff;margin-bottom:10px}
+.tile p{margin:0;color:rgba(245,245,247,.78);font-size:16px;line-height:1.45}
+@media (max-width:860px){.trio{grid-template-columns:1fr}}
+
+/* =========================================================
+   Mon projet — texte qui s'illumine au défilement
+   ========================================================= */
+.projet{padding:clamp(40px,8vw,96px) 0 clamp(96px,14vw,168px)}
+.reveal-text{font:600 clamp(30px,4.6vw,56px)/1.14 var(--display);letter-spacing:-.035em;margin:0;max-width:22ch}
+.reveal-text .w{color:var(--fg);opacity:.16;transition:opacity .25s linear}
+.reveal-text .w.on{opacity:1}
+.reveal-text .w.k{color:var(--acc)}
+
+/* =========================================================
+   Compétences — grille bento
+   ========================================================= */
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 40px;margin-bottom:clamp(36px,5vw,56px)}
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.card{position:relative;border-radius:var(--r-m);background:var(--bg2);padding:30px 28px;overflow:hidden;box-shadow:0 1px 0 var(--line) inset,0 0 0 1px var(--line)}
+.card h3{font-size:22px;margin-bottom:6px}
+.card .k{font-size:15px;color:var(--fg2);margin:0 0 22px}
+.c-drone{grid-column:span 3;background:linear-gradient(160deg,#173d2a,#0f2a1d);color:#fff;box-shadow:none}
+.c-drone .k{color:rgba(255,255,255,.66)}
+.c-drone .chip{background:rgba(255,255,255,.12);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.c-ia{grid-column:span 3}
+.c-dev{grid-column:span 2}
+.c-soft{grid-column:span 2}
+.c-gest{grid-column:span 2}
+.c-qual{grid-column:span 4}
+.c-lang{grid-column:span 2}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.chip{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:999px;background:var(--bg3);font-size:14px;font-weight:500;letter-spacing:-.01em}
+.card .big-ico{position:absolute;right:-14px;bottom:-18px;width:140px;height:140px;opacity:.10;color:currentColor}
+.c-drone .big-ico{opacity:.14}
+.lang{list-style:none;margin:0;padding:0}
+.lang li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);font-size:16px}
+.lang li:first-child{border-top:0;padding-top:0}
+.lang li span:last-child{color:var(--fg2)}
+@media (max-width:860px){.bento{grid-template-columns:1fr 1fr}.bento>.card{grid-column:span 2}}
+
+/* =========================================================
+   Parcours — frise
+   ========================================================= */
+.timeline{list-style:none;margin:0;padding:0;position:relative}
+.timeline::before{content:"";position:absolute;left:11px;top:8px;bottom:8px;width:2px;border-radius:2px;background:linear-gradient(var(--acc),var(--line))}
+.step{position:relative;display:grid;grid-template-columns:180px 1fr;gap:6px 40px;padding:0 0 48px 52px}
+.step:last-child{padding-bottom:0}
+.step::before{content:"";position:absolute;left:4px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--bg);box-shadow:inset 0 0 0 4px var(--acc)}
+.step.now::before{background:var(--acc);box-shadow:0 0 0 6px var(--acc-soft)}
+.step time{font:600 15px/1.6 var(--font);color:var(--acc)}
+.step h3{font-size:24px;margin-bottom:6px}
+.step .org{margin:0 0 8px;font-weight:500}
+.step p{margin:0;color:var(--fg2)}
+.badge{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--acc-soft);color:var(--acc);font-size:13px;font-weight:600;margin-left:8px;vertical-align:3px}
+@media (max-width:700px){.step{grid-template-columns:1fr;padding-left:44px}}
+
+/* =========================================================
+   Projets — grandes tuiles
+   ========================================================= */
+.projects{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.proj{position:relative;display:flex;flex-direction:column;border-radius:var(--r-l);background:var(--bg2);overflow:hidden;box-shadow:inset 0 0 0 1px var(--line);transition:transform .6s var(--out),box-shadow .4s}
+.proj:hover{transform:translateY(-6px);box-shadow:inset 0 0 0 1px var(--line),0 24px 60px rgba(0,0,0,.10)}
+.proj.wide{grid-column:span 2;flex-direction:row}
+.proj .media{position:relative;flex:1 1 50%;min-height:260px;display:grid;place-items:center;padding:24px;text-align:center;background:linear-gradient(150deg,var(--bg3),var(--bg))}
+.proj .media svg{width:72px;height:72px;color:var(--acc);opacity:.85}
+.proj .media .todo{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);max-width:calc(100% - 32px)}
+.proj .body{flex:1 1 50%;padding:clamp(28px,4vw,44px)}
+.proj .when{font:600 14px/1 var(--font);color:var(--acc);margin:0 0 12px}
+.proj h3{font-size:clamp(24px,2.6vw,32px);margin-bottom:12px}
+.proj p{margin:0 0 18px;color:var(--fg2)}
+.proj .chips{margin-top:auto}
+.link{display:inline-flex;align-items:center;gap:6px;color:var(--acc);font-weight:600;margin-top:18px}
+.link svg{width:16px;height:16px;transition:transform .3s var(--out)}
+.link:hover svg{transform:translateX(4px)}
+@media (max-width:860px){.projects{grid-template-columns:1fr}.proj.wide{grid-column:auto;flex-direction:column}}
+
+/* =========================================================
+   Ce que je recherche
+   ========================================================= */
+.search{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fact{border-radius:var(--r-m);background:var(--bg2);padding:26px 24px;box-shadow:inset 0 0 0 1px var(--line)}
+.fact dt{font-size:14px;color:var(--fg2);margin-bottom:10px}
+.fact dd{margin:0;font:600 21px/1.25 var(--display);letter-spacing:-.025em}
+@media (max-width:860px){.search{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.search{grid-template-columns:1fr}}
+
+/* =========================================================
+   Contact
+   ========================================================= */
+.contact{padding:clamp(40px,6vw,64px) 0 180px}
+.final{position:relative;overflow:hidden;border-radius:var(--r-l);padding:clamp(48px,8vw,104px) clamp(22px,5vw,64px);text-align:center;background:#0c0d0e;color:#F5F5F7}
+.final canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.9;pointer-events:none}
+.final .glow{position:absolute;left:50%;top:60%;width:80%;height:120%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(47,122,85,.55),transparent);filter:blur(40px);pointer-events:none}
+.final>*:not(canvas):not(.glow){position:relative}
+.final h2{color:#fff;max-width:14ch;margin:0 auto}
+.final .lead{color:rgba(245,245,247,.72);margin:20px auto 40px}
+.final .glass{--g-bg:rgba(255,255,255,.08);--g-rim-a:rgba(255,255,255,.5);--g-rim-b:rgba(255,255,255,.06);--g-hi:rgba(255,255,255,.28);--g-lo:rgba(255,255,255,.06);--g-drop:0 20px 50px rgba(0,0,0,.4);--g-spec:rgba(255,255,255,.16)}
+.links{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:760px;margin:0 auto}
+.lk{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:20px;text-align:left;transition:transform .45s var(--out)}
+.lk:hover{transform:translateY(-3px)}
+.lk .i{width:44px;height:44px;flex:none;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.12)}
+.lk .i svg{width:22px;height:22px}
+.lk small{display:block;font-size:13px;color:rgba(245,245,247,.6);margin-bottom:3px}
+.lk b{font-weight:600;font-size:16px;word-break:break-word}
+.final .todo{color:#FFC94D;background:rgba(255,196,0,.10)}
+.final .btn{margin-top:36px}
+@media (max-width:640px){.links{grid-template-columns:1fr}}
+footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
+
+/* =========================================================
+   Dock flottant en verre liquide (comme le template Magic UI)
+   ========================================================= */
+.dock{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));z-index:100;transform:translateX(-50%);display:flex;align-items:flex-end;gap:6px;height:64px;padding:8px 10px;border-radius:24px;--blur:26px}
+.dock a,.dock button{--s:44px;position:relative;width:var(--s);height:var(--s);border-radius:50%;display:grid;place-items:center;color:var(--fg);transition:width .18s var(--ease),height .18s var(--ease),background .25s}
+.dock a:hover,.dock button:hover,.dock .on{background:var(--acc-soft)}
+.dock .on{color:var(--acc)}
+.dock svg{width:44%;height:44%;pointer-events:none}
+.dock .sep{width:1px;height:30px;align-self:center;margin:0 4px;background:var(--line)}
+.dock [data-tip]::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 12px);transform:translate(-50%,6px);padding:6px 11px;border-radius:9px;background:var(--fg);color:var(--bg);font:500 12px/1 var(--font);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s,transform .25s var(--out)}
+.dock [data-tip]:hover::after{opacity:1;transform:translate(-50%,0)}
+.dock .moon{display:none}
+:root[data-theme="dark"] .dock .sun{display:none}:root[data-theme="dark"] .dock .moon{display:block}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dock .sun{display:none}:root:not([data-theme="light"]) .dock .moon{display:block}}
+@media (max-width:420px){.dock{gap:2px;padding:8px 6px}.dock a,.dock button{--s:40px}.dock .sep{margin:0 2px}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;filter:none;transform:none}
+  .reveal-text .w{opacity:1}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- =======================================================
+     HÉROS
+     ======================================================= -->
+<section class="hero" id="accueil">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <canvas id="topo" aria-hidden="true"></canvas>
+  <div class="hero-fade"></div>
+
+  <div class="shell">
+    <div class="pill glass rv"><span class="live"></span>Recherche d'alternance · Rentrée septembre 2027</div>
+
+    <div class="avatar glass rv" style="--d:.08s">
+      <div class="in">
+        CM
+        <!-- PHOTO : dépose ta photo carrée dans ce dossier sous le nom « photo.jpg » -->
+        <img src="photo.jpg" alt="Camille Malatray" onerror="this.remove()">
+      </div>
+    </div>
+
+    <h1 class="rv" style="--d:.16s"><span>Camille Malatray</span></h1>
+    <p class="tag rv" style="--d:.24s">BTS Géomètre-Topographe en alternance. <em>Le terrain, la précision et la technologie, réunis.</em></p>
+
+    <ul class="meta rv" style="--d:.32s">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Caluire-et-Cuire (69)</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>École SEPR · Lyon</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>18 ans</li>
+    </ul>
+
+    <div class="cta rv" style="--d:.4s">
+      <a class="btn primary" href="#contact">Me proposer une alternance
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn glass" href="#competences">Voir mes compétences</a>
+    </div>
+  </div>
+</section>
+
+<!-- =======================================================
+     CE QUE J'APPORTE
+     ======================================================= -->
+<section class="apport" id="profil">
+  <div class="shell">
+    <div class="stage">
+      <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+      <svg class="lines" aria-hidden="true"><defs><pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#fff" stroke-width=".6"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg>
+
+      <div class="stage-head rv">
+        <p class="eyebrow">Ce que j'apporte</p>
+        <h2>Trois compétences, un même terrain.</h2>
+      </div>
+
+      <div class="trio">
+        <article class="tile glass rv" style="--d:.05s">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="5" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7 7l3 3M17 7l-3 3M7 17l3-3M17 17l-3-3"/><rect x="9.5" y="9.5" width="5" height="5" rx="1.2"/></svg></div>
+          <h3>Drones</h3>
+          <p>Pilotage stabilisé et FPV, conception et assemblage de mes propres appareils.</p>
+        </article>
+        <article class="tile glass rv" style="--d:.12s">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8L12 3z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z"/></svg></div>
+          <h3>Intelligence artificielle</h3>
+          <p>Usage avancé des IA génératives pour analyser, automatiser et créer.</p>
+        </article>
+        <article class="tile glass rv" style="--d:.19s">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M8 21h8M9 9l-2 2 2 2M15 9l2 2-2 2"/></svg></div>
+          <h3>Développement &amp; design</h3>
+          <p>Fondateur de Trame Design : sites web et identités visuelles.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =======================================================
+     MON PROJET
+     ======================================================= -->
+<section class="projet">
+  <div class="shell">
+    <p class="eyebrow rv">Mon projet</p>
+    <p class="reveal-text" id="reveal">Le métier de géomètre réunit ce qui m'anime : *le terrain, *la *précision et *la *technologie. Drones, photogrammétrie et modélisation 3D transforment aujourd'hui le relevé topographique. Je souhaite y apporter ma maîtrise du drone et des outils numériques, tout en apprenant le métier aux côtés de professionnels.</p>
+  </div>
+</section>
+
+<!-- =======================================================
+     COMPÉTENCES
+     ======================================================= -->
+<section class="sec" id="competences" style="padding-top:0">
+  <div class="shell">
+    <div class="head rv">
+      <div>
+        <p class="eyebrow">Compétences</p>
+        <h2>Ce que je sais faire.</h2>
+      </div>
+      <p class="lead">Des outils du terrain aux outils numériques.</p>
+    </div>
+
+    <div class="bento">
+      <article class="card c-drone rv">
+        <h3>Drone</h3>
+        <p class="k">Du montage au vol de précision.</p>
+        <ul class="chips"><li class="chip">Pilotage FPV</li><li class="chip">Pilotage stabilisé</li><li class="chip">Conception &amp; assemblage</li><li class="chip">Paramétrage</li><li class="chip">Prise de vue aérienne</li></ul>
+        <!-- À COMPLÉTER : as-tu une formation ou un certificat de télépilote (catégorie Ouverte A1/A3, A2…) ? Si oui, ajoute-le ici, c'est un vrai plus pour un géomètre. -->
+        <p style="margin:18px 0 0"><span class="todo">Certificat télépilote ? (ex. A1/A3, A2) — sinon supprime</span></p>
+        <svg class="big-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="5" cy="5" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7 7l3 3M17 7l-3 3M7 17l3-3M17 17l-3-3"/><rect x="9.5" y="9.5" width="5" height="5" rx="1.2"/></svg>
+      </article>
+
+      <article class="card c-ia rv" style="--d:.06s">
+        <h3>IA &amp; numérique</h3>
+        <p class="k">Analyser, automatiser, créer.</p>
+        <ul class="chips"><li class="chip">IA générative</li><li class="chip">Prompt engineering</li><li class="chip">Automatisation</li><li class="chip">Veille techno</li></ul>
+        <svg class="big-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8L12 3z"/></svg>
+      </article>
+
+      <article class="card c-dev rv">
+        <h3>Développement &amp; design</h3>
+        <p class="k">De la maquette à la mise en ligne.</p>
+        <ul class="chips"><li class="chip">Sites web</li><li class="chip">UI / UX</li><li class="chip">Identité visuelle</li></ul>
+      </article>
+
+      <article class="card c-soft rv" style="--d:.06s">
+        <h3>Logiciels</h3>
+        <p class="k">Les outils que j'utilise.</p>
+        <!-- À COMPLÉTER : liste les logiciels que tu sais VRAIMENT utiliser (ex. logiciel de pilotage drone, photogrammétrie, CAO/DAO, Figma, outils web…). -->
+        <span class="todo">Tes logiciels</span>
+      </article>
+
+      <article class="card c-gest rv" style="--d:.12s">
+        <h3>Gestion</h3>
+        <p class="k">Acquis du bac STMG.</p>
+        <ul class="chips"><li class="chip">Gestion</li><li class="chip">Relation client</li><li class="chip">Bureautique</li></ul>
+      </article>
+
+      <article class="card c-qual rv">
+        <h3>Qualités</h3>
+        <p class="k">Ce sur quoi vous pouvez compter.</p>
+        <ul class="chips"><li class="chip">Rigueur</li><li class="chip">Précision</li><li class="chip">Curiosité</li><li class="chip">Autonomie</li><li class="chip">Esprit d'entreprendre</li><li class="chip">Travail d'équipe</li></ul>
+      </article>
+
+      <article class="card c-lang rv" style="--d:.06s">
+        <h3>Langues</h3>
+        <p class="k">&nbsp;</p>
+        <ul class="lang">
+          <li><span>Français</span><span>Langue maternelle</span></li>
+          <!-- À COMPLÉTER : ton niveau d'anglais (ex. A2, B1, B2…) -->
+          <li><span>Anglais</span><span class="todo">Niveau</span></li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- =======================================================
+     PARCOURS
+     ======================================================= -->
+<section class="sec" id="parcours" style="padding-top:0">
+  <div class="shell">
+    <div class="head rv">
+      <div>
+        <p class="eyebrow">Parcours</p>
+        <h2>Formation.</h2>
+      </div>
+    </div>
+
+    <ol class="timeline">
+      <li class="step now rv">
+        <time>Dès sept. 2027</time>
+        <div>
+          <h3>BTS Géomètre-Topographe et Modélisation Numérique <span class="badge">En alternance</span></h3>
+          <p class="org">École SEPR, Lyon</p>
+          <!-- À COMPLÉTER : rythme de l'alternance (ex. « 2 semaines en entreprise / 1 semaine à l'école ») et durée (ex. 2 ans) -->
+          <p>Rythme : <span class="todo">Rythme école / entreprise</span> · Durée : <span class="todo">Durée</span></p>
+        </div>
+      </li>
+      <li class="step rv">
+        <time>2026 – 2027</time>
+        <div>
+          <h3>Baccalauréat STMG</h3>
+          <p class="org">Lycée Aux Lazaristes La Salle, Lyon Croix-Rousse</p>
+          <!-- À COMPLÉTER : ta spécialité de terminale STMG (ex. Gestion et finance, Mercatique, RHC, SIG) -->
+          <p>Terminale en cours · Spécialité : <span class="todo">Ta spécialité</span></p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- =======================================================
+     PROJETS & EXPÉRIENCES
+     ======================================================= -->
+<section class="sec" id="projets" style="padding-top:0">
+  <div class="shell">
+    <div class="head rv">
+      <div>
+        <p class="eyebrow">Projets &amp; expériences</p>
+        <h2>Ce que j'ai construit.</h2>
+      </div>
+      <p class="lead">Des projets concrets, menés de bout en bout.</p>
+    </div>
+
+    <div class="projects">
+      <article class="proj wide rv">
+        <div class="media">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M3 8h18M8 21h8"/></svg>
+          <!-- À COMPLÉTER : remplace ce bloc par une capture d'un site que tu as réalisé : <img src="trame.jpg" alt="..."> -->
+          <span class="todo">Capture d'un site réalisé</span>
+        </div>
+        <div class="body">
+          <p class="when">2026</p>
+          <h3>Fondateur, Trame Design</h3>
+          <p>Agence web en cours d'immatriculation. Conception de sites et d'identités visuelles, de la maquette à la mise en ligne, en relation directe avec les clients.</p>
+          <ul class="chips"><li class="chip">Sites web</li><li class="chip">Identité visuelle</li><li class="chip">Relation client</li></ul>
+          <!-- À COMPLÉTER : lien vers ton portfolio Trame Design -->
+          <a class="link" href="#">Voir le portfolio Trame Design <span class="todo">Lien</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </article>
+
+      <article class="proj rv">
+        <div class="media">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="5" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7 7l3 3M17 7l-3 3M7 17l3-3M17 17l-3-3"/><rect x="9.5" y="9.5" width="5" height="5" rx="1.2"/></svg>
+          <!-- À COMPLÉTER : photo d'un de tes drones -->
+          <span class="todo">Photo de ton drone</span>
+        </div>
+        <div class="body">
+          <p class="when">Projet perso</p>
+          <h3>Conception et construction de drones</h3>
+          <p>Choix des composants, assemblage, câblage, paramétrage du contrôleur de vol et réglages en conditions réelles sur des modèles FPV.</p>
+          <ul class="chips"><li class="chip">Assemblage</li><li class="chip">Câblage</li><li class="chip">Contrôleur de vol</li></ul>
+        </div>
+      </article>
+
+      <article class="proj rv" style="--d:.08s">
+        <div class="media">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18l5-6 4 4 3-3 6 5"/><circle cx="16" cy="7" r="2"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg>
+          <!-- À COMPLÉTER : une de tes prises de vue aériennes (photo ou vidéo) -->
+          <span class="todo">Une de tes prises de vue aériennes</span>
+        </div>
+        <div class="body">
+          <p class="when">Projet perso</p>
+          <h3>Pilotage de drones stabilisés et FPV</h3>
+          <p>Prises de vue aériennes et vols de précision, une pratique directement transposable au relevé topographique par drone.</p>
+          <ul class="chips"><li class="chip">Vol de précision</li><li class="chip">Prise de vue aérienne</li></ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- =======================================================
+     CE QUE JE RECHERCHE
+     ======================================================= -->
+<section class="sec" style="padding-top:0">
+  <div class="shell">
+    <div class="head rv">
+      <div>
+        <p class="eyebrow">Ce que je recherche</p>
+        <h2>Mon alternance.</h2>
+      </div>
+    </div>
+    <dl class="search">
+      <div class="fact rv"><dt>Poste</dt><dd>Alternant·e géomètre-topographe</dd></div>
+      <div class="fact rv" style="--d:.06s"><dt>Rentrée</dt><dd>Septembre 2027</dd></div>
+      <div class="fact rv" style="--d:.12s"><dt>École</dt><dd>SEPR, Lyon</dd></div>
+      <!-- À COMPLÉTER : où peux-tu travailler ? (ex. « Lyon et Métropole ») + es-tu mobile / as-tu le permis ? -->
+      <div class="fact rv" style="--d:.18s"><dt>Zone &amp; mobilité</dt><dd><span class="todo">Zone, permis</span></dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- =======================================================
+     CONTACT
+     ======================================================= -->
+<section class="contact" id="contact">
+  <div class="shell">
+    <div class="final rv">
+      <canvas id="topo2" aria-hidden="true"></canvas>
+      <div class="glow"></div>
+      <p class="eyebrow" style="color:var(--sauge)">Contact</p>
+      <h2>Construisons la suite ensemble.</h2>
+      <p class="lead">Vous cherchez un·e alternant·e motivé·e pour la rentrée 2027 ? Parlons-en.</p>
+
+      <div class="links">
+        <!-- À COMPLÉTER : remplace « # » par mailto:ton-email et le texte par ton adresse -->
+        <a class="lk glass" href="#">
+          <span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></span>
+          <span><small>E-mail</small><b><span class="todo">ton e-mail</span></b></span>
+        </a>
+        <!-- À COMPLÉTER : remplace « # » par tel:+33… et le texte par ton numéro -->
+        <a class="lk glass" href="#">
+          <span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span>
+          <span><small>Téléphone</small><b><span class="todo">ton numéro</span></b></span>
+        </a>
+        <!-- À COMPLÉTER : lien LinkedIn (si tu n'en as pas, supprime ce bloc) -->
+        <a class="lk glass" href="#">
+          <span class="i"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.5c0-1.3-.02-3-1.83-3-1.83 0-2.12 1.43-2.12 2.9V21h-4z"/></svg></span>
+          <span><small>LinkedIn</small><b><span class="todo">ton profil</span></b></span>
+        </a>
+        <!-- À COMPLÉTER : lien vers le portfolio Trame Design -->
+        <a class="lk glass" href="#">
+          <span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
+          <span><small>Portfolio</small><b>Trame Design <span class="todo">lien</span></b></span>
+        </a>
+      </div>
+
+      <!-- À COMPLÉTER : dépose ton CV final dans ce dossier sous le nom « CV_Camille_Malatray.pdf » -->
+      <a class="btn primary" href="CV_Camille_Malatray.pdf" download>Télécharger mon CV
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 10l6 6 6-6M5 20h14"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<footer>© <span id="y">2026</span> Camille Malatray · Caluire-et-Cuire</footer>
+
+<!-- =======================================================
+     DOCK
+     ======================================================= -->
+<nav class="dock glass" aria-label="Navigation">
+  <a href="#accueil" data-tip="Accueil" aria-label="Accueil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></a>
+  <a href="#profil" data-tip="Profil" aria-label="Profil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></a>
+  <a href="#competences" data-tip="Compétences" aria-label="Compétences"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8L12 3z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></a>
+  <a href="#parcours" data-tip="Parcours" aria-label="Parcours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg></a>
+  <a href="#projets" data-tip="Projets" aria-label="Projets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></a>
+  <a href="#contact" data-tip="Contact" aria-label="Contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></a>
+  <span class="sep"></span>
+  <button id="theme" data-tip="Thème" aria-label="Changer de thème">
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</nav>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('y').textContent=new Date().getFullYear();
+
+  /* ---------- thème clair / sombre ---------- */
+  try{var t=localStorage.getItem('cm-theme');if(t)root.setAttribute('data-theme',t)}catch(e){}
+  document.getElementById('theme').addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    var next=cur==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('cm-theme',next)}catch(e){}
+    drawAll();
+  });
+
+  /* ---------- apparitions au défilement ---------- */
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+
+  /* ---------- reflet spéculaire du verre ---------- */
+  document.querySelectorAll('.glass').forEach(function(el){
+    el.addEventListener('pointermove',function(e){
+      var r=el.getBoundingClientRect();
+      el.style.setProperty('--mx',(e.clientX-r.left)+'px');
+      el.style.setProperty('--my',(e.clientY-r.top)+'px');
+      el.classList.add('spec');
+    });
+    el.addEventListener('pointerleave',function(){el.classList.remove('spec')});
+  });
+
+  /* ---------- texte « Mon projet » qui s'illumine ---------- */
+  var rt=document.getElementById('reveal');
+  rt.innerHTML=rt.textContent.trim().split(/\s+/).map(function(w){
+    var k=w.charAt(0)==='*';if(k)w=w.slice(1);
+    return '<span class="w'+(k?' k':'')+'">'+w+'</span>';
+  }).join(' ');
+  var words=rt.querySelectorAll('.w');
+  function lightWords(){
+    var r=rt.getBoundingClientRect(),vh=innerHeight;
+    var p=(vh*.85-r.top)/(r.height+vh*.35);
+    var n=Math.round(Math.max(0,Math.min(1,p))*words.length);
+    for(var i=0;i<words.length;i++)words[i].classList.toggle('on',i<n);
+  }
+
+  /* ---------- dock : grossissement façon macOS ---------- */
+  var dock=document.querySelector('.dock'),items=dock.querySelectorAll('a,button');
+  if(matchMedia('(hover: hover)').matches&&!reduce){
+    dock.addEventListener('mousemove',function(e){
+      items.forEach(function(it){
+        var r=it.getBoundingClientRect(),d=Math.abs(e.clientX-(r.left+r.width/2));
+        var s=44+20*Math.max(0,1-d/130);
+        it.style.setProperty('--s',s+'px');
+      });
+    });
+    dock.addEventListener('mouseleave',function(){items.forEach(function(it){it.style.removeProperty('--s')})});
+  }
+  /* section active */
+  var secs=['accueil','profil','competences','parcours','projets','contact'].map(function(id){return document.getElementById(id)});
+  function activeNav(){
+    var cur=secs[0];secs.forEach(function(s){if(s.getBoundingClientRect().top<innerHeight*.4)cur=s});
+    dock.querySelectorAll('a').forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+cur.id)});
+  }
+
+  /* ---------- courbes de niveau (relevé topographique) ----------
+     bruit de valeur + marching squares : un clin d'œil au métier */
+  var P=new Uint8Array(512);(function(){var p=[],i,j,t,s=7;for(i=0;i<256;i++)p[i]=i;for(i=255;i>0;i--){s=(s*16807)%2147483647;j=s%(i+1);t=p[i];p[i]=p[j];p[j]=t}for(i=0;i<512;i++)P[i]=p[i&255]})();
+  function h(x,y){return P[P[x&255]+(y&255)]/255}
+  function sm(t){return t*t*(3-2*t)}
+  function noise(x,y){var xi=Math.floor(x),yi=Math.floor(y),xf=sm(x-xi),yf=sm(y-yi);
+    var a=h(xi,yi),b=h(xi+1,yi),c=h(xi,yi+1),d=h(xi+1,yi+1);
+    return a+(b-a)*xf+(c-a)*yf+(a-b-c+d)*xf*yf}
+  function fbm(x,y){return noise(x,y)*.55+noise(x*2.1+5,y*2.1+3)*.28+noise(x*4.3+9,y*4.3+1)*.17}
+
+  function drawTopo(cv,color,scale,levels){
+    var dpr=Math.min(devicePixelRatio||1,2),W=cv.clientWidth,H=cv.clientHeight;
+    if(!W||!H)return;
+    cv.width=W*dpr;cv.height=H*dpr;
+    var c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,W,H);
+    var s=12,cols=Math.ceil(W/s)+1,rows=Math.ceil(H/s)+1,f=new Float32Array(cols*rows),x,y,l;
+    for(y=0;y<rows;y++)for(x=0;x<cols;x++)f[y*cols+x]=fbm(x*s*scale,y*s*scale);
+    c.lineWidth=1;c.strokeStyle=color;c.lineJoin='round';
+    for(l=1;l<levels;l++){
+      var t=.18+(l/levels)*.64;c.beginPath();
+      c.globalAlpha=(l%4===0)?1:.55;
+      for(y=0;y<rows-1;y++)for(x=0;x<cols-1;x++){
+        var a=f[y*cols+x],b=f[y*cols+x+1],d=f[(y+1)*cols+x],e=f[(y+1)*cols+x+1];
+        var k=(a>t?8:0)|(b>t?4:0)|(e>t?2:0)|(d>t?1:0);
+        if(k===0||k===15)continue;
+        var X=x*s,Y=y*s,
+          T=[X+s*(t-a)/(b-a),Y],R=[X+s,Y+s*(t-b)/(e-b)],
+          B=[X+s*(t-d)/(e-d),Y+s],L=[X,Y+s*(t-a)/(d-a)],seg;
+        switch(k){
+          case 1:case 14:seg=[L,B];break;case 2:case 13:seg=[B,R];break;
+          case 3:case 12:seg=[L,R];break;case 4:case 11:seg=[T,R];break;
+          case 6:case 9:seg=[T,B];break;case 7:case 8:seg=[L,T];break;
+          case 5:seg=[L,T,B,R];break;case 10:seg=[T,R,L,B];break;
+        }
+        for(var i=0;i<seg.length;i+=2){c.moveTo(seg[i][0],seg[i][1]);c.lineTo(seg[i+1][0],seg[i+1][1])}
+      }
+      c.stroke();
+    }
+    c.globalAlpha=1;
+  }
+  var topo=document.getElementById('topo'),topo2=document.getElementById('topo2');
+  function drawAll(){
+    drawTopo(topo,getComputedStyle(root).getPropertyValue('--topo').trim(),.0026,22);
+    drawTopo(topo2,'rgba(141,184,154,.28)',.0034,18);
+  }
+  drawAll();
+  var rz;addEventListener('resize',function(){clearTimeout(rz);rz=setTimeout(drawAll,200)});
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',drawAll);
+
+  /* ---------- boucle de défilement ---------- */
+  var ticking=false;
+  function onScroll(){
+    if(ticking)return;ticking=true;
+    requestAnimationFrame(function(){
+      if(!reduce)topo.style.transform='translate3d(0,'+(scrollY*.25)+'px,0)';
+      lightWords();activeNav();ticking=false;
+    });
+  }
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+</body>
+</html>
