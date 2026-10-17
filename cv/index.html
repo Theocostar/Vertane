@@ -133,24 +133,6 @@ h3{font-size:clamp(22px,2.4vw,28px);line-height:1.15;letter-spacing:-.025em;font
 .meta li{display:flex;align-items:center;gap:7px}
 .meta svg{width:16px;height:16px;color:var(--acc)}
 .cta{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:38px}
-@media (max-width:600px){
-  .hero{padding:72px 0 120px;min-height:0}
-  .pill{height:36px;padding:0 14px;font-size:12px;gap:8px;white-space:nowrap}
-  .avatar{width:108px;height:108px;margin:26px auto 22px}
-  .avatar .in{font-size:34px}
-  .meta{font-size:14px;gap:8px 16px}
-  .cta .btn{width:100%}
-}
-@media (max-width:600px) and (max-height:760px){
-  .hero{padding-top:44px}
-  .avatar{width:92px;height:92px;margin:18px auto 16px}
-  .avatar .in{font-size:30px}
-  .hero h1{font-size:46px}
-  .hero .tag{font-size:20px;margin-top:14px}
-  .meta{margin-top:18px}
-  .cta{margin-top:24px;gap:10px}
-  .btn{height:48px}
-}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:52px;padding:0 26px;border-radius:999px;font:600 16px/1 var(--font);letter-spacing:-.01em;transition:transform .35s var(--spring),background .3s,box-shadow .3s}
 .btn:hover{transform:scale(1.04)}
 .btn:active{transform:scale(.97)}
@@ -301,8 +283,6 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
 /* =========================================================
    Dock flottant en verre liquide (comme le template Magic UI)
    ========================================================= */
-/* Verre des barres : la capsule de navigation de Vertane (présentation) */
-.vbar{background:rgba(29,29,31,.78);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 10px 30px rgba(0,0,0,.2),inset 0 0 0 1px rgba(255,255,255,.08);color:#EDEBE4}
 .dock{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));z-index:100;transform:translateX(-50%);display:flex;align-items:center;gap:6px;height:64px;padding:8px 10px;border-radius:24px;--blur:26px}
 .dock a,.dock button{--s:44px;position:relative;width:var(--s);height:var(--s);border-radius:50%;display:grid;place-items:center;color:var(--fg);transition:color .3s var(--ease)}
 .dock .on{color:var(--acc)}
@@ -320,10 +300,9 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
 /* Progression par section, juste au-dessus du dock */
 .progress{position:fixed;right:12px;top:50%;z-index:100;transform:translateY(-50%);display:flex;flex-direction:column;width:16px;height:min(340px,46vh);padding:8px 0;border-radius:999px}
 .progress .segs{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.progress .seg{position:relative;flex:1;width:4px;border-radius:4px;background:rgba(255,255,255,.16);overflow:hidden}
-.progress .seg i{position:absolute;inset:0;border-radius:inherit;background:#8DB89A;transform-origin:top;transform:scaleY(var(--p,0))}
-.progress .seg.done i{opacity:.6}
-@media (max-width:600px){.progress{right:5px;width:12px;padding:6px 0}.progress .seg{width:3px}}
+.progress .seg{position:relative;flex:1;width:4px;border-radius:4px;background:var(--line);overflow:hidden}
+.progress .seg i{position:absolute;inset:0;border-radius:inherit;background:var(--acc);transform-origin:top;transform:scaleY(var(--p,0))}
+.progress .seg.done i{opacity:.55}
 /* Écrans larges : dock sur le côté gauche */
 @media (min-width:900px){
   .dock{left:34px;top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column;height:auto;padding:10px 8px}
@@ -333,8 +312,111 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
   .shell{padding-left:max(var(--gut),calc(120px - max(0px,(100vw - var(--shell)) / 2)))}
   footer{padding-bottom:60px}
 }
-@media (max-width:420px){.dock{gap:2px;padding:8px 6px}.dock a,.dock button{--s:40px}.dock .sep{margin:0 2px}}
 
+/* =========================================================
+   Téléphone : tailles resserrées (texte, cartes, icônes)
+   ========================================================= */
+@media (max-width:600px){
+  :root{--gut:18px;--r-l:24px;--r-m:18px}
+  body{font-size:16px}
+  .sec{padding:72px 0}
+  h2{font-size:clamp(30px,8.6vw,40px);letter-spacing:-.03em}
+  h3{font-size:19px}
+  .eyebrow{font-size:13px;margin-bottom:10px}
+  .lead{font-size:16.5px}
+  .head{margin-bottom:28px;gap:10px}
+  /* héros */
+  .hero{min-height:0;padding:40px 0 112px}
+  .pill{height:auto;min-height:32px;padding:7px 12px;gap:8px;font-size:11.5px;line-height:1.3;text-align:left}
+  .avatar{width:88px;height:88px;margin:22px auto 18px;padding:4px}
+  .avatar .in{font-size:28px}
+  .hero h1{font-size:clamp(38px,12vw,50px)}
+  .hero .tag{font-size:clamp(17px,5vw,20px);margin-top:14px}
+  .meta{font-size:13px;gap:6px 14px;margin-top:18px}
+  .meta svg{width:14px;height:14px}
+  .cta{margin-top:24px;gap:10px}
+  .cta .btn{width:100%}
+  .btn{height:46px;padding:0 20px;font-size:15px}
+  /* ce que j'apporte */
+  .apport{padding:8px 0 64px}
+  .stage{padding:30px 16px 18px}
+  .stage-head{margin-bottom:22px}
+  .trio{gap:10px}
+  .tile{padding:18px 18px 20px;display:grid;grid-template-columns:40px 1fr;gap:4px 14px;align-items:start}
+  .tile .ico{width:40px;height:40px;border-radius:12px;margin:0;grid-row:span 2}
+  .tile .ico svg{width:21px;height:21px}
+  .tile h3{font-size:17px;margin:0;align-self:center}
+  .tile p{font-size:14px;line-height:1.4}
+  /* mon projet */
+  .projet{padding:24px 0 72px}
+  .reveal-text{font-size:clamp(23px,6.6vw,28px);line-height:1.2}
+  /* compétences */
+  .bento{gap:10px}
+  .card{padding:20px 18px}
+  .card h3{font-size:18px}
+  .card .k{font-size:13.5px;margin-bottom:14px}
+  .card .big-ico{width:96px;height:96px}
+  .chips{gap:6px}
+  .chip{height:28px;padding:0 11px;font-size:12.5px}
+  .cert{font-size:12.5px;padding:8px 11px;gap:8px;margin-top:14px}
+  .cert svg{width:17px;height:17px}
+  .lang li{font-size:14.5px;padding:9px 0}
+  /* formation */
+  .timeline::before{left:7px}
+  .step{padding:0 0 30px 30px;gap:2px}
+  .step::before{left:0;top:4px;width:16px;height:16px}
+  .step time{font-size:13px}
+  .step h3{font-size:18px}
+  .step .org{font-size:14.5px;margin-bottom:4px}
+  .step p{font-size:14.5px}
+  .badge{height:22px;font-size:11.5px;padding:0 8px;margin-left:4px;vertical-align:2px}
+  /* projets */
+  .projects{gap:12px}
+  .proj .body{padding:18px 18px 22px}
+  .proj .when{font-size:12.5px;margin-bottom:8px}
+  .proj h3{font-size:20px;margin-bottom:8px}
+  .proj p{font-size:14.5px;margin-bottom:14px}
+  .link{margin-top:12px;font-size:15px}
+  /* recherche */
+  .search{gap:10px}
+  .fact{padding:16px 18px}
+  .fact dt{font-size:12.5px;margin-bottom:6px}
+  .fact dd{font-size:17px}
+  .fact dd.note{font-size:13px;margin-top:6px}
+  /* contact */
+  .contact{padding:8px 0 120px}
+  .final{padding:40px 16px 34px}
+  .final h2{font-size:clamp(28px,8vw,36px)}
+  .final .lead{margin:14px auto 26px;font-size:15.5px}
+  .links{gap:10px}
+  .lk{padding:12px 14px;gap:12px;border-radius:16px}
+  .lk .i{width:36px;height:36px;border-radius:11px}
+  .lk .i svg{width:18px;height:18px}
+  .lk small{font-size:11.5px;margin-bottom:2px}
+  .lk b{font-size:14px}
+  .final .btn{margin-top:24px}
+  footer{padding-bottom:100px;font-size:12px}
+  /* dock et progression */
+  .dock{height:auto;gap:0;padding:6px 8px;border-radius:20px;bottom:max(12px,env(safe-area-inset-bottom))}
+  .dock a,.dock button{--s:40px}
+  .dock .sep{height:24px;margin:0 3px}
+  .progress{right:4px;width:12px;padding:6px 0;height:min(260px,40vh)}
+  .progress .seg{width:3px}
+}
+@media (max-width:380px){
+  :root{--gut:14px}
+  .dock a,.dock button{--s:34px}
+  .dock{padding:5px 6px}
+  .dock .sep{margin:0 2px}
+  .hero h1{font-size:clamp(34px,11.5vw,42px)}
+  .stage{padding:26px 12px 14px}
+  .final{padding:34px 12px 28px}
+  .progress{right:3px;width:10px}
+}
+@media (max-width:330px){
+  .dock a,.dock button{--s:31px}
+  .chip{font-size:12px;padding:0 9px}
+}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .rv{opacity:1;filter:none;transform:none}
@@ -646,7 +728,7 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
       <div class="links">
         <a class="lk glass" href="mailto:camillemalatray@icloud.com">
           <span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></span>
-          <span><small>E-mail</small><b>camillemalatray@icloud.com</b></span>
+          <span><small>E-mail</small><b>camillemalatray@<wbr>icloud.com</b></span>
         </a>
         <a class="lk glass" href="tel:+33743014044">
           <span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span>
@@ -676,7 +758,7 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
 <!-- =======================================================
      DOCK
      ======================================================= -->
-<div class="progress vbar" role="progressbar" aria-label="Progression dans la page" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+<div class="progress glass" role="progressbar" aria-label="Progression dans la page" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
   <span class="segs" aria-hidden="true"><span class="seg" title="Accueil"><i></i></span><span class="seg" title="Profil"><i></i></span><span class="seg" title="Compétences"><i></i></span><span class="seg" title="Parcours"><i></i></span><span class="seg" title="Projets"><i></i></span><span class="seg" title="Contact"><i></i></span></span>
 </div>
 
