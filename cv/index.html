@@ -250,6 +250,7 @@ h3{font-size:clamp(22px,2.4vw,28px);line-height:1.15;letter-spacing:-.025em;font
 .fact{border-radius:var(--r-m);background:var(--bg2);padding:26px 24px;box-shadow:inset 0 0 0 1px var(--line)}
 .fact dt{font-size:14px;color:var(--fg2);margin-bottom:10px}
 .fact dd{margin:0;font:600 21px/1.25 var(--display);letter-spacing:-.025em}
+.fact dd.note{margin:10px 0 0;font-weight:400;font-family:var(--font);letter-spacing:-.01em;font-size:14px;line-height:1.4;color:var(--fg2)}
 @media (max-width:860px){.search{grid-template-columns:1fr 1fr}}
 @media (max-width:480px){.search{grid-template-columns:1fr}}
 
@@ -430,7 +431,7 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
       <article class="card c-gest rv" style="--d:.12s">
         <h3>Gestion</h3>
         <p class="k">Acquis du bac STMG.</p>
-        <ul class="chips"><li class="chip">Gestion</li><li class="chip">Relation client</li><li class="chip">Bureautique</li></ul>
+        <ul class="chips"><li class="chip">Gestion</li><li class="chip">Droit &amp; économie</li><li class="chip">Marketing</li><li class="chip">Management</li><li class="chip">Relation client</li><li class="chip">Bureautique</li></ul>
       </article>
 
       <article class="card c-qual rv">
@@ -444,8 +445,7 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
         <p class="k">&nbsp;</p>
         <ul class="lang">
           <li><span>Français</span><span>Langue maternelle</span></li>
-          <!-- À COMPLÉTER : ton niveau d'anglais (ex. A2, B1, B2…) -->
-          <li><span>Anglais</span><span class="todo">Niveau</span></li>
+          <li><span>Anglais</span><span>B2</span></li>
         </ul>
       </article>
     </div>
@@ -479,8 +479,15 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
         <div>
           <h3>Baccalauréat STMG</h3>
           <p class="org">Lycée Aux Lazaristes La Salle, Lyon Croix-Rousse</p>
-          <!-- À COMPLÉTER : ta spécialité de terminale STMG (ex. Gestion et finance, Mercatique, RHC, SIG) -->
-          <p>Terminale en cours · Spécialité : <span class="todo">Ta spécialité</span></p>
+          <p>Terminale en cours · Spécialité Marketing</p>
+        </div>
+      </li>
+      <li class="step rv">
+        <!-- À COMPLÉTER : année d'obtention du brevet (ex. 2024) -->
+        <time><span class="todo">Année</span></time>
+        <div>
+          <h3>Diplôme national du brevet</h3>
+          <p class="org">Mariste Saint-Paul, Lyon</p>
         </div>
       </li>
     </ol>
@@ -512,9 +519,6 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
           <h3>Fondateur, Trame Design</h3>
           <p>Agence web en cours d'immatriculation. Conception de sites et d'identités visuelles, de la maquette à la mise en ligne, en relation directe avec les clients.</p>
           <ul class="chips"><li class="chip">Sites web</li><li class="chip">Identité visuelle</li><li class="chip">Relation client</li></ul>
-          <!-- À COMPLÉTER : lien vers ton portfolio Trame Design -->
-          <a class="link" href="#">Voir le portfolio Trame Design <span class="todo">Lien</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
       </article>
 
@@ -564,8 +568,7 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
       <div class="fact rv"><dt>Poste</dt><dd>Alternant·e géomètre-topographe</dd></div>
       <div class="fact rv" style="--d:.06s"><dt>Rentrée</dt><dd>Septembre 2027</dd></div>
       <div class="fact rv" style="--d:.12s"><dt>École</dt><dd>SEPR, Lyon</dd></div>
-      <!-- À COMPLÉTER : où peux-tu travailler ? (ex. « Lyon et Métropole ») + es-tu mobile / as-tu le permis ? -->
-      <div class="fact rv" style="--d:.18s"><dt>Zone &amp; mobilité</dt><dd><span class="todo">Zone, permis</span></dd></div>
+      <div class="fact rv" style="--d:.18s"><dt>Zone &amp; mobilité</dt><dd>Lyon et alentours · Permis B</dd><dd class="note">Rayon plus large envisageable selon la proposition.</dd></div>
     </dl>
   </div>
 </section>
@@ -583,25 +586,23 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
       <p class="lead">Vous cherchez un·e alternant·e motivé·e pour la rentrée 2027 ? Parlons-en.</p>
 
       <div class="links">
-        <!-- À COMPLÉTER : remplace « # » par mailto:ton-email et le texte par ton adresse -->
-        <a class="lk glass" href="#">
+        <a class="lk glass" href="mailto:camillemalatray@icloud.com">
           <span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></span>
-          <span><small>E-mail</small><b><span class="todo">ton e-mail</span></b></span>
+          <span><small>E-mail</small><b>camillemalatray@icloud.com</b></span>
         </a>
-        <!-- À COMPLÉTER : remplace « # » par tel:+33… et le texte par ton numéro -->
-        <a class="lk glass" href="#">
+        <a class="lk glass" href="tel:+33743014044">
           <span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span>
-          <span><small>Téléphone</small><b><span class="todo">ton numéro</span></b></span>
+          <span><small>Téléphone</small><b>07 43 01 40 44</b></span>
         </a>
         <!-- À COMPLÉTER : lien LinkedIn (si tu n'en as pas, supprime ce bloc) -->
         <a class="lk glass" href="#">
           <span class="i"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.5c0-1.3-.02-3-1.83-3-1.83 0-2.12 1.43-2.12 2.9V21h-4z"/></svg></span>
           <span><small>LinkedIn</small><b><span class="todo">ton profil</span></b></span>
         </a>
-        <!-- À COMPLÉTER : lien vers le portfolio Trame Design -->
-        <a class="lk glass" href="#">
-          <span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
-          <span><small>Portfolio</small><b>Trame Design <span class="todo">lien</span></b></span>
+        <!-- À COMPLÉTER : remplace « # » par le lien de ton profil Indeed -->
+        <a class="lk glass" href="#" target="_blank" rel="noopener">
+          <span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+          <span><small>Indeed</small><b><span class="todo">ton profil</span></b></span>
         </a>
       </div>
 
