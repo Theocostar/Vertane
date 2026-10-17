@@ -303,12 +303,15 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
    ========================================================= */
 /* Verre des barres : la capsule de navigation de Vertane (présentation) */
 .vbar{background:rgba(29,29,31,.78);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 10px 30px rgba(0,0,0,.2),inset 0 0 0 1px rgba(255,255,255,.08);color:#EDEBE4}
-.dock{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));z-index:100;transform:translateX(-50%);display:flex;align-items:flex-end;gap:6px;padding:6px;border-radius:999px}
-.dock a,.dock button{--s:44px;position:relative;width:var(--s);height:var(--s);border-radius:50%;display:grid;place-items:center;color:#EDEBE4;transition:width .18s var(--ease),height .18s var(--ease),background .25s}
-.dock a:hover,.dock button:hover{background:rgba(255,255,255,.12)}
-.dock .on,.dock .on:hover{background:rgba(141,184,154,.22);color:#B7D9C1}
+.dock{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));z-index:100;transform:translateX(-50%);display:flex;align-items:center;gap:6px;height:64px;padding:8px 10px;border-radius:24px;--blur:26px}
+.dock a,.dock button{--s:44px;position:relative;width:var(--s);height:var(--s);border-radius:50%;display:grid;place-items:center;color:var(--fg);transition:color .3s var(--ease)}
+.dock .on{color:var(--acc)}
+/* au survol, l'icône se dessine trait par trait */
+.dock a:hover svg>*,.dock button:hover svg>*,.dock a:focus-visible svg>*,.dock button:focus-visible svg>*{stroke-dasharray:1;animation:draw .9s cubic-bezier(.65,0,.35,1) both}
+.dock svg>*:nth-child(2){animation-delay:.12s!important}.dock svg>*:nth-child(3){animation-delay:.24s!important}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 .dock svg{width:44%;height:44%;pointer-events:none}
-.dock .sep{width:1px;height:28px;align-self:center;margin:0 2px;background:rgba(255,255,255,.14)}
+.dock .sep{width:1px;height:30px;align-self:center;margin:0 4px;background:var(--line)}
 .dock [data-tip]::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 12px);transform:translate(-50%,6px);padding:6px 11px;border-radius:9px;background:var(--fg);color:var(--bg);font:500 12px/1 var(--font);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s,transform .25s var(--out)}
 @media (hover:hover){.dock [data-tip]:hover::after{opacity:1;transform:translate(-50%,0)}}
 .dock .moon{display:none}
@@ -323,15 +326,14 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
 @media (max-width:600px){.progress{right:5px;width:12px;padding:6px 0}.progress .seg{width:3px}}
 /* Écrans larges : dock sur le côté gauche */
 @media (min-width:900px){
-  .dock{left:28px;top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column;align-items:flex-start;padding:6px}
-  .dock .sep{width:28px;height:1px;margin:2px 8px;align-self:auto}
+  .dock{left:34px;top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column;height:auto;padding:10px 8px}
+  .dock .sep{width:30px;height:1px;margin:4px 7px;align-self:auto}
   .dock [data-tip]::after{left:calc(100% + 14px);bottom:auto;top:50%;transform:translate(-6px,-50%)}
   .dock [data-tip]:hover::after{transform:translate(0,-50%)}
-  .dock .sep{background:rgba(255,255,255,.14)}
   .shell{padding-left:max(var(--gut),calc(120px - max(0px,(100vw - var(--shell)) / 2)))}
   footer{padding-bottom:60px}
 }
-@media (max-width:420px){.dock{gap:2px;padding:5px}.dock a,.dock button{--s:40px}.dock .sep{margin:0 2px}}
+@media (max-width:420px){.dock{gap:2px;padding:8px 6px}.dock a,.dock button{--s:40px}.dock .sep{margin:0 2px}}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -678,7 +680,7 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
   <span class="segs" aria-hidden="true"><span class="seg" title="Accueil"><i></i></span><span class="seg" title="Profil"><i></i></span><span class="seg" title="Compétences"><i></i></span><span class="seg" title="Parcours"><i></i></span><span class="seg" title="Projets"><i></i></span><span class="seg" title="Contact"><i></i></span></span>
 </div>
 
-<nav class="dock vbar" aria-label="Navigation">
+<nav class="dock glass" aria-label="Navigation">
   <a href="#accueil" data-tip="Accueil" aria-label="Accueil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></a>
   <a href="#profil" data-tip="Profil" aria-label="Profil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></a>
   <a href="#competences" data-tip="Compétences" aria-label="Compétences"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8L12 3z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></a>
@@ -737,20 +739,9 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
     for(var i=0;i<words.length;i++)words[i].classList.toggle('on',i<n);
   }
 
-  /* ---------- dock : grossissement façon macOS ---------- */
-  var dock=document.querySelector('.dock'),items=dock.querySelectorAll('a,button'),
-      side=matchMedia('(min-width: 900px)');
-  if(matchMedia('(hover: hover)').matches&&!reduce){
-    dock.addEventListener('mousemove',function(e){
-      items.forEach(function(it){
-        var r=it.getBoundingClientRect(),
-            d=side.matches?Math.abs(e.clientY-(r.top+r.height/2)):Math.abs(e.clientX-(r.left+r.width/2));
-        var s=44+20*Math.max(0,1-d/130);
-        it.style.setProperty('--s',s+'px');
-      });
-    });
-    dock.addEventListener('mouseleave',function(){items.forEach(function(it){it.style.removeProperty('--s')})});
-  }
+  /* ---------- dock : longueur de tracé normalisée pour l'animation de dessin ---------- */
+  var dock=document.querySelector('.dock');
+  dock.querySelectorAll('svg>*').forEach(function(el){el.setAttribute('pathLength','1')});
   /* section active */
   var secs=['accueil','profil','competences','parcours','projets','contact'].map(function(id){return document.getElementById(id)});
   function activeNav(){
@@ -830,7 +821,7 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
       lightWords();activeNav();progress();ticking=false;
     });
   }
-  addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);side.addEventListener('change',onScroll);onScroll();
+  addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);onScroll();
 })();
 </script>
 </body>
