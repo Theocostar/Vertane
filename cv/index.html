@@ -270,12 +270,14 @@ h3{font-size:clamp(22px,2.4vw,28px);line-height:1.15;letter-spacing:-.025em;font
 .lk:hover{transform:translateY(-3px)}
 .lk .i{width:44px;height:44px;flex:none;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.12)}
 .lk .i svg{width:22px;height:22px}
+.lk .i.indeed{background:#fff}
+.lk .i.indeed svg{width:24px;height:30px}
 .lk small{display:block;font-size:13px;color:rgba(245,245,247,.6);margin-bottom:3px}
-.lk b{font-weight:600;font-size:16px;word-break:break-word}
+.lk b{font-weight:600;font-size:16px;overflow-wrap:anywhere}
 .final .todo{color:#FFC94D;background:rgba(255,196,0,.10)}
 .final .btn{margin-top:36px}
-@media (max-width:640px){.links{grid-template-columns:1fr}}
-footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
+@media (max-width:640px){.links{grid-template-columns:1fr}.lk b{font-size:14.5px;letter-spacing:-.02em}}
+footer{padding:0 0 170px;text-align:center;color:var(--fg3);font-size:13px}
 
 /* =========================================================
    Dock flottant en verre liquide (comme le template Magic UI)
@@ -291,6 +293,14 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
 .dock .moon{display:none}
 :root[data-theme="dark"] .dock .sun{display:none}:root[data-theme="dark"] .dock .moon{display:block}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dock .sun{display:none}:root:not([data-theme="light"]) .dock .moon{display:block}}
+/* Progression par section, juste au-dessus du dock */
+.progress{position:fixed;left:50%;bottom:calc(max(18px,env(safe-area-inset-bottom)) + 74px);z-index:100;transform:translateX(-50%);display:flex;align-items:center;gap:12px;width:min(380px,calc(100vw - 32px));height:30px;padding:0 14px;border-radius:999px;--blur:20px}
+.progress .lbl{flex:none;min-width:84px;font:600 12px/1 var(--font);letter-spacing:-.01em;color:var(--fg)}
+.progress .lbl b{font-weight:600;color:var(--acc);margin-right:6px;font-variant-numeric:tabular-nums}
+.progress .segs{flex:1;display:flex;gap:4px}
+.progress .seg{position:relative;flex:1;height:4px;border-radius:4px;background:var(--line);overflow:hidden}
+.progress .seg i{position:absolute;inset:0;border-radius:inherit;background:var(--acc);transform-origin:left;transform:scaleX(0)}
+.progress .seg.done i{opacity:.55}
 @media (max-width:420px){.dock{gap:2px;padding:8px 6px}.dock a,.dock button{--s:40px}.dock .sep{margin:0 2px}}
 
 @media (prefers-reduced-motion:reduce){
@@ -475,7 +485,7 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
         </div>
       </li>
       <li class="step rv">
-        <time>2026 – 2027</time>
+        <time>2025 – 2027</time>
         <div>
           <h3>Baccalauréat STMG</h3>
           <p class="org">Lycée Aux Lazaristes La Salle, Lyon Croix-Rousse</p>
@@ -483,11 +493,10 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
         </div>
       </li>
       <li class="step rv">
-        <!-- À COMPLÉTER : année d'obtention du brevet (ex. 2024) -->
-        <time><span class="todo">Année</span></time>
+        <time>2023 – 2025</time>
         <div>
           <h3>Diplôme national du brevet</h3>
-          <p class="org">Mariste Saint-Paul, Lyon</p>
+          <p class="org">Maristes Saint-Paul, Lyon</p>
         </div>
       </li>
     </ol>
@@ -601,7 +610,7 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
         </a>
         <!-- À COMPLÉTER : remplace « # » par le lien de ton profil Indeed -->
         <a class="lk glass" href="#" target="_blank" rel="noopener">
-          <span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+          <span class="i indeed"><svg viewBox="4 2.6 16 20" aria-label="Indeed"><path d="M6 11.2C8.4 6 13.6 3.5 18.8 4.7" fill="none" stroke="#2164F3" stroke-width="2.3" stroke-linecap="round"/><circle fill="#2164F3" cx="12.2" cy="10.6" r="2.3"/><rect fill="#2164F3" x="10.3" y="14" width="3.8" height="8" rx="1.9"/></svg></span>
           <span><small>Indeed</small><b><span class="todo">ton profil</span></b></span>
         </a>
       </div>
@@ -618,6 +627,11 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
 <!-- =======================================================
      DOCK
      ======================================================= -->
+<div class="progress glass" role="progressbar" aria-label="Progression dans la page" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+  <span class="lbl"><b>1/6</b><span>Accueil</span></span>
+  <span class="segs" aria-hidden="true"><span class="seg"><i></i></span><span class="seg"><i></i></span><span class="seg"><i></i></span><span class="seg"><i></i></span><span class="seg"><i></i></span><span class="seg"><i></i></span></span>
+</div>
+
 <nav class="dock glass" aria-label="Navigation">
   <a href="#accueil" data-tip="Accueil" aria-label="Accueil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></a>
   <a href="#profil" data-tip="Profil" aria-label="Profil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></a>
@@ -696,6 +710,25 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
     dock.querySelectorAll('a').forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+cur.id)});
   }
 
+  /* barre de progression : un segment par section, qui se remplit avant de passer à la suivante */
+  var prog=document.querySelector('.progress'),segs=prog.querySelectorAll('.seg'),
+      lblN=prog.querySelector('.lbl b'),lblT=prog.querySelector('.lbl span'),
+      names=['Accueil','Profil','Compétences','Parcours','Projets','Contact'];
+  function progress(){
+    prog.style.width=dock.offsetWidth+'px';
+    var ih=innerHeight,docH=document.documentElement.scrollHeight,pos=scrollY+ih*.4,cur=0;
+    var tops=secs.map(function(s){return s.getBoundingClientRect().top+scrollY});
+    for(var i=0;i<secs.length;i++){
+      var start=tops[i],end=i<secs.length-1?tops[i+1]:Math.max(start+1,docH-ih*.6);
+      var p=Math.max(0,Math.min(1,(pos-start)/(end-start)));
+      segs[i].firstChild.style.transform='scaleX('+p+')';
+      segs[i].classList.toggle('done',p>=1&&i<secs.length-1);
+      if(pos>=start)cur=i;
+    }
+    lblN.textContent=(cur+1)+'/'+secs.length;lblT.textContent=names[cur];
+    prog.setAttribute('aria-valuenow',Math.round(Math.min(1,scrollY/Math.max(1,docH-ih))*100));
+  }
+
   /* ---------- courbes de niveau (relevé topographique) ----------
      bruit de valeur + marching squares : un clin d'œil au métier */
   var P=new Uint8Array(512);(function(){var p=[],i,j,t,s=7;for(i=0;i<256;i++)p[i]=i;for(i=255;i>0;i--){s=(s*16807)%2147483647;j=s%(i+1);t=p[i];p[i]=p[j];p[j]=t}for(i=0;i<512;i++)P[i]=p[i&255]})();
@@ -751,10 +784,10 @@ footer{padding:0 0 130px;text-align:center;color:var(--fg3);font-size:13px}
     if(ticking)return;ticking=true;
     requestAnimationFrame(function(){
       if(!reduce)topo.style.transform='translate3d(0,'+(scrollY*.25)+'px,0)';
-      lightWords();activeNav();ticking=false;
+      lightWords();activeNav();progress();ticking=false;
     });
   }
-  addEventListener('scroll',onScroll,{passive:true});onScroll();
+  addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);onScroll();
 })();
 </script>
 </body>
