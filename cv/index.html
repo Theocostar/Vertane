@@ -108,7 +108,7 @@ h3{font-size:clamp(22px,2.4vw,28px);line-height:1.15;letter-spacing:-.025em;font
 /* =========================================================
    Héros — relevé topographique en fond
    ========================================================= */
-.hero{min-height:100svh;display:flex;align-items:center;padding:110px 0 140px;overflow:hidden}
+.hero{min-height:100svh;display:flex;align-items:center;padding:110px 0 140px;overflow:hidden;overflow:clip}
 .hero canvas{position:absolute;inset:-8% 0 0;width:100%;height:116%;z-index:0;pointer-events:none}
 .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;z-index:0;pointer-events:none;animation:float 18s var(--ease) infinite alternate}
 .blob.b1{width:46vw;height:46vw;max-width:620px;max-height:620px;left:-10vw;top:6vh;background:radial-gradient(circle,var(--sauge),transparent 68%)}
@@ -224,7 +224,7 @@ h3{font-size:clamp(22px,2.4vw,28px);line-height:1.15;letter-spacing:-.025em;font
    Projets — grandes tuiles
    ========================================================= */
 .projects{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-.proj{position:relative;display:flex;flex-direction:column;border-radius:var(--r-l);background:var(--bg2);overflow:hidden;box-shadow:inset 0 0 0 1px var(--line);transition:transform .6s var(--out),box-shadow .4s}
+.proj{position:relative;display:flex;flex-direction:column;border-radius:var(--r-l);background:var(--bg2);overflow:hidden;box-shadow:inset 0 0 0 1px var(--line);transition:transform .6s var(--out),box-shadow .4s;overflow:clip}
 .proj:hover{transform:translateY(-6px);box-shadow:inset 0 0 0 1px var(--line),0 24px 60px rgba(0,0,0,.10)}
 .proj.wide{grid-column:span 2;flex-direction:row}
 .proj .media{position:relative;flex:1 1 50%;min-height:260px;display:grid;place-items:center;padding:24px;text-align:center;background:linear-gradient(150deg,var(--bg3),var(--bg))}
@@ -417,6 +417,64 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
   .dock a,.dock button{--s:31px}
   .chip{font-size:12px;padding:0 9px}
 }
+/* =========================================================
+   Lecteur vidéo (contrôles en verre, au design du site)
+   ========================================================= */
+.vplayer{position:relative;aspect-ratio:16/9;border-radius:28px;overflow:hidden;background:#0b1f15;box-shadow:0 30px 80px rgba(22,24,26,.28),0 0 0 1px var(--line);isolation:isolate;-webkit-user-select:none;user-select:none;overflow:clip}
+.vplayer video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#0b1f15}
+.vplayer::after{content:"";position:absolute;inset:auto 0 0;height:45%;background:linear-gradient(transparent,rgba(5,15,10,.55));pointer-events:none;transition:opacity .4s var(--ease)}
+.vp-top{position:absolute;left:18px;top:18px;z-index:2;transition:opacity .4s var(--ease)}
+.vp-chip{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:999px;background:rgba(10,26,18,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);color:#fff;font:600 13.5px/1 var(--font);letter-spacing:-.01em}
+.vp-big{position:absolute;left:50%;top:50%;z-index:3;width:96px;height:96px;margin:-48px 0 0 -48px;border-radius:50%;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.16);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 0 0 1.5px rgba(255,255,255,.3),0 20px 50px rgba(0,0,0,.35);transition:transform .45s var(--spring),opacity .3s var(--ease)}
+.vp-big svg{width:38px;height:38px;margin-left:5px}
+.vp-big:hover{transform:scale(1.08)}
+.vp-bar{position:absolute;left:14px;right:14px;bottom:14px;z-index:3;display:flex;align-items:center;gap:12px;height:54px;padding:0 10px 0 6px;border-radius:999px;color:#fff;--g-bg:rgba(12,28,20,.42);--g-rim-a:rgba(255,255,255,.45);--g-rim-b:rgba(255,255,255,.06);--g-hi:rgba(255,255,255,.25);--g-lo:rgba(255,255,255,.05);--g-drop:0 14px 40px rgba(0,0,0,.35);--g-spec:rgba(255,255,255,.12);transition:opacity .4s var(--ease),transform .5s var(--out)}
+.vp-bar button{width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;color:#fff;transition:background .2s}
+.vp-bar button:hover{background:rgba(255,255,255,.14)}
+.vp-bar svg{width:20px;height:20px}
+.vp-time{flex:none;font:500 13.5px/1 var(--font);font-variant-numeric:tabular-nums;color:rgba(255,255,255,.85);letter-spacing:0}
+.vp-prog{position:relative;flex:1;height:30px;cursor:pointer;touch-action:none}
+.vp-prog::before,.vp-prog i{content:"";position:absolute;left:0;top:50%;height:5px;margin-top:-2.5px;border-radius:5px}
+.vp-prog::before{right:0;background:rgba(255,255,255,.18)}
+.vp-buf{width:0;background:rgba(255,255,255,.28)}
+.vp-fill{width:0;background:#8DB89A}
+.vp-knob{position:absolute;top:50%;left:0;width:15px;height:15px;margin:-7.5px 0 0 -7.5px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35);transform:scale(0);transition:transform .2s var(--out)}
+.vp-prog:hover .vp-knob,.vplayer.scrub .vp-knob{transform:scale(1)}
+.vp-prog:focus-visible{outline:2px solid #8DB89A;outline-offset:2px;border-radius:6px}
+.vp-vol{flex:none;width:76px;accent-color:#8DB89A}
+.vp-play .i-pause,.vplayer.playing .vp-play .i-play,.vp-mute .i-off,.vplayer.muted .vp-mute .i-on{display:none}
+.vplayer.playing .vp-play .i-pause,.vplayer.muted .vp-mute .i-off{display:block}
+.vplayer.playing .vp-big{opacity:0;transform:scale(.8);pointer-events:none}
+.vplayer.fresh .vp-bar{opacity:0;transform:translateY(12px);pointer-events:none}
+.vplayer.playing.idle .vp-bar,.vplayer.playing.idle .vp-top{opacity:0;pointer-events:none}
+.vplayer.playing.idle::after{opacity:0}
+.vplayer.playing.idle{cursor:none}
+.vp-spin{position:absolute;left:50%;top:50%;z-index:2;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;opacity:0;animation:vpspin .8s linear infinite;pointer-events:none}
+.vplayer.waiting .vp-spin{opacity:1}
+@keyframes vpspin{to{transform:rotate(360deg)}}
+.vp-err{position:absolute;left:50%;bottom:90px;z-index:3;transform:translateX(-50%);width:min(520px,calc(100% - 40px));padding:12px 16px;border-radius:14px;background:rgba(10,26,18,.75);color:#fff;font:500 14px/1.4 var(--font);text-align:center;display:none}
+.vplayer.error .vp-err{display:block}
+.vplayer:fullscreen{border-radius:0;aspect-ratio:auto}
+.vplayer:fullscreen video{object-fit:contain;background:#000}
+/* placement */
+.hero-video{max-width:960px;margin:56px auto 0}
+.proj.vid{grid-column:1/-1;padding:0;flex-direction:column}
+.proj.vid .vplayer{border-radius:0;box-shadow:none}
+.proj.vid .body{flex:none}.proj.vid .chips{margin-top:4px}
+.proj.vid .body{display:grid;grid-template-columns:1fr auto;gap:10px 40px;align-items:end}
+.proj.vid .body .chips{grid-column:1/-1}
+@media (max-width:600px){
+  .hero-video{margin-top:32px}
+  .vplayer{border-radius:20px}
+  .vp-big{width:72px;height:72px;margin:-36px 0 0 -36px}.vp-big svg{width:28px;height:28px}
+  .vp-bar{left:8px;right:8px;bottom:8px;height:46px;gap:6px}
+  .vp-bar button{width:36px;height:36px}
+  .vp-vol{display:none}
+  .vp-time{font-size:12px}
+  .vp-top{left:10px;top:10px}.vp-chip{height:28px;font-size:12px;padding:0 11px}
+  .proj.vid .body{grid-template-columns:1fr}
+}
+@media (hover:none){.vp-vol{display:none}}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .rv{opacity:1;filter:none;transform:none}
@@ -459,6 +517,23 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
       <a class="btn primary" href="#contact">Me proposer une alternance
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       <a class="btn glass" href="#competences">Voir mes compétences</a>
+    </div>
+    <div class="hero-video rv" style="--d:.5s">
+      <div class="vplayer" data-dur="1:27">
+        <video preload="metadata" playsinline poster="videos/cv-video-poster.jpg" src="videos/cv-video.mp4"></video>
+        <div class="vp-top"><span class="vp-chip">CV vidéo · 1 min 27</span></div>
+        <button class="vp-big" aria-label="Lire la vidéo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></button>
+        <div class="vp-spin" aria-hidden="true"></div>
+        <p class="vp-err">Vidéo indisponible ici. Elle se lit quand le site est en ligne, avec le dossier « videos » à côté de la page.</p>
+        <div class="vp-bar glass">
+          <button class="vp-play" aria-label="Lecture"><svg class="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg></button>
+          <span class="vp-time"><span class="vp-cur-t">0:00</span> / <span class="vp-dur-t">1:27</span></span>
+          <div class="vp-prog" role="slider" tabindex="0" aria-label="Position dans la vidéo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i class="vp-buf"></i><i class="vp-fill"></i><b class="vp-knob"></b></div>
+          <button class="vp-mute" aria-label="Couper le son"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor"/><path d="m16 9 6 6M22 9l-6 6"/></svg></button>
+          <input class="vp-vol" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+          <button class="vp-fs" aria-label="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -688,6 +763,32 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
           <ul class="chips"><li class="chip">Vol de précision</li><li class="chip">Prise de vue aérienne</li></ul>
         </div>
       </article>
+
+      <article class="proj vid rv">
+        <div class="vplayer" data-dur="4:12">
+        <video preload="metadata" playsinline poster="videos/drone-fpv-poster.jpg" src="videos/drone-fpv.mp4"></video>
+        <div class="vp-top"><span class="vp-chip">Vidéo · 4 min 12</span></div>
+        <button class="vp-big" aria-label="Lire la vidéo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></button>
+        <div class="vp-spin" aria-hidden="true"></div>
+        <p class="vp-err">Vidéo indisponible ici. Elle se lit quand le site est en ligne, avec le dossier « videos » à côté de la page.</p>
+        <div class="vp-bar glass">
+          <button class="vp-play" aria-label="Lecture"><svg class="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg></button>
+          <span class="vp-time"><span class="vp-cur-t">0:00</span> / <span class="vp-dur-t">4:12</span></span>
+          <div class="vp-prog" role="slider" tabindex="0" aria-label="Position dans la vidéo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i class="vp-buf"></i><i class="vp-fill"></i><b class="vp-knob"></b></div>
+          <button class="vp-mute" aria-label="Couper le son"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor"/><path d="m16 9 6 6M22 9l-6 6"/></svg></button>
+          <input class="vp-vol" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+          <button class="vp-fs" aria-label="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+        </div>
+      </div>
+        <div class="body">
+          <div>
+            <p class="when">Vidéo explicative</p>
+            <h3>Le drone FPV : piloter, construire, programmer</h3>
+            <p>Les composants et l'assemblage, le réglage du contrôleur de vol, le pilotage, les usages possibles jusqu'à la topographie, et les règles pour voler.</p>
+          </div>
+          <ul class="chips"><li class="chip">Construction</li><li class="chip">Programmation</li><li class="chip">Pilotage</li><li class="chip">Photogrammétrie</li><li class="chip">Réglementation</li></ul>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -844,6 +945,55 @@ footer{padding:0 0 120px;text-align:center;color:var(--fg3);font-size:13px}
     prog.setAttribute('aria-valuenow',Math.round(Math.min(1,scrollY/Math.max(1,docH-ih))*100));
   }
 
+  /* ---------- lecteurs vidéo ---------- */
+  var players=[].slice.call(document.querySelectorAll('.vplayer'));
+  function fmt(s){if(!isFinite(s))return '0:00';s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+  players.forEach(function(pl){
+    var v=pl.querySelector('video'),prog=pl.querySelector('.vp-prog'),fill=pl.querySelector('.vp-fill'),buf=pl.querySelector('.vp-buf'),knob=pl.querySelector('.vp-knob'),
+        cur=pl.querySelector('.vp-cur-t'),dur=pl.querySelector('.vp-dur-t'),vol=pl.querySelector('.vp-vol'),idleT=0,raf=0;
+    pl.classList.add('fresh');
+    function toggle(){if(v.paused||v.ended){players.forEach(function(o){if(o!==pl)o.querySelector('video').pause()});var pr=v.play();if(pr&&pr.catch)pr.catch(function(){})}else v.pause()}
+    function paint(){var d=v.duration||0,f=d?v.currentTime/d:0;fill.style.width=(f*100)+'%';knob.style.left=(f*100)+'%';cur.textContent=fmt(v.currentTime);prog.setAttribute('aria-valuenow',Math.round(f*100));
+      if(v.buffered.length&&d)buf.style.width=(v.buffered.end(v.buffered.length-1)/d*100)+'%'}
+    function loop(){paint();if(!v.paused)raf=requestAnimationFrame(loop)}
+    function wake(){pl.classList.remove('idle');clearTimeout(idleT);if(!v.paused)idleT=setTimeout(function(){pl.classList.add('idle')},2500)}
+    pl.querySelector('.vp-big').addEventListener('click',toggle);
+    pl.querySelector('.vp-play').addEventListener('click',toggle);
+    v.addEventListener('click',toggle);
+    v.addEventListener('play',function(){pl.classList.add('playing');pl.classList.remove('fresh');cancelAnimationFrame(raf);loop();wake()});
+    v.addEventListener('pause',function(){pl.classList.remove('playing','idle');paint()});
+    v.addEventListener('ended',function(){pl.classList.remove('playing','idle')});
+    v.addEventListener('loadedmetadata',function(){dur.textContent=fmt(v.duration);paint()});
+    v.addEventListener('progress',paint);v.addEventListener('timeupdate',paint);
+    v.addEventListener('waiting',function(){pl.classList.add('waiting')});
+    ['playing','canplay','seeked'].forEach(function(e){v.addEventListener(e,function(){pl.classList.remove('waiting')})});
+    v.addEventListener('error',function(){pl.classList.add('error')});
+    var src=v.querySelector('source')||v;src.addEventListener('error',function(){pl.classList.add('error')});
+    if(v.error)pl.classList.add('error');
+    /* déplacement dans la vidéo */
+    function seekAt(x){var r=prog.getBoundingClientRect(),f=Math.min(1,Math.max(0,(x-r.left)/r.width));if(v.duration){v.currentTime=f*v.duration;paint()}}
+    prog.addEventListener('pointerdown',function(e){pl.classList.add('scrub');prog.setPointerCapture(e.pointerId);seekAt(e.clientX)});
+    prog.addEventListener('pointermove',function(e){if(pl.classList.contains('scrub'))seekAt(e.clientX)});
+    prog.addEventListener('pointerup',function(){pl.classList.remove('scrub')});
+    prog.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){v.currentTime+=5;e.preventDefault()}if(e.key==='ArrowLeft'){v.currentTime-=5;e.preventDefault()}});
+    /* son */
+    function syncMute(){pl.classList.toggle('muted',v.muted||v.volume===0)}
+    pl.querySelector('.vp-mute').addEventListener('click',function(){v.muted=!v.muted;if(!v.muted&&v.volume===0){v.volume=.6;vol.value=.6}syncMute()});
+    vol.addEventListener('input',function(){v.volume=+vol.value;v.muted=+vol.value===0;syncMute()});
+    /* plein écran */
+    pl.querySelector('.vp-fs').addEventListener('click',function(){
+      if(document.fullscreenElement){document.exitFullscreen()}
+      else if(pl.requestFullscreen){pl.requestFullscreen()}
+      else if(v.webkitEnterFullscreen){v.webkitEnterFullscreen()}
+    });
+    /* commandes qui se cachent pendant la lecture */
+    pl.addEventListener('pointermove',wake);pl.addEventListener('pointerdown',wake);
+    /* clavier */
+    pl.setAttribute('tabindex','0');
+    pl.addEventListener('keydown',function(e){if(e.target===vol)return;var k=e.key.toLowerCase();
+      if(k===' '||k==='k'){toggle();e.preventDefault()}else if(k==='f'){pl.querySelector('.vp-fs').click()}else if(k==='m'){pl.querySelector('.vp-mute').click()}
+      else if(e.target!==prog&&k==='arrowright'){v.currentTime+=5}else if(e.target!==prog&&k==='arrowleft'){v.currentTime-=5}wake()});
+  });
   /* ---------- courbes de niveau (relevé topographique) ----------
      bruit de valeur + marching squares : un clin d'œil au métier */
   var P=new Uint8Array(512);(function(){var p=[],i,j,t,s=7;for(i=0;i<256;i++)p[i]=i;for(i=255;i>0;i--){s=(s*16807)%2147483647;j=s%(i+1);t=p[i];p[i]=p[j];p[j]=t}for(i=0;i<512;i++)P[i]=p[i&255]})();
