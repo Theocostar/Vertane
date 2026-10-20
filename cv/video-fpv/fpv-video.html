@@ -33,7 +33,7 @@ svg{display:block}
 
 /* C1 — OSD */
 #osd{position:absolute;inset:0;font:600 30px/1 var(--mono);letter-spacing:0;color:#fff;text-shadow:0 0 8px rgba(0,0,0,.6)}
-#osd .o{position:absolute;display:flex;align-items:center;gap:12px}
+#osd .o{position:absolute;display:flex;align-items:center;gap:12px;padding:8px 14px;border-radius:12px;background:rgba(6,18,12,.42)}
 #osd .xh{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px 0 0 -60px}
 #osd .bat b{color:var(--clair)}
 #c1t{position:absolute;left:0;right:0;top:330px;text-align:center}
@@ -126,15 +126,19 @@ svg{display:block}
 #fin .ct{display:flex;flex-direction:column;gap:14px;font:500 30px/1 var(--font);color:rgba(245,245,247,.9)}
 #fin .ct svg{width:30px;height:30px;color:var(--sauge)}
 #fin .ct span{display:flex;align-items:center;gap:14px}
+#c1words{left:150px!important;right:auto!important;text-align:left}
 </style>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
 </head>
 <body>
 <div id="stage">
   <div class="layer" id="bg"><canvas id="topo"></canvas></div>
+  <canvas id="gl" style="opacity:0"></canvas>
 
   <!-- ===================== C1 · Le FPV ===================== -->
   <section class="sc" id="c1">
     <canvas id="fly"></canvas>
+    <div id="scrim" style="position:absolute;inset:0;background:radial-gradient(900px 520px at 50% 40%,rgba(6,18,12,.62),rgba(6,18,12,0) 75%);opacity:0"></div>
     <div id="osd">
       <div class="xh"><svg viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="3"><path d="M60 30v22M60 68v22M30 60h22M68 60h22"/><circle cx="60" cy="60" r="4" fill="#fff"/></svg></div>
       <div class="o bat" style="left:80px;top:70px"><b id="osdV">16.8V</b><span>4S</span></div>
@@ -513,7 +517,8 @@ function render(t){
   if(a1>0){
     var immA=1-p(t,C('c1end',12.2),C('c1end',12.2)+.8);
     var txtOn=Math.max(p(t,C('c1a',1.0)-.3,C('c1a',1.0)+.3)*(1-p(t,C('c1b',5.0)-.4,C('c1b',5.0))),p(t,C('c1b',5.0)-.3,C('c1b',5.0)+.3));
-    drawFly(t,immA,1-.6*txtOn);$('fly').style.opacity=immA;$('osd').style.opacity=immA*p(t,.3,1.2);
+    $('scrim').style.opacity=txtOn*immA;
+    if(window.R3){$('fly').style.display='none'}else{drawFly(t,immA,1-.6*txtOn);$('fly').style.opacity=immA}$('osd').style.opacity=immA*p(t,.3,1.2);
     $('osdV').textContent=(16.8-t*.02).toFixed(1)+'V';$('osdT').textContent='00:'+String(Math.floor(t)).padStart(2,'0');
     $('osdAlt').textContent='ALT '+(2.4+Math.sin(t*.7)*.8).toFixed(1)+'M';$('osdSpd').textContent=Math.round(78+Math.sin(t*.9)*12)+' KM/H';
     inOut($('c1t'),t,C('c1a',1.0),C('c1b',5.0),30);rise($('c1a'),t,C('c1a',1.0));
@@ -524,7 +529,7 @@ function render(t){
     $('c1words').style.opacity=p(t,ws-.1,ws)*1;
   }
   /* ---------------- C2 ---------------- */
-  var a2=sceneAlpha(t,T.c2);vis($('c2'),a2);
+  var a2=sceneAlpha(t,T.c2);vis($('c2'),a2);$('asm').style.display=window.R3?'none':'';
   if(a2>0){
     fadeUp($('c2n'),t,24.2,.8,20);rise($('c2h'),t,24.4);
     var PT=[C('p0',26),C('p1',30.5),C('p2',35.5),C('p3',40.5),C('p4',47.5),C('p5',50.5),C('p6',55.5)],ASM=C('asm',60.5);
@@ -597,7 +602,7 @@ function render(t){
     att.yaw+=Math.sin(t*.5)*6;
     $('stL').setAttribute('transform','translate('+(Lx*80)+' '+(Ly*80)+')');$('stLl').setAttribute('x2',-Lx*80);$('stLl').setAttribute('y2',-Ly*80);
     $('stR').setAttribute('transform','translate('+(Rx*80)+' '+(Ry*80)+')');
-    drawAtt(t,E.out(p(t,131,132))*(1-p(t,SIM-.4,SIM+.2)),att);
+    window.ATT=att;window.ATTA=E.out(p(t,131,132))*(1-p(t,SIM-.4,SIM+.2));if(!window.R3)drawAtt(t,window.ATTA,att);
     ['ax0','ax1','ax2','ax3'].forEach(function(id,i){var el=$(id);pop(el,t,AX[i]);el.className='chip'+(t>=AX[i]&&t<AX[i]+2.1?' hi':'');el.style.opacity=(+el.style.opacity)*(1-p(t,SIM-.4,SIM))});
     $('modes').style.opacity=(+$('modes').style.opacity)*(1-p(t,SIM-.4,SIM));
     var simA=p(t,SIM,SIM+.5);$('simto').style.opacity=simA;pop($('sm1'),t,SIM+.1);pop($('sm2'),t,SIM+1.4);pop($('sm3'),t,SIM+2.6);
@@ -638,8 +643,10 @@ function render(t){
     var fk=E.expo(p(t,FN,FN+1.2));$('fin').style.opacity=p(t,FN,FN+.6);$('fin').style.transform='translateY('+((1-fk)*90)+'px) scale('+lerp(.94,1,fk)+')';
     $('fin').querySelectorAll('.ct span').forEach(function(el,i){fadeUp(el,t,FN+1.2+i*.25,.7,20)});fadeUp($('fin').querySelector('h2'),t,FN+.6,.9,30);
   }
+  if(window.R3)R3.frame(t);
 }
 render(0);
 </script>
+<script type="module" src="./scene3d.js"></script>
 </body>
 </html>

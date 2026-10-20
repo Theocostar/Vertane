@@ -1,0 +1,19 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#0f2a1d}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script></head><body>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from './vendor/RoomEnvironment.js';
+import { buildDrone, spinProps } from './drone3d.js';
+const W=1920,H=1080, r=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});
+r.setSize(W,H);r.setPixelRatio(1);r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.05;r.outputColorSpace=THREE.SRGBColorSpace;r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
+document.body.appendChild(r.domElement);
+const scene=new THREE.Scene();const pm=new THREE.PMREMGenerator(r);scene.environment=pm.fromScene(new RoomEnvironment(),.04).texture;scene.environmentIntensity=.75;
+const cam=new THREE.PerspectiveCamera(30,W/H,5,5000);
+const key=new THREE.DirectionalLight(0xfff4e6,2.4);key.position.set(-250,420,180);key.castShadow=true;key.shadow.mapSize.set(2048,2048);Object.assign(key.shadow.camera,{left:-260,right:260,top:260,bottom:-260,near:10,far:1400});key.shadow.bias=-.0004;key.shadow.radius=4;scene.add(key);
+const rim=new THREE.DirectionalLight(0x8DB89A,2.2);rim.position.set(300,160,-380);scene.add(rim);
+scene.add(new THREE.HemisphereLight(0xcfe8d6,0x0b1f15,.35));
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(4000,4000),new THREE.ShadowMaterial({opacity:.38}));ground.rotation.x=-Math.PI/2;ground.position.y=-30;ground.receiveShadow=true;scene.add(ground);
+const {root,parts}=buildDrone();scene.add(root);root.position.y=10;
+window.shot=(az,el,dist,rpm,t)=>{const a=az*Math.PI/180,e=el*Math.PI/180;cam.position.set(Math.sin(a)*Math.cos(e)*dist,Math.sin(e)*dist,Math.cos(a)*Math.cos(e)*dist);cam.lookAt(0,30,0);spinProps(parts.props,t||0,rpm||0);r.render(scene,cam);};
+window.ready=true;
+</script></body></html>
