@@ -2,7 +2,7 @@
 
 Durée visée : environ 4 minutes. **Enregistre chaque chapitre dans un fichier séparé** (la démo ElevenLabs coupe les textes longs, et des fichiers courts sont plus simples à caler).
 
-Le fichier `texte-elevenlabs.txt` contient la même chose, prête à coller (sigles écrits comme ils se prononcent, pauses `<break>`).
+Le fichier `texte-elevenlabs.txt` contient la même chose, prête à coller (sigles écrits comme ils se prononcent).
 
 ## Chapitre 1 · Le FPV
 
@@ -36,5 +36,6 @@ Le fichier `texte-elevenlabs.txt` contient la même chose, prête à coller (sig
 
 - Même voix que le CV vidéo (Guillaume), modèle **Eleven Multilingual v2**.
 - Colle un chapitre à la fois, génère, enregistre.
+- Pas de balises de pause : je fais les silences au montage.
 - Si « Betaflight » ou « ArduPilot » sont mal prononcés, essaie « Bêta-flaïte » ou « Ardu-pilote » (déjà fait dans la version ElevenLabs).
 - Envoie-moi les 7 fichiers : je cale la vidéo sur la voix et j'ajoute le sound design.
